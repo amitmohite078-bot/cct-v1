@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KBV - Know Before Visit | AI Crop Disease, Pest & 1 km² Geo-Spatial Analysis</title>
+
+  <!-- Leaflet CSS (Local offline first + CDN fallback) -->
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    /* ==========================================================================
+       KBV FULL-WIDTH RESPONSIVE WEBSITE DESIGN SYSTEM
+       Rich Rustic Agro Palette:
+       - #590907 (Deep Oxblood / Crimson)
+       - #e8d2b5 (Warm Cream / Soft Sand)
+       - #a5a79b (Sage / Olive-Tinted Slate)
+       ========================================================================== */
+    :root {
+      --kbv-primary: #590907;
+      --kbv-primary-hover: #75120f;
+      --kbv-primary-glow: rgba(89, 9, 7, 0.45);
+      --kbv-primary-gradient: linear-gradient(135deg, #7c1512 0%, #590907 100%);
+      --kbv-cream: #e8d2b5;
+      --kbv-sage: #a5a79b;
+
+      --kbv-bg: #0e0a09;
+      --kbv-surface: #181210;
+      --kbv-surface-card: rgba(26, 20, 18, 0.94);
+      --kbv-border: rgba(165, 167, 155, 0.22);
+      --kbv-border-active: #590907;
+
+      --kbv-red: #590907;
+      --kbv-red-dark: #3f0605;
+      --kbv-red-glow: rgba(89, 9, 7, 0.45);
+      --kbv-red-gradient: linear-gradient(135deg, #7c1512 0%, #590907 100%);
+      --kbv-emerald: #a5a79b;
+      --kbv-emerald-glow: rgba(165, 167, 155, 0.35);
+      --kbv-amber: #e8d2b5;
+
+      --text-main: #f5eedf;
+      --text-sub: #a5a79b;
+      --text-accent: #e8d2b5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--kbv-bg);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Website Header & Navigation */
+    header.kbv-web-header {
+      background: rgba(18, 12, 11, 0.96);
+      border-bottom: 1px solid var(--kbv-border);
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      backdrop-filter: blur(14px);
+      padding: 0 28px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kbv-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .kbv-web-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--kbv-primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 16px var(--kbv-primary-glow);
+      border: 1px solid rgba(232, 210, 181, 0.3);
+    }
+
+    .kbv-brand-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--kbv-cream);
+    }
+
+    .kbv-brand-tagline {
+      font-size: 0.72rem;
+      color: var(--kbv-sage);
+    }
+
+    .kbv-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .kbv-lang-dropdown {
+      background: rgba(26, 20, 18, 0.9);
+      border: 1.5px solid rgba(165, 167, 155, 0.35);
+      color: var(--kbv-cream);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .kbv-lang-dropdown:hover, .kbv-lang-dropdown:focus {
+      border-color: var(--kbv-primary);
+      box-shadow: 0 0 14px var(--kbv-primary-glow);
+    }
+
+    .kbv-lang-dropdown option {
+      background: #181210;
+      color: #f5eedf;
+    }
+
+    /* Main Website Page Content Container */
+    main.kbv-main-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 36px 20px 80px 20px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       PAGE 1: WELCOME & LANGUAGE SELECTION (HERO SECTION)
+       ========================================================================== */
+    #kbvScreen1 {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .kbv-hero-banner {
+      background: radial-gradient(circle at 50% 30%, rgba(89, 9, 7, 0.35) 0%, rgba(165, 167, 155, 0.08) 50%, rgba(14, 10, 9, 0) 80%);
+      border: 1px solid var(--kbv-border);
+      border-radius: 28px;
+      padding: 60px 40px;
+      text-align: center;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kbv-hero-logo-large {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      background: var(--kbv-primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 0 25px var(--kbv-primary-glow);
+      border: 1px solid rgba(232, 210, 181, 0.3);
+    }
+
+    .kbv-hero-headline {
+      font-size: 3.4rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .kbv-hero-headline .kbv-highlight {
+      color: var(--kbv-cream);
+      text-shadow: 0 0 20px rgba(89, 9, 7, 0.6);
+    }
+
+    .kbv-hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-sub);
+      max-width: 650px;
+      margin: 0 auto 36px auto;
+    }
+
+    /* Language Grid */
+    .kbv-lang-grid-card {
+      background: var(--kbv-surface-card);
+      border: 1px solid var(--kbv-border);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 820px;
+      margin: 0 auto 36px auto;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+    }
+
+    .kbv-lang-grid-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: var(--kbv-cream);
+    }
+
+    .kbv-lang-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .kbv-lang-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1.5px solid var(--kbv-border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .kbv-lang-option-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .kbv-radio-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kbv-radio-inner {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: transparent;
+      transition: all 0.2s;
+    }
+
+    .kbv-lang-option.active {
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.08) 100%);
+      border-color: var(--kbv-red);
+      box-shadow: 0 0 18px var(--kbv-red-glow);
+    }
+
+    .kbv-lang-option.active .kbv-radio-circle {
+      border-color: var(--kbv-red);
+    }
+
+    .kbv-lang-option.active .kbv-radio-inner {
+      background: var(--kbv-red);
+    }
+
+    .kbv-lang-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .kbv-lang-code {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-sub);
+    }
+
+    .kbv-lang-option.active .kbv-lang-code {
+      color: var(--kbv-red);
+    }
+
+    .kbv-btn-primary-large {
+      padding: 18px 48px;
+      border-radius: 9999px;
+      background: var(--kbv-red-gradient);
+      border: none;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 30px var(--kbv-red-glow);
+      transition: all 0.2s ease;
+    }
+
+    .kbv-btn-primary-large:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(239, 68, 68, 0.55);
+    }
+
+    /* ==========================================================================
+       PAGE 2: CHOOSE ANALYSIS
+       ========================================================================== */
+    .kbv-page-header {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kbv-page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .kbv-page-desc {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+    }
+
+    .kbv-analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 22px;
+    }
+
+    .kbv-analysis-card {
+      background: var(--kbv-surface-card);
+      border: 1.5px solid var(--kbv-border);
+      border-radius: 24px;
+      padding: 28px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      min-height: 250px;
+    }
+
+    .kbv-analysis-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .kbv-analysis-card.disease-card {
+      border-color: rgba(239, 68, 68, 0.5);
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+    }
+
+    .kbv-analysis-card.disease-card:hover {
+      border-color: var(--kbv-red);
+      box-shadow: 0 0 40px rgba(239, 68, 68, 0.3);
+    }
+
+    .kbv-analysis-card.irrigation-card {
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.12);
+    }
+
+    .kbv-analysis-card.irrigation-card:hover {
+      border-color: #60a5fa;
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+    }
+
+    .kbv-analysis-card.produce-card {
+      border-color: rgba(232, 210, 181, 0.35);
+      box-shadow: 0 0 30px rgba(89, 9, 7, 0.25);
+    }
+
+    .kbv-analysis-card.produce-card:hover {
+      border-color: var(--kbv-cream);
+      box-shadow: 0 0 40px rgba(89, 9, 7, 0.45);
+    }
+
+    .kbv-analysis-card.geo-card {
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.12);
+    }
+
+    .kbv-analysis-card.geo-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.25);
+    }
+
+    .kbv-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .kbv-card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .disease-card .kbv-card-icon {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: var(--kbv-red);
+    }
+
+    .pest-card .kbv-card-icon {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .geo-card .kbv-card-icon {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+    }
+
+    .kbv-card-thumb-web {
+      width: 90px;
+      height: 90px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .kbv-card-title-web {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .kbv-card-desc-web {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .kbv-card-footer-web {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--kbv-border);
+    }
+
+    .kbv-card-action-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--kbv-red);
+    }
+
+    .kbv-circle-arrow-web {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--kbv-red-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 0 14px var(--kbv-red-glow);
+    }
+
+    /* ==========================================================================
+       PAGE 3: DISEASE ANALYSIS (UPLOAD & 1 KM² LOCATION)
+       ========================================================================== */
+    .kbv-web-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    .kbv-web-step-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--kbv-border);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    .kbv-web-step-pill.active {
+      background: var(--kbv-red-gradient);
+      color: #ffffff;
+      border-color: var(--kbv-red);
+      box-shadow: 0 0 16px var(--kbv-red-glow);
+    }
+
+    .kbv-upload-layout-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 860px) {
+      .kbv-upload-layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kbv-upload-panel {
+      background: var(--kbv-surface-card);
+      border: 1.5px dashed rgba(239, 68, 68, 0.45);
+      border-radius: 24px;
+      padding: 30px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kbv-upload-img-preview {
+      width: 100%;
+      max-height: 250px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 16px;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .kbv-sample-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      justify-content: center;
+    }
+
+    .kbv-sample-leaf {
+      padding: 6px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--kbv-border);
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .kbv-sample-leaf.selected {
+      border-color: var(--kbv-red);
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    .kbv-details-panel {
+      background: var(--kbv-surface-card);
+      border: 1px solid var(--kbv-border);
+      border-radius: 24px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .kbv-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kbv-input-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .kbv-web-select {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(14, 25, 18, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .kbv-loc-detect-btn {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
+      color: var(--text-accent);
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .kbv-loc-detect-btn:hover {
+      background: rgba(16, 185, 129, 0.22);
+      border-color: var(--kbv-emerald);
+    }
+
+    /* ==========================================================================
+       PAGE 4: ANALYSIS RESULT & 1 KM² GEO-SPATIAL RISK MAP
+       ========================================================================== */
+    .kbv-result-top-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .kbv-result-top-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kbv-disease-hero-card {
+      background: var(--kbv-surface-card);
+      border: 1.5px solid rgba(89, 9, 7, 0.6);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 0 35px rgba(89, 9, 7, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .kbv-disease-banner-inner {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .kbv-result-leaf-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 18px;
+      object-fit: cover;
+      border: 2px solid rgba(89, 9, 7, 0.7);
+    }
+
+    .kbv-crop-pill-web {
+      background: rgba(89, 9, 7, 0.3);
+      color: var(--kbv-cream);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 6px;
+      border: 1px solid rgba(89, 9, 7, 0.6);
+    }
+
+    .kbv-disease-headline {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--kbv-cream);
+      margin-bottom: 6px;
+    }
+
+    .kbv-conf-track-web {
+      width: 100%;
+      height: 8px;
+      background: rgba(165, 167, 155, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .kbv-conf-fill-web {
+      height: 100%;
+      width: 94%;
+      background: var(--kbv-primary-gradient);
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+
+    .kbv-metrics-row-web {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .kbv-metric-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--kbv-border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .kbv-metric-badge-web {
+      font-size: 0.9rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .badge-high {
+      background: rgba(89, 9, 7, 0.35);
+      color: var(--kbv-cream);
+      border: 1px solid var(--kbv-primary);
+    }
+
+    .badge-area {
+      background: rgba(165, 167, 155, 0.2);
+      color: var(--kbv-cream);
+      border: 1px solid rgba(165, 167, 155, 0.4);
+    }
+
+    /* Actions & Description Card */
+    .kbv-actions-card {
+      background: var(--kbv-surface-card);
+      border: 1px solid var(--kbv-border);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .kbv-action-list-web {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .kbv-action-item-web {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #f5eedf;
+      line-height: 1.45;
+    }
+
+    /* 1 km² Risk Map Container (Full Width on Website) */
+    .kbv-map-card-web {
+      background: var(--kbv-surface-card);
+      border: 1.5px solid rgba(89, 9, 7, 0.55);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 0 35px rgba(89, 9, 7, 0.2);
+    }
+
+    .kbv-map-header-web {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .kbv-map-title-web {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--kbv-cream);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kbv-map-frame-web {
+      width: 100%;
+      height: 440px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(165, 167, 155, 0.3);
+    }
+
+    .kbv-legend-bar-web {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 14px 20px 0 20px;
+      margin-top: 14px;
+      border-top: 1px solid var(--kbv-border);
+    }
+
+    .kbv-legend-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--kbv-sage);
+    }
+
+    /* Integrated 1 km² Agronomic Intelligence Section */
+    .kbv-agronomic-section {
+      background: var(--kbv-surface-card);
+      border: 1px solid var(--kbv-border);
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .kbv-agro-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--kbv-cream);
+      margin-bottom: 6px;
+    }
+
+    .kbv-agro-sub {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+    }
+
+    .kbv-agro-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .kbv-agro-panel {
+      background: rgba(18, 14, 12, 0.7);
+      border: 1px solid var(--kbv-border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .kbv-agro-panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--kbv-cream);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kbv-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--kbv-emerald);
+      color: #f1f5f9;
+      padding: 12px 22px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.25s ease;
+      z-index: 9999;
+    }
+
+    .kbv-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Screen 3 & 4 Location Info, Search & Presets */
+    .kbv-loc-card-wrapper {
+      background: rgba(26, 20, 18, 0.85);
+      border: 1px solid var(--kbv-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .kbv-loc-badge-banner {
+      background: linear-gradient(135deg, rgba(89, 9, 7, 0.35) 0%, rgba(24, 18, 16, 0.95) 100%);
+      border: 1.5px solid rgba(232, 210, 181, 0.3);
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .kbv-preset-chip {
+      background: rgba(165, 167, 155, 0.15);
+      border: 1px solid rgba(165, 167, 155, 0.3);
+      color: var(--kbv-cream);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .kbv-preset-chip:hover {
+      background: var(--kbv-primary);
+      border-color: var(--kbv-cream);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .kbv-loc-search-input {
+      width: 100%;
+      background: rgba(14, 10, 9, 0.85);
+      border: 1px solid var(--kbv-border);
+      color: #f5eedf;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .kbv-loc-search-input:focus {
+      border-color: var(--kbv-cream);
+      box-shadow: 0 0 10px rgba(232, 210, 181, 0.2);
+    }
+
+    .kbv-search-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #181210;
+      border: 1px solid var(--kbv-border);
+      border-radius: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 3000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      margin-top: 4px;
+    }
+    .kbv-search-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      transition: background 0.15s;
+    }
+    .kbv-search-item:hover {
+      background: rgba(89, 9, 7, 0.6);
+      color: #f5eedf;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Website Top Navigation Bar -->
+  <header class="kbv-web-header">
+    <div class="kbv-brand-group" onclick="window.kbvApp.goToScreen(1)">
+      <div class="kbv-web-logo">🍁</div>
+      <div>
+        <div class="kbv-brand-text">KBV <span style="color:#e8d2b5; font-weight:900;" data-i18n="brand_sub">Know Before Visit</span></div>
+        <div class="kbv-brand-tagline" data-i18n="brand_tagline">AI Crop Disease, Pest Diagnostics & 1 km² Geo-Spatial Engine</div>
+      </div>
+    </div>
+
+    <!-- Header Actions (Language Selection) -->
+    <div class="kbv-header-actions">
+      <select class="kbv-lang-dropdown" id="kbvNavLangSelect">
+        <option value="en" selected>English (EN)</option>
+        <option value="hi">हिंदी - Hindi (HI)</option>
+        <option value="kn">ಕನ್ನಡ - Kannada (KN)</option>
+        <option value="te">తెలుగు - Telugu (TE)</option>
+        <option value="ta">தமிழ் - Tamil (TA)</option>
+        <option value="mr">मराठी - Marathi (MR)</option>
+        <option value="gu">ગુજરાતી - Gujarati (GU)</option>
+        <option value="bn">বাংলা - Bengali (BN)</option>
+        <option value="ml">മലയാളം - Malayalam (ML)</option>
+        <option value="pa">ਪੰਜਾਬੀ - Punjabi (PA)</option>
+        <option value="or">ଓଡ଼ିଆ - Odia (OR)</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Main Website Container -->
+  <main class="kbv-main-container">
+
+    <!-- =====================================================================
+         PAGE 1: WELCOME & LANGUAGE SELECTION (HERO SECTION)
+         ===================================================================== -->
+    <section id="kbvScreen1" style="display:block;">
+      <div class="kbv-hero-banner">
+        <div class="kbv-hero-logo-large">🍁</div>
+        <h1 class="kbv-hero-headline" id="kbvHeroTitle">
+          Know Before <span class="kbv-highlight">Visit</span>
+        </h1>
+        <p class="kbv-hero-sub" data-i18n="hero_desc">
+          AI-Powered Disease & Pest Analysis for Better Farming within a 1 km × 1 km Geographical Analysis Area.
+        </p>
+
+        <!-- Language Selector Card -->
+        <div class="kbv-lang-grid-card">
+          <div class="kbv-lang-grid-title">
+            <span>🌐</span>
+            <span data-i18n="select_lang">Select Language</span>
+          </div>
+
+          <div class="kbv-lang-grid">
+            <div class="kbv-lang-option active" data-lang="en">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">English</span>
+              </div>
+              <span class="kbv-lang-code">EN</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="hi">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">हिंदी (Hindi)</span>
+              </div>
+              <span class="kbv-lang-code">HI</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="kn">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">ಕನ್ನಡ (Kannada)</span>
+              </div>
+              <span class="kbv-lang-code">KN</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="te">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">తెలుగు (Telugu)</span>
+              </div>
+              <span class="kbv-lang-code">TE</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="ta">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">தமிழ் (Tamil)</span>
+              </div>
+              <span class="kbv-lang-code">TA</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="mr">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">मराठी (Marathi)</span>
+              </div>
+              <span class="kbv-lang-code">MR</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="gu">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">ગુજરાતી (Gujarati)</span>
+              </div>
+              <span class="kbv-lang-code">GU</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="bn">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">বাংলা (Bengali)</span>
+              </div>
+              <span class="kbv-lang-code">BN</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="ml">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">മലയാളം (Malayalam)</span>
+              </div>
+              <span class="kbv-lang-code">ML</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="pa">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">ਪੰਜਾਬੀ (Punjabi)</span>
+              </div>
+              <span class="kbv-lang-code">PA</span>
+            </div>
+
+            <div class="kbv-lang-option" data-lang="or">
+              <div class="kbv-lang-option-left">
+                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <span class="kbv-lang-name">ଓଡ଼ିଆ (Odia)</span>
+              </div>
+              <span class="kbv-lang-code">OR</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Continue CTA -->
+        <button class="kbv-btn-primary-large" id="kbvContinueBtn">
+          <span data-i18n="continue_btn">Continue to Analysis →</span>
+        </button>
+      </div>
+    </section>
+
+
+    <!-- =====================================================================
+         PAGE 2: CHOOSE ANALYSIS
+         ===================================================================== -->
+    <section id="kbvScreen2" style="display:none;">
+      <div class="kbv-page-header">
+        <div>
+          <h2 class="kbv-page-title" data-i18n="choose_analysis">Choose Analysis</h2>
+          <p class="kbv-page-desc" data-i18n="choose_sub">What would you like to inspect in your field?</p>
+        </div>
+        <button class="kbv-web-tab" onclick="window.kbvApp.goToScreen(1)" data-i18n="back_welcome">← Back to Welcome</button>
+      </div>
+
+      <div class="kbv-analysis-grid">
+        <!-- Card 1: Disease Analysis -->
+        <div class="kbv-analysis-card disease-card" id="kbvDiseaseCard">
+          <div>
+            <div class="kbv-card-top">
+              <div class="kbv-card-icon">🐞</div>
+              <img src="https://images.unsplash.com/photo-1592417817098-8f3d6910985c?auto=format&fit=crop&w=240&q=80"
+                alt="Disease scan" class="kbv-card-thumb-web" />
+            </div>
+            <h3 class="kbv-card-title-web" data-i18n="disease_title">Disease Analysis</h3>
+            <p class="kbv-card-desc-web" data-i18n="disease_desc">
+              Detect crop fungal and bacterial diseases from leaf or plant photos with scientific AI confidence.
+            </p>
+          </div>
+          <div class="kbv-card-footer-web">
+            <span class="kbv-card-action-text" data-i18n="start_diagnosis">Start Diagnosis →</span>
+            <div class="kbv-circle-arrow-web">→</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Smart Irrigation Plan (Replaced Pestegator) -->
+        <div class="kbv-analysis-card irrigation-card" id="kbvIrrigationCard">
+          <div>
+            <div class="kbv-card-top">
+              <div class="kbv-card-icon" style="background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.4); color:#60a5fa;">💧</div>
+              <img src="https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?auto=format&fit=crop&w=240&q=80"
+                alt="Irrigation system" class="kbv-card-thumb-web" />
+            </div>
+            <h3 class="kbv-card-title-web" data-i18n="irrigation_plan_title">Smart Irrigation Plan</h3>
+            <p class="kbv-card-desc-web" data-i18n="irrigation_plan_desc">
+              Weather-driven 7-day FAO-56 irrigation schedule, daily crop water demand (ETc), and moisture threshold balance.
+            </p>
+          </div>
+          <div class="kbv-card-footer-web">
+            <span class="kbv-card-action-text" data-i18n="view_irrigation_btn" style="color:#60a5fa;">View Irrigation Plan →</span>
+            <div class="kbv-circle-arrow-web" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8);">→</div>
+          </div>
+        </div>
+
+        <!-- Card 3: Top Crops & Estimated Produce -->
+        <div class="kbv-analysis-card produce-card" id="kbvProduceCard">
+          <div>
+            <div class="kbv-card-top">
+              <div class="kbv-card-icon" style="background:rgba(232,210,181,0.2); border:1px solid rgba(232,210,181,0.4); color:var(--kbv-cream);">⚖️</div>
+              <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=240&q=80"
+                alt="Crop yield harvest" class="kbv-card-thumb-web" />
+            </div>
+            <h3 class="kbv-card-title-web" data-i18n="produce_estimate_title">Top Crops & Estimated Produce</h3>
+            <p class="kbv-card-desc-web" data-i18n="produce_estimate_desc">
+              Calculate expected metric tonnes of produce per 1 km² (100 Hectares) and per hectare based on your exact field location.
+            </p>
+          </div>
+          <div class="kbv-card-footer-web">
+            <span class="kbv-card-action-text" data-i18n="view_produce_btn" style="color:var(--kbv-cream);">Calculate Produce →</span>
+            <div class="kbv-circle-arrow-web" style="background:linear-gradient(135deg, #7c1512, #590907);">→</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =====================================================================
+         PAGE 3: DISEASE ANALYSIS (UPLOAD & 1 KM² LOCATION)
+         ===================================================================== -->
+    <section id="kbvScreen3" style="display:none;">
+      <div class="kbv-page-header">
+        <div>
+          <h2 class="kbv-page-title" data-i18n="disease_title">Disease Analysis</h2>
+          <p class="kbv-page-desc" data-i18n="screen3_desc">Upload a crop leaf photo and synchronize your 1 km² farm area for multi-module intelligence.</p>
+        </div>
+        <button class="kbv-web-tab" onclick="window.kbvApp.goToScreen(2)" data-i18n="back_options">← Back to Options</button>
+      </div>
+
+      <!-- Stepper Indicator -->
+      <div class="kbv-web-stepper">
+        <div class="kbv-web-step-pill active" data-i18n="step_upload">1. Upload Plant Photo</div>
+        <span style="color:#64748b;">—</span>
+        <div class="kbv-web-step-pill" data-i18n="step_details">2. Crop & Field Details</div>
+        <span style="color:#64748b;">—</span>
+        <div class="kbv-web-step-pill" data-i18n="step_analyze">3. Run AI Diagnostics</div>
+      </div>
+
+      <div class="kbv-upload-layout-grid">
+        <!-- Left: Image Upload & Sample Leaves -->
+        <div class="kbv-upload-panel">
+          <img id="kbvUploadPreview" class="kbv-upload-img-preview"
+            src="https://images.unsplash.com/photo-1592417817098-8f3d6910985c?auto=format&fit=crop&w=600&q=80"
+            alt="Leaf Preview" />
+
+          <input type="file" id="kbvFileInput" accept="image/*" style="display:none;" />
+          <div style="display:flex; gap:12px; margin-bottom:18px;">
+            <button class="kbv-btn-pill" id="kbvCameraBtn">
+              <span data-i18n="camera_btn">📷 Camera</span>
+            </button>
+            <button class="kbv-btn-pill" id="kbvGalleryBtn">
+              <span data-i18n="gallery_btn">🖼️ Gallery</span>
+            </button>
+          </div>
+
+          <div style="font-size:0.8rem; color:var(--text-sub); margin-bottom:8px;" data-i18n="sample_chips_label">Or click a sample infected leaf:</div>
+          <div class="kbv-sample-chips-row">
+            <div class="kbv-sample-leaf selected" data-crop="tomato">🍅 Tomato Early Blight</div>
+            <div class="kbv-sample-leaf" data-crop="rice">🌾 Rice Blast</div>
+            <div class="kbv-sample-leaf" data-crop="wheat">🌾 Wheat Rust</div>
+            <div class="kbv-sample-leaf" data-crop="maize">🌽 Maize Blight</div>
+            <div class="kbv-sample-leaf" data-crop="cotton">☁️ Cotton Leaf Curl</div>
+            <div class="kbv-sample-leaf" data-crop="soybean">🌱 Soybean Rust</div>
+            <div class="kbv-sample-leaf" data-crop="onion">🧅 Onion Blotch</div>
+            <div class="kbv-sample-leaf" data-crop="groundnut">🥜 Groundnut Tikka</div>
+          </div>
+        </div>
+
+        <!-- Right: Crop Type, Stage, 1 km² Location & Analyze Button -->
+        <div class="kbv-details-panel">
+          <div class="kbv-input-group">
+            <label class="kbv-input-label" data-i18n="crop_type_label">Crop Type *</label>
+            <select class="kbv-web-select" id="kbvCropTypeSelect">
+              <option value="tomato" selected>Tomato</option>
+              <option value="rice">Rice (Paddy)</option>
+              <option value="wheat">Wheat</option>
+              <option value="maize">Maize (Corn)</option>
+              <option value="cotton">Cotton</option>
+              <option value="soybean">Soybean</option>
+              <option value="onion">Onion</option>
+              <option value="groundnut">Groundnut</option>
+            </select>
+          </div>
+
+          <div class="kbv-input-group">
+            <label class="kbv-input-label" data-i18n="growth_stage_label">Growth Stage *</label>
+            <select class="kbv-web-select" id="kbvGrowthStageSelect">
+              <option value="vegetative" selected>Vegetative (Leaf Growth)</option>
+              <option value="flowering">Flowering / Tasseling</option>
+              <option value="fruiting">Fruiting / Grain Fill</option>
+              <option value="maturity">Ripening & Harvest Maturity</option>
+            </select>
+          </div>
+
+          <div class="kbv-loc-card-wrapper">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <label class="kbv-input-label" style="margin-bottom:0;" data-i18n="location_label">Active 1 km² Farm Location</label>
+              <span id="kbvLocStatusPill" style="font-size:0.7rem; background:rgba(89,9,7,0.4); color:var(--kbv-cream); padding:2px 8px; border-radius:6px; font-weight:700;">📍 Location Active</span>
+            </div>
+
+            <!-- Prominent Fetched Location Box -->
+            <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(165,167,155,0.25); border-radius:12px; padding:12px; margin-bottom:12px;">
+              <div style="display:flex; align-items:flex-start; gap:8px;">
+                <span style="font-size:20px; line-height:1;">📍</span>
+                <div style="flex:1;">
+                  <div id="kbvFetchedLocationName" style="font-size:0.95rem; font-weight:800; color:var(--kbv-cream); line-height:1.3;">Bengaluru Urban, Karnataka, India</div>
+                  <div id="kbvFetchedCoords" style="font-size:0.75rem; color:var(--kbv-sage); margin-top:2px;">12.9571°N, 77.5325°E • 100 Hectares (247.1 Acres)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GPS Detect Button -->
+            <button class="kbv-loc-detect-btn" id="kbvUseLocationBtn" style="margin-bottom:10px;">
+              <span data-i18n="use_curr_loc">🎯 Detect My Exact GPS</span>
+            </button>
+
+            <!-- Search Village, Taluk, or City -->
+            <div style="position:relative; margin-bottom:10px;">
+              <input type="text" id="kbvLocSearchInput" class="kbv-loc-search-input" placeholder="🔍 Search any Indian village, district or city..." autocomplete="off" />
+              <div id="kbvLocSearchDropdown" class="kbv-search-dropdown" style="display:none;"></div>
+            </div>
+
+            <!-- Quick Region Preset Chips -->
+            <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+              <span style="font-size:0.7rem; color:var(--text-sub);">Quick Presets:</span>
+              <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(12.5238, 76.8967, 'Mandya, Karnataka')">Mandya (KA)</button>
+              <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(19.9975, 73.7898, 'Nashik, Maharashtra')">Nashik (MH)</button>
+              <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(16.3067, 80.4365, 'Guntur, Andhra Pradesh')">Guntur (AP)</button>
+              <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(30.9010, 75.8573, 'Ludhiana, Punjab')">Ludhiana (PB)</button>
+              <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(25.3176, 82.9739, 'Varanasi, Uttar Pradesh')">Varanasi (UP)</button>
+              <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(22.7196, 75.8577, 'Indore, Madhya Pradesh')">Indore (MP)</button>
+            </div>
+          </div>
+
+          <button class="kbv-btn-primary-large" id="kbvAnalyzeBtn" style="width:100%; justify-content:center; margin-top:8px;">
+            <span data-i18n="analyze_btn">Analyze Plant & 1 km² Area →</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =====================================================================
+         PAGE 4: ANALYSIS RESULT & 1 KM² GEO-SPATIAL RISK MAP
+         ===================================================================== -->
+    <section id="kbvScreen4" style="display:none;">
+      <div class="kbv-page-header">
+        <div>
+          <h2 class="kbv-page-title" data-i18n="result_title">Disease Diagnostic & 1 km² Geo-Spatial Result</h2>
+          <p class="kbv-page-desc" data-i18n="screen4_desc">AI diagnostic confidence profile, scientific IPM remedies, and 1 km² geodesic risk mapping.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="kbv-web-tab" id="kbvSaveReportBtn" style="border:1px solid rgba(255,255,255,0.2);">
+            <span data-i18n="save_report_btn">📥 Save Diagnostic Report</span>
+          </button>
+          <button class="kbv-web-tab" onclick="window.kbvApp.goToScreen(3)" data-i18n="new_scan">← New Scan</button>
+        </div>
+      </div>
+
+      <!-- Prominent Location Banner above Results -->
+      <div class="kbv-loc-badge-banner" id="kbvScreen4LocBanner">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-size:26px;">📍</div>
+          <div>
+            <div style="font-size:0.72rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Analyzed Farm Field Location</div>
+            <div id="kbvScreen4LocationText" style="font-size:1.15rem; font-weight:800; color:var(--kbv-cream);">Bengaluru Urban, Karnataka, India</div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div id="kbvScreen4CoordsText" style="font-size:0.9rem; font-weight:700; color:#10b981;">12.9571°N, 77.5325°E</div>
+          <div style="font-size:0.72rem; color:var(--text-sub);">1.00 km² Geodesic Area • 100 Hectares (247.1 Acres)</div>
+        </div>
+      </div>
+
+      <!-- Top Row: Disease Diagnosis Banner & IPM Recommended Actions -->
+      <div class="kbv-result-top-grid">
+        <!-- Disease Diagnostic Card -->
+        <div class="kbv-disease-hero-card">
+          <div class="kbv-disease-banner-inner">
+            <img id="kbvResultImage"
+              src="https://images.unsplash.com/photo-1592417817098-8f3d6910985c?auto=format&fit=crop&w=600&q=80"
+              alt="Disease leaf" class="kbv-result-leaf-img" />
+            <div style="flex:1;">
+              <span class="kbv-crop-pill-web" id="kbvResultCropBadge">Crop: Tomato</span>
+              <div class="kbv-disease-headline" id="kbvResultDiseaseTitle">Early Blight</div>
+              <div style="font-size:0.8rem; font-weight:700; color:var(--text-sub);" id="kbvResultConfidenceText">Confidence: 94%</div>
+              <div class="kbv-conf-track-web">
+                <div class="kbv-conf-fill-web" id="kbvResultConfidenceBar"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Severity & Area -->
+          <div class="kbv-metrics-row-web">
+            <div class="kbv-metric-box">
+              <span style="font-size:24px;">⚠️</span>
+              <div>
+                <div style="font-size:0.75rem; color:var(--text-sub);" data-i18n="severity_label">Severity</div>
+                <span class="kbv-metric-badge-web badge-high" id="kbvSeverityBadge">High</span>
+              </div>
+            </div>
+
+            <div class="kbv-metric-box">
+              <span style="font-size:24px;">🌱</span>
+              <div>
+                <div style="font-size:0.75rem; color:var(--text-sub);" data-i18n="affected_area_label">Analysis Area</div>
+                <span class="kbv-metric-badge-web badge-area" id="kbvAreaBadge">1.0 km²</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--kbv-border); border-radius:16px; padding:16px;">
+            <div style="font-size:0.85rem; font-weight:700; color:#f1f5f9; margin-bottom:6px;" data-i18n="desc_label">Disease Description</div>
+            <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.5;" id="kbvResultDescription">
+              Early blight is a fungal disease that causes brown spots with concentric rings on leaves, leading to early leaf drop and reduced yield.
+            </p>
+          </div>
+        </div>
+
+        <!-- Recommended Actions Card -->
+        <div class="kbv-actions-card">
+          <div style="font-size:1.1rem; font-weight:800; color:#ffffff; display:flex; align-items:center; gap:8px;">
+            <span>🛡️</span>
+            <span data-i18n="rec_actions_label">Recommended Actions & Scientific Remedies</span>
+          </div>
+          <ul class="kbv-action-list-web" id="kbvResultActionsList">
+            <li class="kbv-action-item-web">
+              <span style="color:#10b981; font-weight:bold; font-size:16px;">✓</span>
+              <span>Remove and destroy infected leaves immediately to reduce fungal spore load.</span>
+            </li>
+            <li class="kbv-action-item-web">
+              <span style="color:#10b981; font-weight:bold; font-size:16px;">✓</span>
+              <span>Spray recommended protective fungicide: Mancozeb 75% WP @ 2.5 g/L or Azoxystrobin 18.2% + Difenoconazole 11.4% SC @ 1 ml/L.</span>
+            </li>
+            <li class="kbv-action-item-web">
+              <span style="color:#10b981; font-weight:bold; font-size:16px;">✓</span>
+              <span>Maintain 60cm × 45cm plant spacing to promote airflow and rapid canopy drying.</span>
+            </li>
+            <li class="kbv-action-item-web">
+              <span style="color:#10b981; font-weight:bold; font-size:16px;">✓</span>
+              <span>Avoid overhead sprinkler irrigation; strictly use drip irrigation to keep foliage dry.</span>
+            </li>
+          </ul>
+
+          <div style="margin-top:auto; padding-top:14px;">
+            <button class="kbv-btn-primary-large" id="kbvViewDetailedMapBtn" style="width:100%; justify-content:center; padding:14px;">
+              <span data-i18n="view_map_btn">Explore 1 km² Crop Recommendations ↓</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Row: 1 km² Area Risk Map (Full Width on Website) -->
+      <div class="kbv-map-card-web">
+        <div class="kbv-map-header-web">
+          <div class="kbv-map-title-web">
+            <span>📍</span>
+            <span data-i18n="risk_map_title">1 km² Area Risk Map & Geodesic Boundary (Your Exact Location)</span>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-accent);" data-i18n="area_badge_text">
+            Area: 1.00 km² • 100 Hectares (247.1 Acres)
+          </div>
+        </div>
+
+        <!-- Full-Size Interactive Leaflet Risk Map -->
+        <div class="kbv-map-frame-web" id="kbvRiskMapContainer"></div>
+
+        <!-- Concentric Risk Legend -->
+        <div class="kbv-legend-bar-web">
+          <div class="kbv-legend-pill">
+            <div style="width:10px; height:10px; border-radius:50%; background:#ef4444;"></div>
+            <span data-i18n="high_risk" id="kbvHighRiskLegend">High Risk Zone (32%)</span>
+          </div>
+          <div class="kbv-legend-pill">
+            <div style="width:10px; height:10px; border-radius:50%; background:#f59e0b;"></div>
+            <span data-i18n="mod_risk" id="kbvModRiskLegend">Moderate Risk Zone (45%)</span>
+          </div>
+          <div class="kbv-legend-pill">
+            <div style="width:10px; height:10px; border-radius:50%; background:#10b981;"></div>
+            <span data-i18n="low_risk" id="kbvLowRiskLegend">Low Risk Zone (23%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section: Integrated 1 km² Crop Suitability & Irrigation (Directly on Page) -->
+      <div class="kbv-agronomic-section" id="kbvAgronomicSection">
+        <h3 class="kbv-agro-title" data-i18n="agro_title">Integrated 1 km² Crop Suitability & Weather-Driven Advisory</h3>
+        <p class="kbv-agro-sub" data-i18n="agro_sub">
+          Connecting your disease diagnosis to regional soil pedology (ISRIC SoilGrids), climate, and FAO-56 irrigation demands.
+        </p>
+
+        <div class="kbv-agro-grid-3">
+          <!-- Top Crops -->
+          <div class="kbv-agro-panel">
+            <div class="kbv-agro-panel-title" data-i18n="panel_crops">🌿 Top Suitable Crops (Ranked by AHP Score)</div>
+            <div id="cropSuitabilityContainer">
+              <div style="font-size:0.82rem; color:var(--text-sub);">Loading regional crop rankings...</div>
+            </div>
+          </div>
+
+          <!-- Soil & Weather Status -->
+          <div class="kbv-agro-panel">
+            <div class="kbv-agro-panel-title" data-i18n="panel_soil_weather">🧪 1 km² Soil & Micro-Climate Profile</div>
+            <div style="font-size:0.82rem; color:#cbd5e1; line-height:1.7;">
+              <div style="margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.08);">
+                <b style="color:var(--kbv-cream);">📍 <span data-i18n="field_loc_label">Field Location:</span></b>
+                <span id="kbvSoilLocName" style="color:#a7f3d0; font-weight:700;">Bengaluru Urban, Karnataka</span>
+              </div>
+              <div><b data-i18n="soil_class_label">Soil Classification:</b> <span id="soilClassValue">Red Sandy Loam (Alfisols)</span></div>
+              <div><b data-i18n="soil_ph_label">Soil pH (0-30cm):</b> <span id="soilPhValue">6.8 (Optimal Neutral)</span></div>
+              <div><b data-i18n="soil_texture_label">Soil Texture:</b> <span id="soilTextureValue">Sandy Clay Loam (Well Drained)</span></div>
+              <div><b data-i18n="temp_label">Temperature:</b> <span id="weatherTempValue">27.5°C</span></div>
+              <div><b data-i18n="elev_slope_label">Elevation / Slope:</b> <span id="terrainElevValue">920m</span> (<span id="terrainSlopeValue">1.8%</span>)</div>
+            </div>
+          </div>
+
+          <!-- 7-Day Irrigation Schedule -->
+          <div class="kbv-agro-panel">
+            <div class="kbv-agro-panel-title" data-i18n="panel_irrigation">💧 FAO-56 Weather-Driven Irrigation</div>
+            <div id="integratedModulesContainer">
+              <div style="font-size:0.82rem; color:var(--text-sub);">Loading 7-day soil water balance...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Toast -->
+  <div class="kbv-toast" id="kbvToast">📍 Location Synchronized</div>
+
+  <!-- Leaflet Scripts (Local offline first + CDN fallback) -->
+  <script src="js/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Application Modules -->
+  <script src="js/api.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/suitability.js"></script>
+  <script src="js/modules.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/kbv_ui.js"></script>
+
+  <!-- Bootstrap -->
+  <script>
+    function startWebsite() {
+      console.log("Starting KBV Website...");
+
+      // 1. Initialize KBV UI immediately
+      try {
+        window.kbvApp = new window.KBVApp();
+        window.kbvApp.init();
+      } catch (err) {
+        console.error("KBV init error:", err);
+      }
+
+      // 2. Initialize AgroCloud engine in background
+      try {
+        window.app = new window.AgroCloudApp();
+        window.app.init().catch(e => console.warn("Background engine notice:", e));
+      } catch (err) {
+        console.warn("AgroCloudApp notice:", err);
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", startWebsite);
+    } else {
+      startWebsite();
+    }
+  </script>
+
+</body>
+
+</html>

@@ -707,22 +707,24 @@ class SuitabilityRenderer {
         <canvas id="comparisonRadarCanvas"></canvas>
       </div>
 
-      <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
-        <thead>
-          <tr style="background:#F0EEE9; border-bottom:1.5px solid rgba(45,90,39,0.22);">
-            <th style="padding:12px; text-align:left; color:#2D5A27;">${LBL.param}</th>
-            ${headerCols}
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.water}</td>${waterCols}</tr>
-          <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.dur}</td>${durationCols}</tr>
-          <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.season}</td>${seasonCols}</tr>
-          <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.limit}</td>${limitCols}</tr>
-          <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.pros}</td>${prosCols}</tr>
-          <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.chal}</td>${challengesCols}</tr>
-        </tbody>
-      </table>
+      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <table style="width:100%; min-width:500px; border-collapse:collapse; font-size:0.82rem;">
+          <thead>
+            <tr style="background:#F0EEE9; border-bottom:1.5px solid rgba(45,90,39,0.22);">
+              <th style="padding:12px; text-align:left; color:#2D5A27;">${LBL.param}</th>
+              ${headerCols}
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.water}</td>${waterCols}</tr>
+            <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.dur}</td>${durationCols}</tr>
+            <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.season}</td>${seasonCols}</tr>
+            <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.limit}</td>${limitCols}</tr>
+            <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.pros}</td>${prosCols}</tr>
+            <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.chal}</td>${challengesCols}</tr>
+          </tbody>
+        </table>
+      </div>
     `;
 
     setTimeout(() => {

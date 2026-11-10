@@ -1902,7 +1902,7 @@ class ModulesManager {
         </div>
 
         <!-- 4 Economic Output Metric Boxes -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+        <div class="kbv-mandi-metrics-grid">
           <div style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.18); border-radius:10px; padding:12px;">
             <div style="font-size:0.7rem; color:#4F5E46; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:5px;"><span style="color:#2D5A27; display:inline-flex;">${ic(cropIcoName, 13)}</span> ${ML.yield_title}</div>
             <div id="mandiYieldVal" style="font-size:1.25rem; font-weight:900; color:#1A2412; margin-top:3px;">${totalYield} ${ML.qtl}</div>

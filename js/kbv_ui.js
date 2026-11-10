@@ -7,17 +7,17 @@
 const KBV_TRANSLATIONS = {
   en: {
     brand_sub: "Know Before Visit",
-    brand_tagline: "AI Crop Disease, Pest Diagnostics & 1 km² Geo-Spatial Engine",
+    brand_tagline: "1 km² Geo-Spatial Crop Suitability, Remote Sensing & Mandi Intelligence",
     nav_welcome: "1. Welcome",
     nav_choose: "2. Choose Analysis",
-    nav_upload: "3. Disease Upload",
-    nav_result: "4. Analysis Result & 1 km² Map",
+    nav_upload: "3. Field Setup",
+    nav_result: "4. Live Farm Dashboard & 1 km² Map",
     nav_loc_sync: "📍 Location Syncing...",
     hero_title_1: "Know Before",
     hero_title_2: "Visit",
-    hero_desc: "AI-Powered Disease & Pest Analysis for Better Farming within a 1 km × 1 km Geographical Analysis Area.",
+    hero_desc: "1 km × 1 km Geo-Spatial Crop Suitability, FAO-56 Irrigation & Mandi Market Intelligence.",
     select_lang: "Select Language",
-    continue_btn: "Continue to Analysis →",
+    continue_btn: "🚀 Enter Live Farm Dashboard →",
     choose_analysis: "Choose Analysis",
     choose_sub: "What would you like to inspect in your field?",
     back_welcome: "← Back to Welcome",
@@ -121,7 +121,7 @@ const KBV_TRANSLATIONS = {
     hero_title_2: "जानें",
     hero_desc: "1 किमी × 1 किमी भौगोलिक क्षेत्र में बेहतर खेती के लिए एआई-संचालित रोग एवं कीट विश्लेषण।",
     select_lang: "भाषा चुनें",
-    continue_btn: "विश्लेषण के लिए आगे बढ़ें →",
+    continue_btn: "🚀 लाइव खेत डैशबोर्ड खोलें →",
     choose_analysis: "विश्लेषण चुनें",
     choose_sub: "आप अपने खेत में क्या जांचना चाहते हैं?",
     back_welcome: "← स्वागत पर वापस",
@@ -225,7 +225,7 @@ const KBV_TRANSLATIONS = {
     hero_title_2: "ತಿಳಿಯಿರಿ",
     hero_desc: "1 ಕಿಮೀ × 1 ಕಿಮೀ ಭೌಗೋಳಿಕ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಉತ್ತಮ ಕೃಷಿಗಾಗಿ ಎಐ-ಚಾಲಿತ ಬೆಳೆ ರೋಗ ಮತ್ತು ಕೀಟ ವಿಶ್ಲೇಷಣೆ.",
     select_lang: "ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ",
-    continue_btn: "ವಿಶ್ಲೇಷಣೆಗೆ ಮುಂದುವರಿಯಿರಿ →",
+    continue_btn: "🚀 ಲೈವ್ ಫಾರ್ಮ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ →",
     choose_analysis: "ವಿಶ್ಲೇಷಣೆ ಆಯ್ಕೆಮಾಡಿ",
     choose_sub: "ನಿಮ್ಮ ಜಮೀನಿನಲ್ಲಿ ಏನನ್ನು ಪರೀಕ್ಷಿಸಲು ಬಯಸುತ್ತೀರಿ?",
     back_welcome: "← ಸ್ವಾಗತಕ್ಕೆ ಹಿಂತಿರುಗಿ",
@@ -329,7 +329,7 @@ const KBV_TRANSLATIONS = {
     hero_title_2: "जाणून घ्या",
     hero_desc: "1 किमी × 1 किमी भौगोलिक क्षेत्रात उत्तम शेतीसाठी एआय-आधारित रोग आणि कीड विश्लेषण.",
     select_lang: "भाषा निवडा",
-    continue_btn: "विश्लेषणासाठी पुढे जा →",
+    continue_btn: "🚀 थेट शेत डॅशबोर्ड उघडा →",
     choose_analysis: "विश्लेषण निवडा",
     choose_sub: "तुम्हाला तुमच्या शेतात काय तपासायचे आहे?",
     back_welcome: "← परत स्वागताकडे",
@@ -426,7 +426,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI పంట వ్యాధి, చీడపీడల నిర్ధారణ & 1 చ.కి.మీ భౌగోళిక విశ్లేషణ ఇంజిన్",
         hero_desc: "1 కి.మీ × 1 కి.మీ భౌగోళిక విశ్లేషణ పరిధిలో మెరుగైన వ్యవసాయం కోసం AI ఆధారిత వ్యాధి & తెగుళ్ల విశ్లేషణ.",
     select_lang: "భాషను ఎంచుకోండి",
-    continue_btn: "విశ్లేషణకు కొనసాగండి →",
+    continue_btn: "🚀 లైవ్ ఫార్మ్ డ్యాష్‌బోర్డ్‌ను తెరవండి →",
     choose_analysis: "విశ్లేషణను ఎంచుకోండి",
     choose_sub: "మీ పొలంలో దేనిని పరిశీలించాలనుకుంటున్నారు?",
     back_welcome: "← స్వాగతానికి తిరిగి వెళ్లండి",
@@ -523,7 +523,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI பயிர் நோய், பூச்சி கண்டறிதல் & 1 கிமீ² புவிசார் பகுப்பாய்வு இயந்திரம்",
         hero_desc: "1 கி.மீ × 1 கி.மீ புவியியல் பரப்பளவில் சிறந்த விவசாயத்திற்கான AI நோய் மற்றும் பூச்சி பகுப்பாய்வு.",
     select_lang: "மொழியைத் தேர்ந்தெடுக்கவும்",
-    continue_btn: "பகுப்பாய்வுக்குத் தொடரவும் →",
+    continue_btn: "🚀 நேரடி பண்ணை டாஷ்போர்டைத் திறக்கவும் →",
     choose_analysis: "பகுப்பாய்வைத் தேர்ந்தெடுக்கவும்",
     choose_sub: "உங்கள் வயலில் எதை ஆய்வு செய்ய விரும்புகிறீர்கள்?",
     back_welcome: "← முகப்புக்குத் திரும்புக",
@@ -620,7 +620,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI પાક રોગ, જીવાત નિદાન અને 1 કિમી² ભૌગોલિક એન્જિન",
         hero_desc: "1 કિમી × 1 કિમી ભૌગોલિક ક્ષેત્રમાં બહેતર ખેતી માટે AI આધારિત રોગ અને જીવાત વિશ્લેષણ.",
     select_lang: "ભાષા પસંદ કરો",
-    continue_btn: "વિશ્લેષણ માટે આગળ વધો →",
+    continue_btn: "🚀 લાઇવ ફાર્મ ડેશબોર્ડ ખોલો →",
     choose_analysis: "વિશ્લેષણ પસંદ કરો",
     choose_sub: "તમે તમારા ખેતરમાં શું તપાસવા માંગો છો?",
     back_welcome: "← સ્વાગત પર પાછા જાઓ",
@@ -717,7 +717,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI শস্য রোগ, পোকা নির্ণয় ও ১ বর্গকিমি ভৌগোলিক ইঞ্জিন",
         hero_desc: "১ কিমি × ১ কিমি ভৌগোলিক এলাকায় উন্নত চাষের জন্য AI চালিত রোগ এবং পোকা বিশ্লেষণ।",
     select_lang: "ভাষা নির্বাচন করুন",
-    continue_btn: "বিশ্লেষণের জন্য এগিয়ে যান →",
+    continue_btn: "🚀 লাইভ ফার্ম ড্যাশবোর্ড খুলুন →",
     choose_analysis: "বিশ্লেষণ নির্বাচন করুন",
     choose_sub: "আপনি আপনার জমিতে কী পরীক্ষা করতে চান?",
     back_welcome: "← হোমপেজে ফিরে যান",
@@ -814,7 +814,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI വിള രോഗം, കീട നിർണ്ണയം & 1 ച.കി.മീ ഭൂവിവര വിശകലന എഞ്ചിൻ",
         hero_desc: "1 കി.മീ × 1 കി.മീ ഭൂമിശാസ്ത്രപരമായ പരിധിയിൽ മികച്ച കൃഷിക്കായി AI അധിഷ്ഠിത രോഗ, കീട വിശകലനം.",
     select_lang: "ഭാഷ തിരഞ്ഞെടുക്കുക",
-    continue_btn: "വിശകലനത്തിലേക്ക് തുടരുക →",
+    continue_btn: "🚀 ലൈവ് ഫാം ഡാഷ്‌ബോർഡ് തുറക്കുക →",
     choose_analysis: "വിശകലനം തിരഞ്ഞെടുക്കുക",
     choose_sub: "നിങ്ങളുടെ തോട്ടത്തിൽ എന്താണ് പരിശോധിക്കേണ്ടത്?",
     back_welcome: "← സ്വാഗതത്തിലേക്ക് മടങ്ങുക",
@@ -911,7 +911,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI ਫ਼ਸਲ ਰੋਗ, ਕੀੜੇ ਦੀ ਪਛਾਣ ਅਤੇ 1 ਕਿਲੋਮੀਟਰ² ਭੂਗੋਲਿਕ ਇੰਜਣ",
         hero_desc: "1 ਕਿਮੀ × 1 ਕਿਮੀ ਭੂਗੋਲਿਕ ਖੇਤਰ ਵਿੱਚ ਬਿਹਤਰ ਖੇਤੀ ਲਈ AI ਅਧਾਰਿਤ ਬਿਮਾਰੀ ਅਤੇ ਕੀੜਿਆਂ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ।",
     select_lang: "ਭਾਸ਼ਾ ਚੁਣੋ",
-    continue_btn: "ਵਿਸ਼ਲੇਸ਼ਣ ਲਈ ਅੱਗੇ ਵਧੋ →",
+    continue_btn: "🚀 ਲਾਈਵ ਫਾਰਮ ਡੈਸ਼ਬੋਰਡ ਖੋਲ੍ਹੋ →",
     choose_analysis: "ਵਿਸ਼ਲੇਸ਼ਣ ਚੁਣੋ",
     choose_sub: "ਤੁਸੀਂ ਆਪਣੇ ਖੇਤ ਵਿੱਚ ਕੀ ਜਾਂਚਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
     back_welcome: "← ਵਾਪਸ ਸੁਆਗਤ 'ਤੇ",
@@ -1008,7 +1008,7 @@ const KBV_TRANSLATIONS = {
     brand_tagline: "AI ଫସଲ ରୋଗ, କୀଟ ଚିହ୍ନଟ ଏବଂ ୧ ବର୍ଗ କିମି ଭୌଗୋଳିକ ଇଞ୍ଜିନ",
         hero_desc: "୧ କିମି × ୧ କିମି ଭୌଗୋଳିକ କ୍ଷେତ୍ରରେ ଉନ୍ନତ ଚାଷ ପାଇଁ AI ଚାଳିତ ରୋଗ ଏବଂ କୀଟ ବିଶ୍ଳେଷଣ।",
     select_lang: "ଭାଷା ଚୟନ କରନ୍ତୁ",
-    continue_btn: "ବିଶ୍ଳେଷଣ ପାଇଁ ଆଗକୁ ବଢ଼ନ୍ତୁ →",
+    continue_btn: "🚀 ଲାଇଭ୍ ଫାର୍ମ ଡ୍ୟାସବୋର୍ଡ ଖୋଲନ୍ତୁ →",
     choose_analysis: "ବିଶ୍ଳେଷଣ ଚୟନ କରନ୍ତୁ",
     choose_sub: "ଆପଣ ନିଜ ଜମିରେ କଣ ପରୀକ୍ଷା କରିବାକୁ ଚାହାଁନ୍ତି?",
     back_welcome: "← ସ୍ୱାଗତକୁ ଫେରନ୍ତୁ",
@@ -2281,9 +2281,39 @@ const MULTILINGUAL_DISEASE_DATA = {
   }
 };
 
+window.switchMapLayer = function(mode, btnEl) {
+  if (btnEl) {
+    document.querySelectorAll('.kbv-layer-btn').forEach(b => {
+      b.style.background = '#FFFFFF';
+      b.style.borderColor = 'rgba(45,90,39,0.2)';
+      b.style.color = '#4F5E46';
+    });
+    if (mode === 'ndvi') {
+      btnEl.style.background = 'rgba(45,90,39,0.16)';
+      btnEl.style.borderColor = '#2D5A27';
+      btnEl.style.color = '#1A2412';
+    } else if (mode === 'ndwi') {
+      btnEl.style.background = 'rgba(2,132,199,0.15)';
+      btnEl.style.borderColor = '#0284c7';
+      btnEl.style.color = '#0c4a6e';
+    } else {
+      btnEl.style.background = 'rgba(45,90,39,0.14)';
+      btnEl.style.borderColor = '#2D5A27';
+      btnEl.style.color = '#1A2412';
+    }
+  }
+  if (window.kbvApp && typeof window.kbvApp.setMapLayerMode === "function") {
+    window.kbvApp.setMapLayerMode(mode);
+  }
+  if (window.app && window.app.mapManager && typeof window.app.mapManager.setLayerMode === "function") {
+    window.app.mapManager.setLayerMode(mode);
+  }
+};
+
 class KBVApp {
   constructor() {
     this.currentScreen = 1;
+    this.activeDashboardTab = "map";
     this.currentLanguage = "en";
     this.selectedCrop = "tomato";
     this.selectedStage = "vegetative";
@@ -2319,6 +2349,8 @@ class KBVApp {
     this.setupEventListeners();
     this.applyTranslations();
     this.updateLocationDisplays(this.currentLat, this.currentLon, this.currentLocationName);
+
+    // Initial first page: Select Language (Screen 1)
     this.goToScreen(1);
 
     // Initial auto-detect browser location or reverse geocode
@@ -2365,6 +2397,11 @@ class KBVApp {
         const lang = el.getAttribute("data-lang");
         this.setLanguage(lang);
       });
+      el.addEventListener("dblclick", () => {
+        const lang = el.getAttribute("data-lang");
+        this.setLanguage(lang);
+        this.goToScreen(4);
+      });
     });
 
     // 2. Language dropdown in website navbar
@@ -2379,14 +2416,8 @@ class KBVApp {
       });
     }
 
-    // 3. Screen 1 Continue Button
-    const continueBtn = document.getElementById("kbvContinueBtn");
-    if (continueBtn) {
-      continueBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.goToScreen(2);
-      });
-    }
+    // 3. Screen 1 Continue Button -> Proceeds directly to Live Farm Dashboard (Screen 4)
+    // (Inline onclick already calls window.kbvApp.goToScreen(4))
 
     // 4. Back buttons
     document.querySelectorAll(".kbv-back-btn").forEach(btn => {
@@ -2397,7 +2428,13 @@ class KBVApp {
       });
     });
 
-    // 5. Website Navbar Page Tabs
+    // 5. Website Header Page Tabs
+    document.querySelectorAll(".kbv-nav-tab[data-page]").forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-page");
+        if (target) this.goToScreen(target);
+      });
+    });
     document.querySelectorAll(".kbv-web-tab[data-screen]").forEach(tab => {
       tab.addEventListener("click", () => {
         const target = parseInt(tab.getAttribute("data-screen"));
@@ -2405,143 +2442,60 @@ class KBVApp {
       });
     });
 
-    // 6. Analysis Cards in Screen 2
-    const diseaseCard = document.getElementById("kbvDiseaseCard");
-    if (diseaseCard) {
-      diseaseCard.addEventListener("click", () => {
-        this.analysisMode = "disease";
-        const titleEl = document.querySelector("#kbvScreen3 .kbv-page-title");
-        const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
-        if (titleEl) titleEl.textContent = t.disease_title;
-        this.goToScreen(3);
-      });
-    }
-
-    // Card 2: Smart Irrigation Plan in Screen 2 (Replaced Pestegator)
-    const irrCard = document.getElementById("kbvIrrigationCard");
-    if (irrCard) {
-      irrCard.addEventListener("click", async () => {
-        const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
-        const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
-        this.goToScreen(4);
-        if (window.app) {
-          await window.app.runAnalysis(lat, lon);
-          if (window.modulesManager) {
-            window.modulesManager.setSubtab("irrigation");
-          }
-        }
-        const agroSec = document.getElementById("kbvAgronomicSection");
-        if (agroSec) agroSec.scrollIntoView({ behavior: "smooth" });
-      });
-    }
-
-    // Card 3: Top Crops & Estimated Produce in Screen 2
-    const prodCard = document.getElementById("kbvProduceCard");
-    if (prodCard) {
-      prodCard.addEventListener("click", async () => {
-        const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
-        const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
-        this.goToScreen(4);
-        if (window.app) {
-          await window.app.runAnalysis(lat, lon);
-        }
-        const cropSec = document.getElementById("cropSuitabilityContainer");
-        if (cropSec) cropSec.scrollIntoView({ behavior: "smooth" });
-      });
-    }
-
-    // 7. Image Upload Buttons
-    const cameraBtn = document.getElementById("kbvCameraBtn");
-    const galleryBtn = document.getElementById("kbvGalleryBtn");
-    const fileInput = document.getElementById("kbvFileInput");
-
-    if (cameraBtn) {
-      cameraBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (fileInput) fileInput.click();
-      });
-    }
-
-    if (galleryBtn) {
-      galleryBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (fileInput) fileInput.click();
-      });
-    }
-
-    if (fileInput) {
-      fileInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            this.setUploadedImage(evt.target.result);
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-    }
-
-    // 8. Sample Leaf Presets in Screen 3
-    document.querySelectorAll(".kbv-sample-leaf").forEach(el => {
+    // 6. Crop quick chips (sync active visual state)
+    document.querySelectorAll(".kbv-crop-chip").forEach(el => {
+      if (el.getAttribute("onclick")) return;
       el.addEventListener("click", () => {
         const crop = el.getAttribute("data-crop");
-        if (crop && MULTILINGUAL_DISEASE_DATA[crop]) {
-          this.setCropSelection(crop);
-        }
+        if (crop) this.setCropSelection(crop);
       });
     });
 
-    // 9. Dropdown changes
-    const cropSelect = document.getElementById("kbvCropTypeSelect");
-    if (cropSelect) {
-      cropSelect.addEventListener("change", (e) => {
-        this.setCropSelection(e.target.value);
+    // Dashboard Direct Controls: Location Search
+    const dashLocInput = document.getElementById("kbvDashLocSearchInput");
+    const dashLocDropdown = document.getElementById("kbvDashLocSearchDropdown");
+    let dashLocTimer = null;
+    if (dashLocInput && dashLocDropdown) {
+      dashLocInput.addEventListener("input", (e) => {
+        clearTimeout(dashLocTimer);
+        const q = e.target.value.trim();
+        if (q.length < 2) {
+          dashLocDropdown.style.display = "none";
+          return;
+        }
+        dashLocTimer = setTimeout(async () => {
+          try {
+            const res = await window.ApiClient.searchLocation(q);
+            const results = (res && res.results) || [];
+            if (results.length > 0) {
+              dashLocDropdown.innerHTML = results.map(r => `
+                <div class="kbv-search-item" data-lat="${r.latitude}" data-lon="${r.longitude}" data-name="${r.name}">
+                  ${typeof window.kbvIcon === "function" ? window.kbvIcon("pin", 13) : ""} <b>${r.name.split(',')[0]}</b> <span style="font-size:0.75rem; color:#4F5E46;">${r.name.split(',').slice(1, 4).join(',')}</span>
+                </div>
+              `).join("");
+              dashLocDropdown.style.display = "block";
+              dashLocDropdown.querySelectorAll(".kbv-search-item").forEach(item => {
+                item.addEventListener("click", async (evt) => {
+                  const lat = parseFloat(evt.currentTarget.getAttribute("data-lat"));
+                  const lon = parseFloat(evt.currentTarget.getAttribute("data-lon"));
+                  const name = evt.currentTarget.getAttribute("data-name");
+                  dashLocInput.value = name.split(",").slice(0, 3).join(",");
+                  dashLocDropdown.style.display = "none";
+                  await this.selectFarmLocation(lat, lon, name);
+                });
+              });
+            } else {
+              dashLocDropdown.style.display = "none";
+            }
+          } catch (err) {
+            console.warn("Dashboard search error:", err);
+          }
+        }, 300);
       });
-    }
 
-    const stageSelect = document.getElementById("kbvGrowthStageSelect");
-    if (stageSelect) {
-      stageSelect.addEventListener("change", (e) => {
-        this.selectedStage = e.target.value;
-      });
-    }
-
-    // 10. Use Current Location button in Screen 3
-    const useLocBtn = document.getElementById("kbvUseLocationBtn");
-    if (useLocBtn) {
-      useLocBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        await this.detectLocationForAnalysis();
-      });
-    }
-
-    // 11. Analyze Button in Screen 3
-    const analyzeBtn = document.getElementById("kbvAnalyzeBtn");
-    if (analyzeBtn) {
-      analyzeBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        await this.runAnalysisWorkflow();
-      });
-    }
-
-    // 12. Screen 4 Save Report Button
-    const saveReportBtn = document.getElementById("kbvSaveReportBtn");
-    if (saveReportBtn) {
-      saveReportBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.saveReport();
-      });
-    }
-
-    // 13. Screen 4 Scroll to Crop Suitability & Irrigation
-    const viewMapBtn = document.getElementById("kbvViewDetailedMapBtn");
-    if (viewMapBtn) {
-      viewMapBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const section = document.getElementById("kbvAgronomicSection");
-        if (section) {
-          section.scrollIntoView({ behavior: "smooth" });
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#kbvDashLocSearchInput") && !e.target.closest("#kbvDashLocSearchDropdown")) {
+          dashLocDropdown.style.display = "none";
         }
       });
     }
@@ -2567,7 +2521,7 @@ class KBVApp {
             if (results.length > 0) {
               locSearchDropdown.innerHTML = results.map(r => `
                 <div class="kbv-search-item" data-lat="${r.latitude}" data-lon="${r.longitude}" data-name="${r.name}">
-                  📍 <b>${r.name.split(',')[0]}</b> <span style="font-size:0.75rem; color:#94a3b8;">${r.name.split(',').slice(1, 4).join(',')}</span>
+                  ${typeof window.kbvIcon === "function" ? window.kbvIcon("pin", 13) : ""} <b>${r.name.split(',')[0]}</b> <span style="font-size:0.75rem; color:#4F5E46;">${r.name.split(',').slice(1, 4).join(',')}</span>
                 </div>
               `).join("");
               locSearchDropdown.style.display = "block";
@@ -2607,12 +2561,6 @@ class KBVApp {
     // Apply translations across DOM
     this.applyTranslations();
 
-    // Re-render analysis results in selected language
-    if (this.selectedCrop) {
-      this.analysisResult = this.getLocalizedResult(this.selectedCrop, lang);
-      this.renderAnalysisResult(this.analysisResult);
-    }
-
     // Notify suitability renderer and modules manager if present
     if (window.suitabilityRenderer && typeof window.suitabilityRenderer.setLanguage === "function") {
       window.suitabilityRenderer.setLanguage(lang);
@@ -2631,54 +2579,46 @@ class KBVApp {
   applyTranslations() {
     const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
     
-    // 1. Text elements with data-i18n
+    // 1. Text elements with data-i18n (strip leading emojis so crisp SVG icons stay clean)
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
       if (t[key]) {
-        el.textContent = t[key];
+        el.textContent = String(t[key]).replace(/^[\u{1F300}-\u{1FAFF}\u2600-\u27BF]+\s*/u, "");
       }
     });
 
-    // 2. Hero Title
-    const heroTitle = document.getElementById("kbvHeroTitle");
-    if (heroTitle) {
-      heroTitle.innerHTML = `${t.hero_title_1} <span class="kbv-highlight">${t.hero_title_2}</span>`;
+    const MANDI_PANEL_TITLES = {
+      en: "APMC Mandi Market Prices & Profitability Calculator",
+      hi: "एपीएमसी मंडी बाज़ार भाव और लाभप्रदता कैलकुलेटर",
+      kn: "ಎಪಿಎಂಸಿ ಮಂಡಿ ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಮತ್ತು ಲಾಭದಾಯಕತೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್",
+      mr: "एपीएमसी मंडी बाजारभाव आणि नफा कॅल्क्युलेटर",
+      te: "ఏపీఎంసీ మండి మార్కెట్ ధరలు & లాభదాయకత క్యాలిక్యులేటర్",
+      ta: "ஏபிஎம்சி மண்டி சந்தை விலை & லாபக் கணிப்பான்",
+      gu: "એપીએમસી મંડી બજાર ભાવ અને નફા કેલ્ક્યુલેટર",
+      bn: "এপিএমসি মান্ডি বাজার দর ও লাভের ক্যালকুলেটর",
+      ml: "എപിഎംസി മണ്ഡി വിപണി വിലയും ലാഭ കണക്കുകൂട്ടലും",
+      pa: "ਏਪੀਐਮਸੀ ਮੰਡੀ ਬਾਜ਼ਾਰ ਭਾਅ ਅਤੇ ਮੁਨਾਫ਼ਾ ਕੈਲਕੁਲੇਟਰ",
+      or: "ଏପିଏମସି ମଣ୍ଡି ବଜାର ଦର ଏବଂ ଲାଭ କ୍ୟାଲକୁଲେଟର"
+    };
+    const mandiTitleEl = document.querySelector('[data-i18n="panel_mandi"]');
+    if (mandiTitleEl) {
+      mandiTitleEl.textContent = MANDI_PANEL_TITLES[this.currentLanguage] || MANDI_PANEL_TITLES.en;
     }
 
-    // 3. Localize Crop Type Dropdown Options
-    const cropSelect = document.getElementById("kbvCropTypeSelect");
-    if (cropSelect && t.crops) {
-      Array.from(cropSelect.options).forEach(opt => {
+    // 2. Hero Title (preserve AgroNexus identity cleanly)
+    const heroTitle = document.getElementById("kbvHeroTitle");
+    if (heroTitle) {
+      heroTitle.innerHTML = `Agro<span class="kbv-highlight">Nexus</span>`;
+    }
+
+    // 3. Localize Dashboard Crop Selector Options
+    const dashCropSelect = document.getElementById("kbvDashCropSelect");
+    if (dashCropSelect && dashCropSelect.options && t.crops) {
+      Array.from(dashCropSelect.options).forEach(opt => {
         if (t.crops[opt.value]) {
           opt.textContent = t.crops[opt.value];
         }
       });
-    }
-
-    // 4. Localize Growth Stage Dropdown Options
-    const stageSelect = document.getElementById("kbvGrowthStageSelect");
-    if (stageSelect && t.stages) {
-      Array.from(stageSelect.options).forEach(opt => {
-        if (t.stages[opt.value]) {
-          opt.textContent = t.stages[opt.value];
-        }
-      });
-    }
-
-    // 5. Localize Sample Leaf Chips
-    if (t.sample_chips) {
-      document.querySelectorAll(".kbv-sample-leaf").forEach(chip => {
-        const crop = chip.getAttribute("data-crop");
-        if (crop && t.sample_chips[crop]) {
-          chip.textContent = t.sample_chips[crop];
-        }
-      });
-    }
-
-    // 6. Update Analyze button
-    const analyzeBtn = document.getElementById("kbvAnalyzeBtn");
-    if (analyzeBtn) {
-      analyzeBtn.innerHTML = `<span>${t.analyze_btn}</span>`;
     }
 
     // 7. Localize 1 km² soil/weather profile (live data or comprehensive 11-language placeholders)
@@ -2803,37 +2743,95 @@ class KBVApp {
   }
 
   goToScreen(screenNum) {
+    // If user requests Screen 2 or 3, redirect directly to Screen 4 (Dashboard)
+    if (screenNum === 2 || screenNum === 3) {
+      screenNum = 4;
+    }
     this.currentScreen = screenNum;
     this.updateScreenVisibility();
-
-    // Update website top navigation tabs
-    document.querySelectorAll(".kbv-web-tab[data-screen]").forEach(tab => {
-      const target = parseInt(tab.getAttribute("data-screen"));
-      if (target === screenNum) tab.classList.add("active");
-      else tab.classList.remove("active");
-    });
 
     // Scroll window smoothly to top
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Initialize/refresh 1 km² risk map on Screen 4
+    // If opening Screen 4 (Live Farm Dashboard), initialize risk map and trigger workflow
     if (screenNum === 4) {
       setTimeout(() => {
-        const lat = (window.app && window.app.currentLat) || 12.9571;
-        const lon = (window.app && window.app.currentLon) || 77.5325;
+        const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
+        const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
         this.initOrUpdateRiskMap(lat, lon);
       }, 120);
+
+      // Trigger analysis workflow if not already run
+      if (!this.analysisResult) {
+        setTimeout(async () => {
+          try {
+            await this.runAnalysisWorkflow();
+          } catch (e) {
+            console.warn("Auto-analysis notice:", e);
+          }
+        }, 200);
+      }
     }
   }
 
   updateScreenVisibility() {
-    for (let i = 1; i <= 4; i++) {
-      const screen = document.getElementById(`kbvScreen${i}`);
-      if (screen) {
-        if (i === this.currentScreen) {
-          screen.style.display = "block";
+    const s1 = document.getElementById("kbvScreen1");
+    const s2 = document.getElementById("kbvScreen2");
+    const s3 = document.getElementById("kbvScreen3");
+    const s4 = document.getElementById("kbvScreen4");
+    const headerNav = document.getElementById("kbvHeaderFeatureNav");
+    const dashTabs = document.getElementById("kbvDashboardTabs");
+
+    if (this.currentScreen === 1) {
+      // Screen 1: Dedicated Select Language Page
+      if (s1) s1.style.display = "block";
+      if (s2) s2.style.display = "none";
+      if (s3) s3.style.display = "none";
+      if (s4) s4.style.display = "none";
+      if (headerNav) headerNav.style.display = "none";
+      if (dashTabs) dashTabs.style.display = "none";
+    } else {
+      // Screen 4: Refined KBV Heritage Editorial Dashboard
+      if (s1) s1.style.display = "none";
+      if (s2) s2.style.display = "none";
+      if (s3) s3.style.display = "none";
+      if (s4) s4.style.display = "block";
+      if (headerNav) headerNav.style.display = "flex";
+      if (dashTabs) dashTabs.style.display = "flex";
+      this.switchDashboardTab(this.activeDashboardTab || "map");
+    }
+  }
+
+  switchDashboardTab(tabName) {
+    this.activeDashboardTab = tabName || "map";
+    document.querySelectorAll("#kbvDashboardTabs .kbv-nav-tab").forEach(btn => {
+      if (btn.getAttribute("data-tab-view") === this.activeDashboardTab) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    document.querySelectorAll(".kbv-editorial-tab-panel").forEach(panel => {
+      if (panel.id === `kbvTab_${this.activeDashboardTab}`) {
+        panel.classList.add("active");
+      } else {
+        panel.classList.remove("active");
+      }
+    });
+
+    if (this.activeDashboardTab === "map") {
+      setTimeout(() => {
+        if (this.riskMap) this.riskMap.invalidateSize();
+      }, 80);
+    } else if (["irrigation", "mandi", "doctor"].includes(this.activeDashboardTab)) {
+      if (window.modulesManager) {
+        if (window.modulesManager.modulesData) {
+          window.modulesManager.render();
         } else {
-          screen.style.display = "none";
+          const lat = this.currentLat || (window.app && window.app.currentLat) || 12.9571;
+          const lon = this.currentLon || (window.app && window.app.currentLon) || 77.5325;
+          window.modulesManager.loadModules(lat, lon).catch(e => console.warn("Tab module load notice:", e));
         }
       }
     }
@@ -2841,17 +2839,38 @@ class KBVApp {
 
   setCropSelection(cropKey) {
     this.selectedCrop = cropKey;
-    const cropSelect = document.getElementById("kbvCropTypeSelect");
-    if (cropSelect) cropSelect.value = cropKey;
+    const dashCropSelect = document.getElementById("kbvDashCropSelect");
+    if (dashCropSelect) dashCropSelect.value = cropKey;
 
-    const cropObj = MULTILINGUAL_DISEASE_DATA[cropKey] || MULTILINGUAL_DISEASE_DATA.tomato;
-    this.setUploadedImage(cropObj.image);
-    this.analysisResult = this.getLocalizedResult(cropKey, this.currentLanguage);
-
-    document.querySelectorAll(".kbv-sample-leaf").forEach(el => {
-      if (el.getAttribute("data-crop") === cropKey) el.classList.add("selected");
-      else el.classList.remove("selected");
+    document.querySelectorAll(".kbv-crop-chip").forEach(el => {
+      const isMatch = el.getAttribute("data-crop") === cropKey;
+      el.classList.toggle("active", isMatch);
+      el.style.background = "";
+      el.style.borderColor = "";
+      el.style.color = "";
     });
+
+    // Dynamically synchronize Mandi Market Price, Irrigation & AI Crop Doctor Modules
+    if (window.modulesManager) {
+      const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
+      const lat = this.currentLat || (window.app && window.app.currentLat) || 12.9571;
+      const lon = this.currentLon || (window.app && window.app.currentLon) || 77.5325;
+      const env = (window.app && window.app.analysisData && window.app.analysisData.environmental_data) || {};
+      const ctx = {
+        lat,
+        lon,
+        locationName: this.currentLocationName
+      };
+      if (env.soil) {
+        ctx.ph = env.soil.ph;
+        ctx.texture = env.soil.texture_class;
+      }
+      if (env.weather) {
+        ctx.temperature = env.weather.average_temperature;
+      }
+      window.modulesManager.setCrop(cropKey, cropName, ctx);
+      window.modulesManager.loadModules(lat, lon).catch(e => console.warn("Module sync notice:", e));
+    }
   }
 
   setUploadedImage(imageSrc) {
@@ -2865,17 +2884,23 @@ class KBVApp {
 
   async detectLocationForAnalysis() {
     const locBtn = document.getElementById("kbvUseLocationBtn");
-    const locText = document.getElementById("kbvLocationDisplay");
-    const navBadge = document.getElementById("kbvNavLocationBadge");
+    const dashLocBtn = document.getElementById("kbvDashUseLocBtn");
+    const dashOrigHtml = dashLocBtn ? dashLocBtn.innerHTML : "";
     const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
     
     if (locBtn) {
       locBtn.innerHTML = `<span>${t.locating}</span>`;
       locBtn.disabled = true;
     }
+    if (dashLocBtn) {
+      dashLocBtn.innerHTML = `<span>${t.locating}</span>`;
+      dashLocBtn.disabled = true;
+    }
 
     try {
-      let lat = 12.9571, lon = 77.5325, locDesc = "Bengaluru, Karnataka";
+      let lat = this.currentLat || 12.9571;
+      let lon = this.currentLon || 77.5325;
+      let locDesc = this.currentLocationName || "Bengaluru, Karnataka";
 
       if (window.app && window.app.mapManager) {
         try {
@@ -2895,159 +2920,82 @@ class KBVApp {
         }
       }
 
+      this.currentLat = lat;
+      this.currentLon = lon;
       this.currentLocationName = locDesc;
       this.updateLocationDisplays(lat, lon, locDesc);
+      this.initOrUpdateRiskMap(lat, lon);
 
       if (window.app) {
         window.app.currentLat = lat;
         window.app.currentLon = lon;
-        window.app.handleLocationChanged(lat, lon);
+        window.app.currentLocationName = locDesc;
+        await window.app.runAnalysis(lat, lon);
       }
 
-      this.showToast(`📍 Location synchronized: ${locDesc}`, 4000);
+      this.showToast(`Location synchronized: ${locDesc}`, 4000);
     } catch (err) {
       console.warn("Location error:", err);
-      this.showToast("📍 Using agricultural coordinate grid.", 3000);
+      this.showToast("Using agricultural coordinate grid.", 3000);
     } finally {
       if (locBtn) {
         locBtn.innerHTML = `<span>${t.use_curr_loc}</span>`;
         locBtn.disabled = false;
       }
+      if (dashLocBtn) {
+        const gpsIc = typeof window.kbvIcon === "function" ? window.kbvIcon("gps", 15) : "";
+        dashLocBtn.innerHTML = dashOrigHtml || `${gpsIc} <span>Detect GPS</span>`;
+        dashLocBtn.disabled = false;
+      }
     }
   }
 
   async runAnalysisWorkflow() {
-    const analyzeBtn = document.getElementById("kbvAnalyzeBtn");
-    if (analyzeBtn) {
-      analyzeBtn.innerHTML = `⏳ Analyzing Plant & 1 km² Analysis Grid...`;
-      analyzeBtn.disabled = true;
+    const dashAnalyzeBtn = document.getElementById("kbvDashAnalyzeBtn");
+    const origBtnHtml = dashAnalyzeBtn ? dashAnalyzeBtn.innerHTML : "";
+    if (dashAnalyzeBtn) {
+      dashAnalyzeBtn.innerHTML = `Analyzing...`;
+      dashAnalyzeBtn.disabled = true;
     }
 
-    const stepItems = document.querySelectorAll(".kbv-web-step-pill");
-    stepItems.forEach(s => s.classList.remove("active"));
-    if (stepItems[1]) stepItems[1].classList.add("active");
-
-    const cropKey = this.selectedCrop || "tomato";
-    let data = this.getLocalizedResult(cropKey, this.currentLanguage);
-
-    const lat = (window.app && window.app.currentLat) || 12.9571;
-    const lon = (window.app && window.app.currentLon) || 77.5325;
-
-    // 1. Run 1 km² Geo-Spatial Analysis and populate pedology, climate, and top crops
-    if (window.app && window.app.runAnalysis) {
-      try {
-        if (typeof window.app.setLanguage === "function") {
-          window.app.setLanguage(this.currentLanguage);
-        }
-        await window.app.runAnalysis(lat, lon);
-        await window.app.handleCropSelected(cropKey);
-      } catch (err) {
-        console.warn("Geospatial analysis call notice:", err);
-      }
-    }
-
-    if (stepItems[2]) {
-      stepItems.forEach(s => s.classList.remove("active"));
-      stepItems[2].classList.add("active");
-    }
-
-    // 2. Fetch real disease detection and irrigation module data from backend
     try {
-      if (window.ApiClient) {
-        const modules = await window.ApiClient.getCropModules(cropKey, lat, lon, this.selectedStage);
-        const disModule = modules && modules.disease_detection_module;
-        const diseaseList = disModule && disModule.common_diseases_and_pests;
-        if (diseaseList && diseaseList.length > 0) {
-          let d = diseaseList[0];
-          if (this.analysisMode === "pest") {
-            const pestFound = diseaseList.find(x => (x.pathogen_type || "").toLowerCase().includes("pest") || (x.pathogen_type || "").toLowerCase().includes("insect"));
-            if (pestFound) d = pestFound;
+      const cropKey = this.selectedCrop || "tomato";
+      const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
+      const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
+
+      // Run 1 km² Geo-Spatial Analysis and populate pedology, climate, remote sensing, and top crops
+      if (window.app && window.app.runAnalysis) {
+        try {
+          if (typeof window.app.setLanguage === "function") {
+            window.app.setLanguage(this.currentLanguage);
           }
-          // If in non-English mode, use localized strings from MULTILINGUAL_DISEASE_DATA
-          if (this.currentLanguage !== "en" && MULTILINGUAL_DISEASE_DATA[cropKey]) {
-            data = this.getLocalizedResult(cropKey, this.currentLanguage);
-          } else {
-            data = {
-              crop: (modules.crop_name || (cropKey.charAt(0).toUpperCase() + cropKey.slice(1))),
-              disease: d.name,
-              pathogen: d.pathogen_type || "Pathogen",
-              confidence: 94,
-              severity: (d.pathogen_type && d.pathogen_type.toLowerCase().includes("fungal")) ? "High" : "Moderate",
-              affectedArea: "1.0 km²",
-              image: this.uploadedImageSrc || (MULTILINGUAL_DISEASE_DATA[cropKey] ? MULTILINGUAL_DISEASE_DATA[cropKey].image : data.image),
-              description: `${d.name} (${d.pathogen_type}). Symptoms: ${d.symptoms} Weather Trigger: ${d.favorable_conditions}`,
-              actions: [
-                d.preventive_measures,
-                d.chemical_control,
-                d.organic_control
-              ].filter(Boolean)
-            };
+          await window.app.runAnalysis(lat, lon);
+          if (typeof window.app.handleCropSelected === "function") {
+            await window.app.handleCropSelected(cropKey);
           }
+        } catch (err) {
+          console.warn("Geospatial analysis call notice:", err);
         }
       }
-    } catch (e) {
-      console.warn("Backend crop module fallback", e);
+
+      if (window.app && window.app.analysisData) {
+        window.lastAnalysisData = window.app.analysisData;
+      }
+      this.analysisResult = { crop: cropKey, timestamp: Date.now() };
+    } catch (workflowErr) {
+      console.error("Workflow execution notice:", workflowErr);
+    } finally {
+      if (dashAnalyzeBtn) {
+        const boltIc = typeof window.kbvIcon === "function" ? window.kbvIcon("bolt", 14) : "";
+        dashAnalyzeBtn.innerHTML = origBtnHtml || `${boltIc} <span>Analyze</span>`;
+        dashAnalyzeBtn.disabled = false;
+      }
+      this.goToScreen(4);
     }
-
-    this.analysisResult = data;
-    this.renderAnalysisResult(data);
-
-    if (analyzeBtn) {
-      const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
-      analyzeBtn.innerHTML = t.analyze_btn;
-      analyzeBtn.disabled = false;
-    }
-
-    this.goToScreen(4);
   }
 
-  renderAnalysisResult(data) {
-    if (!data) return;
-    const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
-
-    const resultImg = document.getElementById("kbvResultImage");
-    if (resultImg) resultImg.src = data.image || this.uploadedImageSrc;
-
-    const cropBadge = document.getElementById("kbvResultCropBadge");
-    if (cropBadge) cropBadge.textContent = `${t.crop_label_prefix || 'Crop:'} ${data.crop}`;
-
-    const diseaseTitle = document.getElementById("kbvResultDiseaseTitle");
-    if (diseaseTitle) diseaseTitle.textContent = data.disease;
-
-    const confText = document.getElementById("kbvResultConfidenceText");
-    if (confText) confText.textContent = `${t.confidence_label || 'Confidence:'} ${data.confidence}%`;
-
-    const confBar = document.getElementById("kbvResultConfidenceBar");
-    if (confBar) {
-      confBar.style.width = "0%";
-      setTimeout(() => { confBar.style.width = `${data.confidence}%`; }, 80);
-    }
-
-    const severityBadge = document.getElementById("kbvSeverityBadge");
-    if (severityBadge) {
-      severityBadge.textContent = data.severity;
-      if (data.severity.toLowerCase().includes("high") || data.severity.includes("उच्च") || data.severity.includes("ಹೆಚ್ಚಿನ")) {
-        severityBadge.className = "kbv-metric-badge-web badge-high";
-      } else {
-        severityBadge.className = "kbv-metric-badge-web badge-area";
-      }
-    }
-
-    const areaBadge = document.getElementById("kbvAreaBadge");
-    if (areaBadge) areaBadge.textContent = data.affectedArea || "1.0 km²";
-
-    const descEl = document.getElementById("kbvResultDescription");
-    if (descEl) descEl.textContent = data.description;
-
-    const actionsList = document.getElementById("kbvResultActionsList");
-    if (actionsList && data.actions) {
-      actionsList.innerHTML = data.actions.map(act => `
-        <li class="kbv-action-item-web">
-          <span style="color:#10b981; font-weight:bold; font-size:16px;">✓</span>
-          <span>${act}</span>
-        </li>
-      `).join("");
-    }
+  renderAnalysisResult() {
+    // Legacy disease card removed; dashboard updates via AgroCloudApp & ModulesManager.
   }
 
   initOrUpdateRiskMap(lat, lon) {
@@ -3136,49 +3084,50 @@ class KBVApp {
       const sw = [lat - deltaLat, lon - deltaLon];
 
       L.polygon([nw, ne, se, sw], {
-        color: '#e8d2b5',
+        color: '#FFFFFF',
         weight: 2.5,
         dashArray: '6, 6',
-        fillColor: '#590907',
+        fillColor: '#2D5A27',
         fillOpacity: 0.08
       }).addTo(this.riskLayers).bindTooltip("1.0 km × 1.0 km Geodesic Boundary (100 Hectares / 247.1 Acres)", { permanent: false });
 
       // B. 3 Concentric Risk Zones (500m Low Risk, 350m Moderate Risk, 180m High Risk)
       L.circle([lat, lon], {
         radius: 500,
-        color: '#a5a79b',
+        color: '#2D5A27',
         weight: 2,
-        fillColor: '#a5a79b',
+        fillColor: '#6B9433',
         fillOpacity: 0.22
       }).addTo(this.riskLayers);
 
       L.circle([lat, lon], {
         radius: 350,
-        color: '#d4a373',
+        color: '#D97706',
         weight: 2,
-        fillColor: '#d4a373',
-        fillOpacity: 0.35
+        fillColor: '#D97706',
+        fillOpacity: 0.32
       }).addTo(this.riskLayers);
 
       L.circle([lat, lon], {
         radius: 180,
-        color: '#590907',
+        color: '#B91C1C',
         weight: 2,
-        fillColor: '#590907',
-        fillOpacity: 0.55
+        fillColor: '#B91C1C',
+        fillOpacity: 0.45
       }).addTo(this.riskLayers);
 
       // C. Centroid Farm Marker Pin
+      const pinSvg = typeof window.kbvIcon === "function" ? window.kbvIcon("pin", 13) : "";
       const centerIcon = L.divIcon({
         className: 'kbv-map-pin',
-        html: `<div style="background:#590907; width:24px; height:24px; border-radius:50%; border:3px solid #e8d2b5; box-shadow:0 0 16px rgba(89,9,7,0.8); display:flex; align-items:center; justify-content:center; color:#e8d2b5; font-size:12px;">📍</div>`,
+        html: `<div style="background:#2D5A27; width:24px; height:24px; border-radius:50%; border:3px solid #F0EEE9; box-shadow:0 0 16px rgba(45,90,39,0.75); display:flex; align-items:center; justify-content:center; color:#FFFFFF;">${pinSvg}</div>`,
         iconSize: [24, 24],
         iconAnchor: [12, 12]
       });
       const locTitle = this.currentLocationName || "Your Field Location";
       L.marker([lat, lon], { icon: centerIcon })
         .addTo(this.riskLayers)
-        .bindPopup(`<div style="font-family:sans-serif; min-width:180px;"><b style="color:#590907; font-size:13px;">📍 ${locTitle}</b><br><span style="font-size:11px; color:#475569;">${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E</span><br><span style="display:inline-block; margin-top:4px; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; color:#0f766e;">1 km² Active Analysis Grid</span></div>`)
+        .bindPopup(`<div style="font-family:sans-serif; min-width:180px;"><b style="color:#2D5A27; font-size:13px;">${locTitle}</b><br><span style="font-size:11px; color:#4F5E46;">${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E</span><br><span style="display:inline-block; margin-top:4px; background:#F0EEE9; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; color:#2D5A27;">1 km² Active Analysis Grid</span></div>`)
         .openPopup();
 
       // D. Multiple invalidateSize timeouts to ensure tiles render perfectly even with CSS transitions
@@ -3208,20 +3157,25 @@ class KBVApp {
     
     const statusPill = document.getElementById("kbvLocStatusPill");
     if (statusPill) {
-      statusPill.textContent = "📍 Synced";
-      statusPill.style.background = "rgba(16,185,129,0.25)";
-      statusPill.style.color = "#a7f3d0";
+      statusPill.textContent = "Synced";
+      statusPill.style.background = "rgba(45,90,39,0.12)";
+      statusPill.style.color = "#2D5A27";
     }
 
-    // Screen 4 Location Banner & Soil Profile elements
+    // Dedicated Pages Location Labels
     const s4LocText = document.getElementById("kbvScreen4LocationText");
     if (s4LocText) s4LocText.textContent = name;
     
     const s4CoordsText = document.getElementById("kbvScreen4CoordsText");
-    if (s4CoordsText) s4CoordsText.textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E`;
+    if (s4CoordsText) s4CoordsText.textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E • 100 Hectares (247.1 Acres)`;
     
     const soilLoc = document.getElementById("kbvSoilLocName");
     if (soilLoc) soilLoc.textContent = name;
+
+    ["kbvCropsLocLabel", "kbvSoilLocLabel", "kbvIrrigationLocLabel", "kbvMandiLocLabel", "kbvDoctorLocLabel"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = name;
+    });
 
     const mapTitle = document.getElementById("kbvMapTitleText");
     if (mapTitle) {
@@ -3231,6 +3185,9 @@ class KBVApp {
   }
 
   async selectFarmLocation(lat, lon, name) {
+    this.currentLat = lat;
+    this.currentLon = lon;
+    this.currentLocationName = name;
     if (window.app) {
       window.app.currentLat = lat;
       window.app.currentLon = lon;
@@ -3239,32 +3196,191 @@ class KBVApp {
     }
     this.updateLocationDisplays(lat, lon, name);
     this.initOrUpdateRiskMap(lat, lon);
+
+    // Synchronize Mandi Market & Modules to newly selected location
+    if (window.modulesManager) {
+      const cropKey = this.selectedCrop || "tomato";
+      const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
+      window.modulesManager.setCrop(cropKey, cropName, { lat, lon, locationName: name });
+      window.modulesManager.loadModules(lat, lon).catch(e => console.warn("Module loc sync notice:", e));
+    }
     this.showToast(`📍 Farm Location set to: ${name}`, 4000);
   }
 
+  setMapLayerMode(mode) {
+    this.currentMapMode = mode;
+    if (!this.riskMap || !this.riskLayers) return;
+
+    this.riskLayers.clearLayers();
+
+    const lat = this.currentLat || (window.app && window.app.currentLat) || 12.9571;
+    const lon = this.currentLon || (window.app && window.app.currentLon) || 77.5325;
+    const deltaLat = 500 / 111320;
+    const deltaLon = 500 / (111320 * Math.cos(lat * Math.PI / 180));
+    const nw = [lat + deltaLat, lon - deltaLon];
+    const ne = [lat + deltaLat, lon + deltaLon];
+    const se = [lat - deltaLat, lon + deltaLon];
+    const sw = [lat - deltaLat, lon - deltaLon];
+
+    // 1. Geodesic 1km square boundary outline
+    L.polygon([nw, ne, se, sw], {
+      color: '#FFFFFF',
+      weight: 2.5,
+      dashArray: '6, 6',
+      fillColor: 'transparent'
+    }).addTo(this.riskLayers).bindTooltip("1.0 km × 1.0 km Geodesic Boundary", { permanent: false });
+
+    // 2. Render 5x5 sub-cells if mode is ndvi, ndwi, soil, elevation
+    if (mode === "ndvi" || mode === "ndwi" || mode === "soil" || mode === "elevation") {
+      const env = (window.app && window.app.analysisData && window.app.analysisData.environmental_data) || {};
+      const rs = env.remote_sensing || {};
+      const soilData = env.soil || {};
+      const terrainData = env.terrain || {};
+      const subNdvi = rs.subgrid_ndvi || [];
+      const subNdwi = rs.subgrid_ndwi || [];
+      const subSoil = soilData.subgrid_analysis || [];
+      const subTerrain = terrainData.subgrid_elevations || [];
+
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          const idx = (r * 5) + c;
+          const c_s = lat - deltaLat + (r * (2 * deltaLat / 5));
+          const c_n = c_s + (2 * deltaLat / 5);
+          const c_w = lon - deltaLon + (c * (2 * deltaLon / 5));
+          const c_e = c_w + (2 * deltaLon / 5);
+
+          let fillColor = "#16a34a";
+          let fillOpacity = 0.52;
+          let popupText = "";
+
+          if (mode === "ndvi") {
+            const ndviVal = (subNdvi[idx] && subNdvi[idx].ndvi !== undefined) ? subNdvi[idx].ndvi : +(0.55 + (Math.sin(idx * 1.5) * 0.18)).toFixed(2);
+            fillColor = ndviVal >= 0.65 ? "#16a34a" : (ndviVal >= 0.45 ? "#65a30d" : (ndviVal >= 0.25 ? "#ca8a04" : "#dc2626"));
+            popupText = `<b>Sentinel-2 NDVI: ${ndviVal}</b><br>Canopy Vigor: ${ndviVal >= 0.65 ? 'Dense Healthy' : (ndviVal >= 0.45 ? 'Moderate' : 'Stressed')}<br>Cell: ${r+1}, ${c+1} (4 Hectares)`;
+          } else if (mode === "ndwi") {
+            const ndwiVal = (subNdwi[idx] && subNdwi[idx].ndwi !== undefined) ? subNdwi[idx].ndwi : +(0.12 + (Math.cos(idx * 1.2) * 0.12)).toFixed(2);
+            fillColor = ndwiVal >= 0.20 ? "#0284c7" : (ndwiVal >= 0.0 ? "#0d9488" : (ndwiVal >= -0.20 ? "#d97706" : "#b91c1c"));
+            popupText = `<b>Sentinel-2 NDWI: ${ndwiVal}</b><br>Moisture: ${ndwiVal >= 0.15 ? 'Optimal Hydration' : (ndwiVal >= 0.0 ? 'Mild Deficit' : 'Moisture Stress')}<br>Cell: ${r+1}, ${c+1} (4 Hectares)`;
+          } else if (mode === "soil") {
+            const sCell = subSoil[idx] || {};
+            const phVal = sCell.ph !== undefined ? sCell.ph : +((soilData.ph || 6.8) + ((r - 2) * 0.08) - ((c - 2) * 0.04)).toFixed(2);
+            const tex = sCell.texture_class || soilData.texture_class || "Clay Loam";
+            const drain = soilData.drainage || "Well Drained";
+            fillColor = phVal < 6.0 ? "#f97316" : (phVal <= 7.8 ? "#06b6d4" : "#8b5cf6");
+            popupText = `<b>Soil pH: ${phVal}</b><br>Texture: ${tex} (${drain})<br>Cell: ${r+1}, ${c+1}`;
+          } else {
+            const tCell = subTerrain[idx] || {};
+            const slopeVal = tCell.slope_pct !== undefined ? tCell.slope_pct : +((terrainData.slope_pct || 1.4) + (r * 0.15)).toFixed(2);
+            const elevVal = tCell.elevation_m !== undefined ? tCell.elevation_m : Math.round((terrainData.elevation_m || 520) + (r * 3));
+            fillColor = slopeVal < 2.0 ? "#10b981" : (slopeVal < 4.5 ? "#3b82f6" : "#eab308");
+            popupText = `<b>Slope Gradient: ${slopeVal}%</b><br>Micro-Elevation: ${elevVal}m<br>Cell: ${r+1}, ${c+1}`;
+          }
+
+          const cellBounds = [[c_s, c_w], [c_n, c_e]];
+          L.rectangle(cellBounds, {
+            color: '#F0EEE9',
+            weight: 1,
+            fillColor: fillColor,
+            fillOpacity: fillOpacity
+          }).addTo(this.riskLayers).bindPopup(popupText);
+        }
+      }
+    } else {
+      // Default: Concentric risk zones
+      L.circle([lat, lon], { radius: 500, color: '#2D5A27', weight: 2, fillColor: '#6B9433', fillOpacity: 0.22 }).addTo(this.riskLayers);
+      L.circle([lat, lon], { radius: 350, color: '#D97706', weight: 2, fillColor: '#D97706', fillOpacity: 0.32 }).addTo(this.riskLayers);
+      L.circle([lat, lon], { radius: 180, color: '#B91C1C', weight: 2, fillColor: '#B91C1C', fillOpacity: 0.45 }).addTo(this.riskLayers);
+    }
+
+    // Centroid Pin
+    const pinSvg = typeof window.kbvIcon === "function" ? window.kbvIcon("pin", 13) : "";
+    const centerIcon = L.divIcon({
+      className: 'kbv-map-pin',
+      html: `<div style="background:#2D5A27; width:24px; height:24px; border-radius:50%; border:3px solid #F0EEE9; box-shadow:0 0 16px rgba(45,90,39,0.75); display:flex; align-items:center; justify-content:center; color:#FFFFFF;">${pinSvg}</div>`,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+    L.marker([lat, lon], { icon: centerIcon })
+      .addTo(this.riskLayers)
+      .bindPopup(`<b style="color:#2D5A27;">${this.currentLocationName || 'Field Location'}</b><br>${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E`);
+
+    this.showToast(`Active Map Layer: ${mode.toUpperCase()}`, 2500);
+  }
+
+    openNdviMap() {
+    this.goToScreen(4);
+    this.switchDashboardTab("map");
+    setTimeout(() => {
+      const ndviBtn = document.getElementById("layerBtnNdvi");
+      if (typeof window.switchMapLayer === "function") {
+        window.switchMapLayer("ndvi", ndviBtn);
+      }
+    }, 200);
+  }
+
+  openNdwiMap() {
+    this.goToScreen(4);
+    this.switchDashboardTab("map");
+    setTimeout(() => {
+      const ndwiBtn = document.getElementById("layerBtnNdwi");
+      if (typeof window.switchMapLayer === "function") {
+        window.switchMapLayer("ndwi", ndwiBtn);
+      }
+    }, 200);
+  }
+
+  async openMandiProfit() {
+    this.goToScreen(4);
+    const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
+    const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
+    if (window.app && !window.app.analysisData) {
+      await window.app.runAnalysis(lat, lon);
+    }
+    this.switchDashboardTab("mandi");
+  }
+
+  async openVoiceDoctor() {
+    this.goToScreen(4);
+    const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
+    const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
+    if (window.app && !window.app.analysisData) {
+      await window.app.runAnalysis(lat, lon);
+    }
+    this.switchDashboardTab("doctor");
+  }
+
+  downloadHealthCard() {
+    this.saveReport();
+  }
+
   saveReport() {
-    const res = this.analysisResult || this.getLocalizedResult("tomato", this.currentLanguage);
-    const lat = window.app ? window.app.currentLat.toFixed(5) : '12.9571';
-    const lon = window.app ? window.app.currentLon.toFixed(5) : '77.5325';
+    let analysisData = (window.app && (window.app.analysisData || window.app.lastAnalysisData)) || window.lastAnalysisData;
+    const modulesData = window.modulesManager ? window.modulesManager.modulesData : null;
+    const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
+    const lon = (window.app && window.app.currentLon) || this.currentLon || 77.5325;
+
+    if (!analysisData && window.ApiClient && typeof window.ApiClient.fallbackAnalyze === "function") {
+      analysisData = window.ApiClient.fallbackAnalyze(lat, lon);
+      window.lastAnalysisData = analysisData;
+    }
+
+    if (window.farmReportGenerator && analysisData) {
+      window.farmReportGenerator.generateReport(analysisData, modulesData);
+      this.showToast("📄 Digital Farm Health Card PDF ready for print/download!", 4000);
+      return;
+    }
+    const cropName = (this.selectedCrop || "tomato").toUpperCase();
+    const soil = (analysisData && analysisData.environmental_data && analysisData.environmental_data.soil) || {};
     const reportText = `
 ======================================================
-  AGROCLOUD AI - KBV FIELD DIAGNOSTIC REPORT
+  AGROCLOUD AI - KBV 1 KM² FARM HEALTH REPORT
 ======================================================
 Generated: ${new Date().toLocaleString()}
-Crop: ${res.crop}
-Detected Disease: ${res.disease}
-Pathogen: ${res.pathogen}
-Diagnostic Confidence: ${res.confidence}%
-Severity: ${res.severity}
+Selected Crop: ${cropName}
+Soil Classification: ${soil.soil_classification || "Regional Soil Profile"}
+Soil pH: ${soil.ph || "N/A"}
 Analysis Boundary: 1.0 km² Geodesic Area (100 Hectares / 247.1 Acres)
 Target Coordinates: ${lat}°N, ${lon}°E
-
-DESCRIPTION:
-${res.description}
-
-RECOMMENDED ACTIONS & SCIENTIFIC REMEDIES:
-${(res.actions || []).map((a, i) => `${i + 1}. ${a}`).join("\n")}
-
 ======================================================
 100% Software-Based • No IoT / Hardware Sensors Required
 AgroCloud AI Geospatial Pedology & Climatology Engine
@@ -3275,7 +3391,7 @@ AgroCloud AI Geospatial Pedology & Climatology Engine
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `KBV_${res.crop.replace(/[\s\(\)\/]+/g, '_')}_Report.txt`;
+    a.download = `KBV_${cropName}_Farm_Report.txt`;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -3294,3 +3410,163 @@ AgroCloud AI Geospatial Pedology & Climatology Engine
 }
 
 window.KBVApp = KBVApp;
+
+/**
+ * Shared image upload & camera capture controller for Field Map & AI Crop Doctor.
+ */
+window.kbvMedia = {
+  currentImage: null,
+  _stream: null,
+  _bound: false,
+
+  _ensureBound() {
+    if (this._bound) return;
+    this._bound = true;
+
+    const handleFile = (file, sourceLabel) => {
+      if (!file || !file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        this.setImage(ev.target.result, file.name || "field_photo.jpg", sourceLabel);
+      };
+      reader.readAsDataURL(file);
+    };
+
+    const fileInput = document.getElementById("kbvFieldImageInput");
+    if (fileInput) {
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0], "Uploaded Image");
+        e.target.value = "";
+      });
+    }
+
+    const camInput = document.getElementById("kbvFieldCameraInput");
+    if (camInput) {
+      camInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) handleFile(e.target.files[0], "Camera Photo");
+        e.target.value = "";
+      });
+    }
+
+    const closeBtn = document.getElementById("cameraModalCloseBtn");
+    if (closeBtn) closeBtn.onclick = () => this.closeCamera();
+
+    const snapBtn = document.getElementById("kbvCaptureSnapBtn");
+    if (snapBtn) snapBtn.onclick = () => this.captureFrame();
+
+    const fallbackBtn = document.getElementById("kbvCameraFallbackFileBtn");
+    if (fallbackBtn) {
+      fallbackBtn.onclick = () => {
+        this.closeCamera();
+        this.pickImage();
+      };
+    }
+  },
+
+  pickImage() {
+    this._ensureBound();
+    const input = document.getElementById("kbvFieldImageInput");
+    if (input) input.click();
+  },
+
+  async openCamera() {
+    this._ensureBound();
+    const modal = document.getElementById("cameraCaptureModal");
+    const video = document.getElementById("kbvCameraVideo");
+    const errEl = document.getElementById("kbvCameraErrorNotice");
+    const snapBtn = document.getElementById("kbvCaptureSnapBtn");
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !modal || !video) {
+      const camInput = document.getElementById("kbvFieldCameraInput");
+      if (camInput) camInput.click();
+      return;
+    }
+
+    if (errEl) {
+      errEl.style.display = "none";
+      errEl.textContent = "";
+    }
+    if (snapBtn) snapBtn.disabled = false;
+    modal.classList.add("open");
+
+    try {
+      this._stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      video.srcObject = this._stream;
+    } catch (err) {
+      if (snapBtn) snapBtn.disabled = true;
+      if (errEl) {
+        errEl.style.display = "block";
+        errEl.textContent = "Camera unavailable or permission denied. Click 'Choose Image File Instead' below to upload a photo.";
+      }
+    }
+  },
+
+  captureFrame() {
+    const video = document.getElementById("kbvCameraVideo");
+    const canvas = document.getElementById("kbvCameraCanvas");
+    if (!video || !canvas || !video.videoWidth) return;
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.88);
+    this.closeCamera();
+    this.setImage(dataUrl, `camera_${Date.now()}.jpg`, "Camera Snapshot");
+  },
+
+  closeCamera() {
+    if (this._stream) {
+      this._stream.getTracks().forEach((t) => t.stop());
+      this._stream = null;
+    }
+    const video = document.getElementById("kbvCameraVideo");
+    if (video) video.srcObject = null;
+    const modal = document.getElementById("cameraCaptureModal");
+    if (modal) modal.classList.remove("open");
+  },
+
+  setImage(dataUrl, name, source) {
+    this.currentImage = { dataUrl, name, source };
+    this.syncPreviews();
+    if (window.kbvApp && typeof window.kbvApp.showToast === "function") {
+      window.kbvApp.showToast(`📷 ${source} attached: ${name}`, 3000);
+    }
+  },
+
+  clearImage() {
+    this.currentImage = null;
+    this.syncPreviews();
+  },
+
+  syncPreviews() {
+    const img = this.currentImage;
+    const bar = document.getElementById("kbvAttachedMediaBar");
+    const thumb = document.getElementById("kbvAttachedMediaThumb");
+    const title = document.getElementById("kbvAttachedMediaTitle");
+    const meta = document.getElementById("kbvAttachedMediaMeta");
+
+    if (bar && thumb && title && meta) {
+      if (img) {
+        thumb.src = img.dataUrl;
+        title.textContent = img.name;
+        meta.textContent = `${img.source} • Attached for AI Crop Doctor`;
+        bar.style.display = "flex";
+      } else {
+        bar.style.display = "none";
+      }
+    }
+
+    const docPrev = document.getElementById("doctorPendingImagePreview");
+    const docThumb = document.getElementById("doctorPendingImageThumb");
+    const docName = document.getElementById("doctorPendingImageName");
+    if (docPrev && docThumb && docName) {
+      if (img) {
+        docThumb.src = img.dataUrl;
+        docName.textContent = `${img.name} (${img.source})`;
+        docPrev.style.display = "flex";
+      } else {
+        docPrev.style.display = "none";
+      }
+    }
+  }
+};

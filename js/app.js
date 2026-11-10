@@ -3,9 +3,9 @@
  */
 class AgroCloudApp {
   constructor() {
-    this.currentLat = 19.9975;
-    this.currentLon = 73.7898;
-    this.currentLocationName = "Detecting Farm Location...";
+    this.currentLat = (window.kbvApp && window.kbvApp.currentLat) || 12.9571;
+    this.currentLon = (window.kbvApp && window.kbvApp.currentLon) || 77.5325;
+    this.currentLocationName = (window.kbvApp && window.kbvApp.currentLocationName) || "Detecting Farm Location...";
     this.analysisData = null;
     this.mapManager = null;
     this.suitabilityRenderer = null;
@@ -305,6 +305,7 @@ class AgroCloudApp {
     try {
       // 1. Initialize Map Manager helper
       this.mapManager = new window.MapManager("kbvRiskMapContainer");
+      window.mapManager = this.mapManager;
 
       // 2. Initialize Suitability Renderer
       this.suitabilityRenderer = new window.SuitabilityRenderer("cropSuitabilityContainer", (cropId) => {
@@ -313,14 +314,14 @@ class AgroCloudApp {
       window.suitabilityRenderer = this.suitabilityRenderer;
 
       // 3. Initialize Modules Manager
-      this.modulesManager = new window.ModulesManager("integratedModulesContainer");
+      this.modulesManager = new window.ModulesManager("kbvDedicatedIrrigationContainer");
       window.modulesManager = this.modulesManager;
 
       // 4. Setup Event Listeners
       this.setupUIEventListeners();
 
-      // 5. Automatically initiate exact location detection on startup!
-      await this.detectAndInitializeLocation();
+      // 5. Automatically initiate exact location detection in background (non-blocking)
+      this.detectAndInitializeLocation().catch(e => console.warn("Background location detection:", e));
     } catch (err) {
       console.error("AgroCloudApp initialization error:", err);
       const statusEl = document.getElementById("analysisStatusText");
@@ -460,12 +461,16 @@ class AgroCloudApp {
     document.querySelectorAll(".modal-close-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".modal-backdrop").forEach(m => m.classList.remove("open"));
+        if (window.kbvMedia && typeof window.kbvMedia.closeCamera === "function") window.kbvMedia.closeCamera();
       });
     });
 
     document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
       backdrop.addEventListener("click", (e) => {
-        if (e.target === backdrop) backdrop.classList.remove("open");
+        if (e.target === backdrop) {
+          backdrop.classList.remove("open");
+          if (window.kbvMedia && typeof window.kbvMedia.closeCamera === "function") window.kbvMedia.closeCamera();
+        }
       });
     });
   }
@@ -489,6 +494,10 @@ class AgroCloudApp {
   async handleLocationChanged(lat, lon) {
     this.currentLat = lat;
     this.currentLon = lon;
+    if (window.kbvApp) {
+      window.kbvApp.currentLat = lat;
+      window.kbvApp.currentLon = lon;
+    }
     
     // Reverse geocode location title
     const rev = await window.ApiClient.reverseGeocode(lat, lon);
@@ -517,8 +526,15 @@ class AgroCloudApp {
 
     // 1. Fetch geo-spatial and suitability data
     this.analysisData = await window.ApiClient.analyzeArea(lat, lon);
+    if (!this.analysisData || !this.analysisData.grid || !this.analysisData.crop_suitability) {
+      console.warn("API response incomplete, falling back to local client geo-engine");
+      this.analysisData = window.ApiClient.fallbackAnalyze(lat, lon);
+    }
+    window.lastAnalysisData = this.analysisData;
+    this.lastAnalysisData = this.analysisData;
 
-    if (indicatorEl) indicatorEl.textContent = `1 km × 1 km Grid Active (${this.analysisData.grid.area_hectares} ha)`;
+    const areaHa = (this.analysisData && this.analysisData.grid && this.analysisData.grid.area_hectares) || 100.0;
+    if (indicatorEl) indicatorEl.textContent = `1 km × 1 km Grid Active (${areaHa} ha)`;
 
     // 2. Update Map boundary via KBV UI controller
     if (window.kbvApp && typeof window.kbvApp.initOrUpdateRiskMap === "function") {
@@ -537,17 +553,35 @@ class AgroCloudApp {
     }
 
     // 3. Render Environmental Parameter Cards
-    this.renderEnvironmentalCards(this.analysisData.environmental_data);
+    if (this.analysisData.environmental_data) {
+      this.renderEnvironmentalCards(this.analysisData.environmental_data);
+    }
 
     // 4. Render Grid Metadata
-    this.renderGridMetadata(this.analysisData.grid);
+    if (this.analysisData.grid) {
+      this.renderGridMetadata(this.analysisData.grid);
+    }
 
     // 5. Render Crop Recommendations
-    this.suitabilityRenderer.render(this.analysisData.crop_suitability);
+    if (this.suitabilityRenderer && this.analysisData.crop_suitability) {
+      this.suitabilityRenderer.render(this.analysisData.crop_suitability);
+    }
 
-    // 6. Sync Top Recommended Crop to Integrated Modules
-    const topCrop = (this.analysisData.crop_suitability.top_recommendations || [])[0];
-    if (topCrop) {
+    // 6. Sync Top Recommended Crop to Integrated Modules & Snapshot Card
+    const cs = this.analysisData.crop_suitability || {};
+    const topCrop = (cs.top_recommendations || cs.all_ranked_crops || [])[0];
+    const snapTop = document.getElementById("kbvSnapTopCrop");
+    if (snapTop && topCrop) {
+      const cname = this.suitabilityRenderer ? this.suitabilityRenderer.localizeCropName(topCrop) : topCrop.name;
+      snapTop.textContent = `${cname} (${topCrop.suitability_score}/100)`;
+    }
+    const env = this.analysisData.environmental_data || {};
+    const rs = env.remote_sensing || {};
+    const snapNdvi = document.getElementById("kbvSnapNdvi");
+    if (snapNdvi && rs.ndvi !== undefined) {
+      snapNdvi.textContent = `${rs.ndvi} (${rs.vegetation_badge || "Good"})`;
+    }
+    if (topCrop && this.modulesManager) {
       this.handleCropSelected(topCrop.id);
     }
   }
@@ -581,6 +615,10 @@ class AgroCloudApp {
     if (soilClassEl && soil) {
       soilClassEl.textContent = this.localizeSoilClass(soil.soil_classification, lang);
     }
+    const snapSoilEl = document.getElementById("kbvSnapSoil");
+    if (snapSoilEl && soil) {
+      snapSoilEl.textContent = this.localizeSoilClass(soil.soil_classification, lang);
+    }
 
     const soilTaxEl = document.getElementById("soilTaxonomyMeta");
     if (soilTaxEl && soil) {
@@ -591,6 +629,11 @@ class AgroCloudApp {
     if (soilPhEl && soil) {
       const phStatus = this.localizePhStatus(soil.ph, lang);
       soilPhEl.textContent = `${soil.ph} pH (${phStatus})`;
+    }
+    const snapPhEl = document.getElementById("kbvSnapPh");
+    if (snapPhEl && soil) {
+      const phStatus = this.localizePhStatus(soil.ph, lang);
+      snapPhEl.textContent = `${soil.ph} (${phStatus})`;
     }
 
     const soilTexEl = document.getElementById("soilTextureValue");
@@ -661,6 +704,10 @@ class AgroCloudApp {
       }[lang] || "7-Day Forecast:";
       weatherRainEl.textContent = `${weather.annual_rainfall} ${mmUnit} (${fcLbl} ${weather.rainfall_forecast_7d || 0} ${mmUnit})`;
     }
+    const snapRainEl = document.getElementById("kbvSnapRain");
+    if (snapRainEl && weather) {
+      snapRainEl.textContent = `${weather.annual_rainfall} mm/yr`;
+    }
 
     const weatherSolarEl = document.getElementById("weatherSolarValue");
     if (weatherSolarEl && weather) {
@@ -686,6 +733,10 @@ class AgroCloudApp {
         mr: "उतार", gu: "ઢોળાવ", bn: "ঢাল", ml: "ചരിവ്", pa: "ਢਲਾਣ", or: "ଢାଲୁ"
       }[lang] || "slope";
       terrainSlopeEl.textContent = `${terrain.slope_pct}% (${terrain.slope_degrees || 1.0}° ${slopeLbl})`;
+    }
+    const snapElevEl = document.getElementById("kbvSnapElev");
+    if (snapElevEl && terrain) {
+      snapElevEl.textContent = `${terrain.elevation_m} m · ${terrain.slope_pct}%`;
     }
 
     const terrainRiskEl = document.getElementById("terrainRiskValue");
@@ -721,8 +772,9 @@ class AgroCloudApp {
   }
 
   openComparisonModal() {
-    if (!this.analysisData) return;
-    const top3 = (this.analysisData.crop_suitability.top_recommendations || []).slice(0, 3);
+    if (!this.analysisData || !this.analysisData.crop_suitability) return;
+    const cs = this.analysisData.crop_suitability;
+    const top3 = (cs.top_recommendations || cs.all_ranked_crops || []).slice(0, 3);
     this.suitabilityRenderer.renderComparisonModal(top3);
     const modal = document.getElementById("comparisonModal");
     if (modal) modal.classList.add("open");
@@ -735,28 +787,28 @@ class AgroCloudApp {
 
     let rows = Object.values(reg).map(p => `
       <tr>
-        <td style="font-weight:bold; color:#f0fdf4;">${p.name}</td>
-        <td style="color:#10b981; font-weight:600;">${p.value} ${p.unit || ''}</td>
-        <td style="color:#cbd5e1;">${p.source}</td>
-        <td style="color:#94a3b8;">${p.spatial_resolution}</td>
-        <td style="color:#94a3b8;">${p.observation_date}</td>
-        <td><span style="background:rgba(16,185,129,0.2); color:#34d399; padding:2px 6px; border-radius:4px; font-weight:bold;">${p.confidence_pct}%</span></td>
-        <td style="color:#e2e8f0; font-size:0.75rem;">${p.status}</td>
-        <td style="color:#64748b; font-size:0.72rem;">${p.limitations}</td>
+        <td style="font-weight:bold; color:#1A2412;">${p.name}</td>
+        <td style="color:#2D5A27; font-weight:600;">${p.value} ${p.unit || ''}</td>
+        <td style="color:#33402B;">${p.source}</td>
+        <td style="color:#4F5E46;">${p.spatial_resolution}</td>
+        <td style="color:#4F5E46;">${p.observation_date}</td>
+        <td><span style="background:rgba(45,90,39,0.14); color:#2D5A27; padding:2px 6px; border-radius:4px; font-weight:bold;">${p.confidence_pct}%</span></td>
+        <td style="color:#1A2412; font-size:0.75rem;">${p.status}</td>
+        <td style="color:#5C6B52; font-size:0.72rem;">${p.limitations}</td>
       </tr>
     `).join("");
 
     const body = document.getElementById("provenanceModalBody");
     if (body) {
       body.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:rgba(0,0,0,0.3); border-radius:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); border-radius:8px;">
           <div>
-            <div style="font-size:0.9rem; font-weight:bold; color:#a7f3d0;">Data Transparency & Scientific Audit Report</div>
-            <div style="font-size:0.75rem; color:#94a3b8;">Full observational trail for 1 km × 1 km grid at Lat ${this.currentLat.toFixed(4)}, Lon ${this.currentLon.toFixed(4)}</div>
+            <div style="font-size:0.9rem; font-weight:bold; color:#2D5A27;">Data Transparency & Scientific Audit Report</div>
+            <div style="font-size:0.75rem; color:#4F5E46;">Full observational trail for 1 km × 1 km grid at Lat ${this.currentLat.toFixed(4)}, Lon ${this.currentLon.toFixed(4)}</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:1.4rem; font-weight:800; color:#10b981;">${prov.overall_data_confidence_pct}%</div>
-            <div style="font-size:0.7rem; color:#94a3b8;">Overall Data Confidence</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#2D5A27;">${prov.overall_data_confidence_pct}%</div>
+            <div style="font-size:0.7rem; color:#4F5E46;">Overall Data Confidence</div>
           </div>
         </div>
 
@@ -787,6 +839,10 @@ class AgroCloudApp {
   }
 
   showToast(message, duration = 4000) {
+    if (window.kbvApp && typeof window.kbvApp.showToast === "function") {
+      window.kbvApp.showToast(message, duration);
+      return;
+    }
     let toast = document.getElementById("appToast");
     if (!toast) {
       toast = document.createElement("div");
@@ -795,14 +851,15 @@ class AgroCloudApp {
         position: fixed;
         bottom: 24px;
         right: 24px;
-        background: #10b981;
-        color: #064e3b;
+        background: #1A2412;
+        color: #F0EEE9;
+        border: 1px solid #2D5A27;
         font-weight: 700;
         padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        border-radius: 9999px;
+        box-shadow: 0 10px 25px rgba(26,36,18,0.28);
         z-index: 9999;
-        font-size: 0.88rem;
+        font-size: 0.85rem;
         transition: all 0.3s ease;
       `;
       document.body.appendChild(toast);
@@ -870,8 +927,14 @@ class AgroCloudApp {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  window.app = new AgroCloudApp();
-  window.app.init();
-});
+window.AgroCloudApp = AgroCloudApp;
+
+if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+  window.addEventListener("DOMContentLoaded", () => {
+    if (!window.app) {
+      window.app = new AgroCloudApp();
+      window.app.init().catch(e => console.warn("App engine startup notice:", e));
+    }
+  });
+}
 

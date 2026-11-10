@@ -204,22 +204,25 @@ class MapManager {
     this.activeLayerMode = mode;
     
     // Switch base tile layer if needed
-    if (mode === "osm" && this.currentTileLayer !== this.tileProviders.osm) {
-      this.map.removeLayer(this.currentTileLayer);
-      this.currentTileLayer = this.tileProviders.osm;
-      this.currentTileLayer.addTo(this.map);
-    } else if (mode !== "osm" && this.currentTileLayer !== this.tileProviders.satellite) {
-      this.map.removeLayer(this.currentTileLayer);
-      this.currentTileLayer = this.tileProviders.satellite;
-      this.currentTileLayer.addTo(this.map);
-    }
+    if (this.map) {
+      if (mode === "osm" && this.currentTileLayer !== this.tileProviders.osm) {
+        this.map.removeLayer(this.currentTileLayer);
+        this.currentTileLayer = this.tileProviders.osm;
+        this.currentTileLayer.addTo(this.map);
+      } else if (mode !== "osm" && this.currentTileLayer !== this.tileProviders.satellite) {
+        this.map.removeLayer(this.currentTileLayer);
+        this.currentTileLayer = this.tileProviders.satellite;
+        this.currentTileLayer.addTo(this.map);
+      }
 
-    if (this.lastAnalysisData) {
-      this.renderSubgridLayers();
+      if (this.lastAnalysisData) {
+        this.renderSubgridLayers();
+      }
     }
   }
 
   renderSubgridLayers() {
+    if (!this.subgridLayerGroup) return;
     this.subgridLayerGroup.clearLayers();
     if (!this.lastAnalysisData) return;
 
@@ -239,7 +242,7 @@ class MapManager {
     const terrainLookup = {};
     terrainSubcells.forEach(t => terrainLookup[t.cell_id] = t);
 
-    cells.forEach(cell => {
+    cells.forEach((cell, idx) => {
       const b = cell.bounds;
       const cellBounds = [[b.south, b.west], [b.north, b.east]];
       
@@ -297,6 +300,38 @@ class MapManager {
           <b>Local Slope:</b> ${slope}% (${slope < 2.0 ? 'Mechanization Optimal' : 'Requires Contouring'})<br>
           <b>Flood Hazard:</b> ${data.environmental_data.terrain.flood_risk.level}<br>
           <b>Land Cover:</b> ${data.environmental_data.terrain.land_cover}
+        `;
+      } else if (this.activeLayerMode === "ndvi") {
+        // Satellite NDVI Vegetation Canopy Layer
+        fillOpacity = 0.52;
+        const rs = data.environmental_data.remote_sensing || {};
+        const cellNdvi = (rs.subgrid_ndvi && rs.subgrid_ndvi[idx]) ? rs.subgrid_ndvi[idx].ndvi : 0.62;
+        if (cellNdvi >= 0.65) fillColor = "#16a34a"; // Dense green
+        else if (cellNdvi >= 0.45) fillColor = "#65a30d"; // Lime
+        else if (cellNdvi >= 0.25) fillColor = "#ca8a04"; // Amber
+        else fillColor = "#dc2626"; // Stressed red
+
+        popupContent += `
+          <b>🌿 Sentinel-2 NDVI:</b> ${cellNdvi} (${cellNdvi >= 0.65 ? 'Dense Healthy Canopy' : (cellNdvi >= 0.45 ? 'Moderate Vigor' : 'Sparse / Stressed')})<br>
+          <b>Centroid LAI:</b> ${rs.lai || 2.4}<br>
+          <b>Resolution:</b> 10m Optical Reflectance<br>
+          <b>Sub-cell Slope:</b> ${slope}% | <b>Elevation:</b> ${elev}m
+        `;
+      } else if (this.activeLayerMode === "ndwi") {
+        // Satellite NDWI Moisture & Water Stress Layer
+        fillOpacity = 0.52;
+        const rs = data.environmental_data.remote_sensing || {};
+        const cellNdwi = (rs.subgrid_ndwi && rs.subgrid_ndwi[idx]) ? rs.subgrid_ndwi[idx].ndwi : 0.14;
+        if (cellNdwi >= 0.20) fillColor = "#0284c7"; // Hydrated sky blue
+        else if (cellNdwi >= 0.0) fillColor = "#0d9488"; // Optimal teal
+        else if (cellNdwi >= -0.20) fillColor = "#d97706"; // Moderate water stress orange
+        else fillColor = "#b91c1c"; // Severe drought deficit red
+
+        popupContent += `
+          <b>💧 Sentinel-2 NDWI:</b> ${cellNdwi} (${cellNdwi >= 0.15 ? 'Optimal Canopy Hydration' : (cellNdwi >= 0.0 ? 'Mild Moisture Deficit' : 'Moisture Stressed')})<br>
+          <b>Water Balance:</b> ${data.environmental_data.weather.annual_rainfall} mm/yr<br>
+          <b>Drainage:</b> ${data.environmental_data.soil.drainage}<br>
+          <b>Soil Texture:</b> ${data.environmental_data.soil.soil_classification}
         `;
       } else {
         // Standard Satellite / OSM outline

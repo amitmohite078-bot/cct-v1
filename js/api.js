@@ -6,9 +6,11 @@
 
 const isHttp = typeof window !== "undefined" && window.location && window.location.protocol.startsWith("http");
 const API_BASE = (isHttp && window.location.origin !== "null") ? window.location.origin : "http://127.0.0.1:8000";
+const IS_STATIC_HOST = typeof window !== "undefined" && window.location && /github\.io$/i.test(window.location.hostname || "");
 
 const ApiClient = {
   async healthCheck() {
+    if (IS_STATIC_HOST) return { status: "static_client_mode" };
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 1500);
@@ -21,17 +23,19 @@ const ApiClient = {
   },
 
   async getIpLocation() {
-    // 1. Try Backend IP detection
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1500);
-      const res = await fetch(`${API_BASE}/api/geospatial/ip-location`, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        if (data.latitude && data.longitude) return data;
-      }
-    } catch (e) {}
+    // 1. Try Backend IP detection (skip on static hosts like GitHub Pages)
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1500);
+        const res = await fetch(`${API_BASE}/api/geospatial/ip-location`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.latitude && data.longitude) return data;
+        }
+      } catch (e) {}
+    }
 
     // 2. Try Client-side IP Service 1: geojs.io
     try {
@@ -81,39 +85,43 @@ const ApiClient = {
   },
 
   async analyzeArea(latitude, longitude, season = null) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-      const res = await fetch(`${API_BASE}/api/geospatial/analyze`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ latitude, longitude, season }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) return await res.json();
-    } catch (e) {
-      console.warn("Backend API call unavailable or timed out, computing via fast in-browser agro-engine:", e);
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const res = await fetch(`${API_BASE}/api/geospatial/analyze`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ latitude, longitude, season }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) return await res.json();
+      } catch (e) {
+        console.warn("Backend API call unavailable or timed out, computing via fast in-browser agro-engine:", e);
+      }
     }
     return this.fallbackAnalyze(latitude, longitude, season);
   },
 
   async reverseGeocode(lat, lon) {
-    // 1. Try Backend reverse geocode
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
-      const res = await fetch(`${API_BASE}/api/geospatial/reverse-geocode?lat=${lat}&lon=${lon}`, {
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const d = await res.json();
-        if (d && d.location_name && !d.location_name.includes("undefined")) {
-          return d;
+    // 1. Try Backend reverse geocode (skip on static hosts like GitHub Pages)
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500);
+        const res = await fetch(`${API_BASE}/api/geospatial/reverse-geocode?lat=${lat}&lon=${lon}`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const d = await res.json();
+          if (d && d.location_name && !d.location_name.includes("undefined")) {
+            return d;
+          }
         }
-      }
-    } catch (e) {}
+      } catch (e) {}
+    }
 
     // 2. Direct browser fetch to BigDataCloud (fast, CORS-friendly, zero API key)
     try {
@@ -210,22 +218,24 @@ const ApiClient = {
   },
 
   async searchLocation(query) {
-    // 1. Try Backend search
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1800);
-      const res = await fetch(`${API_BASE}/api/geospatial/search-location`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const d = await res.json();
-        if (d && d.results && d.results.length > 0) return d;
-      }
-    } catch (e) {}
+    // 1. Try Backend search (skip on static hosts like GitHub Pages)
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1800);
+        const res = await fetch(`${API_BASE}/api/geospatial/search-location`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const d = await res.json();
+          if (d && d.results && d.results.length > 0) return d;
+        }
+      } catch (e) {}
+    }
 
     // 2. Direct browser search on Nominatim
     try {
@@ -266,36 +276,40 @@ const ApiClient = {
   },
 
   async getCropModules(cropId, latitude, longitude, growthStage = "mid_season") {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-      const res = await fetch(`${API_BASE}/api/integration/crop-modules`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ crop_id: cropId, latitude, longitude, growth_stage: growthStage }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) return await res.json();
-    } catch (e) {
-      console.warn("Backend crop modules unavailable, synthesizing locally:", e);
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const res = await fetch(`${API_BASE}/api/integration/crop-modules`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ crop_id: cropId, latitude, longitude, growth_stage: growthStage }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) return await res.json();
+      } catch (e) {
+        console.warn("Backend crop modules unavailable, synthesizing locally:", e);
+      }
     }
     return this.fallbackCropModules(cropId, latitude, longitude, growthStage);
   },
 
   async chatCropDoctor(cropName, question, fieldContext, language = "en") {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-      const res = await fetch(`${API_BASE}/api/integration/crop-doctor/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ crop_name: cropName, question, field_context: fieldContext, language }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) return await res.json();
-    } catch (e) {}
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const res = await fetch(`${API_BASE}/api/integration/crop-doctor/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ crop_name: cropName, question, field_context: fieldContext, language }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) return await res.json();
+      } catch (e) {}
+    }
 
     const q = question.toLowerCase();
     let advice = "";

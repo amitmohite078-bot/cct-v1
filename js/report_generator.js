@@ -67,6 +67,10 @@ class FarmReportGenerator {
     const etcVal = irrMod.daily_crop_water_demand_etc_mm || irrMod.crop_water_demand_etc_mm_day || 5.5;
     const nextIrr = irrMod.next_irrigation_due || "every 5–7 days";
 
+    const logoUrl = (typeof window !== "undefined" && window.location && window.location.protocol && window.location.protocol.startsWith("http"))
+      ? new URL("assets/agronexus_logo.png?v=3.2", window.location.href).href
+      : "assets/agronexus_logo.png?v=3.2";
+
     const reportHtml = `
       <!DOCTYPE html>
       <html>
@@ -199,7 +203,7 @@ class FarmReportGenerator {
 
         <div class="card-header">
           <div class="title-area">
-            <img src="/assets/agronexus_logo.png?v=3.2" alt="AgroNexus — Intelligence That Grows." style="height:40px; width:auto; margin-bottom:6px; display:block;" onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/static/assets/agronexus_logo.png?v=3.2';}else{this.style.display='none';}" />
+            <img src="${logoUrl}" alt="AgroNexus — Intelligence That Grows." style="height:40px; width:auto; margin-bottom:6px; display:block;" onerror="this.style.display='none';" />
             <h1>AgroNexus — Digital Farm Health Card</h1>
             <p>Intelligence That Grows. • 100% Software-Defined Agro-Ecological Dossier • 1 km × 1 km Geodesic Grid (100 Hectares)</p>
           </div>

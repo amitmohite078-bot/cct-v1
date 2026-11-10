@@ -170,24 +170,24 @@ async def fetch_terrain_data(
 
 def _estimate_regional_elevation(lat: float, lon: float) -> float:
     """Estimated baseline elevation for coordinates when API is unavailable."""
-    # Indo-Gangetic Plains
-    if 24.0 <= lat <= 30.0 and 74.0 <= lon <= 88.0:
-        return 180.0
-    # Deccan Plateau (Maharashtra/Karnataka/Telangana)
-    elif 13.0 <= lat <= 20.0 and 74.5 <= lon <= 78.5:
-        return 560.0
-    # Western Ghats
-    elif 9.0 <= lat <= 16.0 and 74.5 <= lon <= 76.5:
-        return 820.0
-    # Coastal plains
-    elif lon <= 73.5 or lon >= 82.0:
-        return 25.0
+    # Rajasthan arid
+    if lon <= 74.0 and 24.0 <= lat <= 29.0:
+        return 210.0
     # Punjab / Haryana
     elif 28.0 <= lat <= 32.0 and 74.0 <= lon <= 77.0:
         return 225.0
-    # Rajasthan arid
-    elif lon <= 74.0 and 24.0 <= lat <= 29.0:
-        return 210.0
+    # Indo-Gangetic Plains
+    elif 24.0 <= lat <= 30.0 and 74.0 <= lon <= 88.0:
+        return 180.0
+    # Western Ghats
+    elif 9.0 <= lat <= 16.0 and 74.5 <= lon <= 76.5:
+        return 820.0
+    # Deccan Plateau (Maharashtra/Karnataka/Telangana)
+    elif 13.0 <= lat <= 20.0 and 74.5 <= lon <= 78.5:
+        return 560.0
+    # Coastal plains
+    elif lon <= 73.5 or lon >= 82.0:
+        return 25.0
     else:
         return 320.0
 

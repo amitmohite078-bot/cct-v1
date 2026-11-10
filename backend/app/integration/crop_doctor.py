@@ -1,9 +1,10 @@
 """
-AgroCloud AI - AI Crop Doctor & Agronomist Advisory Module
+AgroCloud AI - AI Crop Doctor & Multilingual Agronomist Advisory Module
 Provides personalized, scientifically grounded agronomic counsel for the selected crop,
-calibrated to the exact 1 km x 1 km edaphic and meteorological parameters.
+calibrated to the exact 1 km x 1 km edaphic, meteorological, and remote sensing parameters.
+Supports multilingual voice & text queries in Hindi, Marathi, Telugu, Tamil, Kannada, Gujarati, and English.
 """
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from app.models.crop_catalogue import CROPS_DATABASE
 
 def generate_crop_doctor_advisory(
@@ -52,7 +53,6 @@ def generate_crop_doctor_advisory(
     p_status = nutrients.get("p_status", "Medium")
     k_status = nutrients.get("k_status", "Medium")
 
-    # Base recommendation adjustments
     n_adj = "+25% (Soil N is Low)" if n_status == "Low" else ("-20% (Soil N is High)" if n_status == "High" else "100% Recommended Dose")
     p_adj = "+25% (Soil P is Low)" if p_status == "Low" else ("-20% (Soil P is High)" if p_status == "High" else "100% Recommended Dose")
     k_adj = "+25% (Soil K is Low)" if k_status == "Low" else ("-20% (Soil K is High)" if k_status == "High" else "100% Recommended Dose")
@@ -99,41 +99,134 @@ def generate_crop_doctor_advisory(
         )
     }
 
-def answer_crop_doctor_question(crop_name: str, question: str, field_data: Dict[str, Any]) -> str:
-    """Answers farmer questions contextually."""
+def answer_crop_doctor_question(
+    crop_name: str,
+    question: str,
+    field_data: Dict[str, Any],
+    lang: str = "en"
+) -> Dict[str, Any]:
+    """
+    Answers farmer questions contextually with multi-language support.
+    Returns both the response text and detected language metadata for Text-to-Speech audio readout.
+    """
     q = question.lower()
     ph = field_data.get("ph", 7.0)
     texture = field_data.get("texture", "Loam")
     temp = field_data.get("temperature", 27.0)
     
-    if "fertilizer" in q or "urea" in q or "npk" in q:
-        return (
-            f"For {crop_name} on your {texture} soil, a balanced 120:60:40 N:P:K kg/ha ratio is recommended. "
-            f"Apply all Phosphorus (DAP or SSP) as basal at sowing. Split Urea into 3 equal doses: at sowing, "
-            f"at 30 days (knee-high/tillering), and at flowering. Because soil pH is {ph}, avoid surface broadcasting urea in hot sunshine to prevent ammonia volatilization."
-        )
-    elif "water" in q or "irrigation" in q or "rain" in q:
-        return (
-            f"At current ambient temperatures around {temp}°C, {crop_name} requires irrigation every 6 to 9 days "
-            f"depending on whether rain falls. Critical moisture-sensitive stages are flowering and grain development. "
-            f"Never allow waterlogging in {texture} soil, as standing water for >24 hours starves root systems of oxygen."
-        )
-    elif "pest" in q or "disease" in q or "spray" in q or "insect" in q:
-        return (
-            f"For pest and disease control in {crop_name}, conduct weekly field scouting. Look under lower leaves for "
-            f"egg masses or early rust pustules. For organic control, spray Neem Seed Kernel Extract (5% NSKE) or Azadirachtin 1500 ppm @ 5ml/L. "
-            f"If chemical control is necessary, use systemic fungicides/insecticides strictly according to label dosages and observe the withholding period."
-        )
-    elif "sow" in q or "plant" in q or "seed" in q:
-        return (
-            f"Ensure seeds are certified and certified germinable (>85%). Treat seeds with Trichoderma harzianum @ 5g/kg seed. "
-            f"Sow at a uniform depth of 3 to 5 cm into moist soil. Maintain appropriate row-to-row spacing (e.g. 60 cm x 20 cm for maize) "
-            f"to ensure optimal plant population and light interception."
-        )
-    else:
-        return (
-            f"Regarding '{question}': In your 1 km² area with {texture} soil and {temp}°C temperature, {crop_name} "
-            f"requires balanced nutrient stewardship, proactive pest monitoring, and proper soil aeration. "
-            f"Make sure to follow the recommended irrigation schedule and soil amendments to maximize yield potential."
-        )
+    # Auto-detect language if Devanagari or other Indic scripts are present
+    if any('\u0900' <= char <= '\u097F' for char in question):
+        if lang not in ["hi", "mr"]:
+            # Distinguish Marathi vs Hindi keywords
+            lang = "mr" if any(w in q for w in ["पाणी", "खत", "पिक", "कसे", "काय", "माती", "लागवड", "फवारणी"]) else "hi"
+    elif any('\u0C00' <= char <= '\u0C7F' for char in question):
+        lang = "te"
+    elif any('\u0B80' <= char <= '\u0BFF' for char in question):
+        lang = "ta"
+    elif any('\u0C80' <= char <= '\u0CFF' for char in question):
+        lang = "kn"
+    elif any('\u0A80' <= char <= '\u0AFF' for char in question):
+        lang = "gu"
 
+    # Category matching
+    is_fert = any(w in q for w in ["fertilizer", "urea", "npk", "खाद", "खत", "उर्वरक", "यूरिया", "ఎరువులు", "உரங்கள்", "ಗೊಬ್ಬರ", "ખાતર"])
+    is_water = any(w in q for w in ["water", "irrigation", "rain", "पानी", "पाणी", "सिंचाई", "ओलिता", "నీరు", "பாசனம்", "ನೀರು", "પાણી"])
+    is_pest = any(w in q for w in ["pest", "disease", "spray", "insect", "कीड़ा", "कीटक", "रोग", "फवारणी", "छिड़काव", "తెగులు", "பூச்சி", "ಕೀಟ", "રોગ"])
+    is_sow = any(w in q for w in ["sow", "plant", "seed", "बुवाई", "पेरणी", "लागवड", "बीज", "విత్తనం", "விதை", "ಬೀಜ", "વાવણી"])
+
+    # --- HINDI RESPONSES ---
+    if lang == "hi":
+        if is_fert:
+            ans = f"{crop_name} के लिए आपकी {texture} मिट्टी में NPK (120:60:40 kg/ha) की संतुलित मात्रा डालें। बुवाई के समय पूरा फास्फोरस (DAP/SSP) और 50% पोटाश डालें। यूरिया को 3 भागों में बांटकर दें (बुवाई, 30 दिन बाद और फूल आने पर)। मिट्टी का pH {ph} होने से तेज धूप में यूरिया न छिड़कें।"
+        elif is_water:
+            ans = f"{crop_name} को वर्तमान {temp}°C तापमान में हर 6-8 दिन में सिंचाई की आवश्यकता होती है। फूल और दाना बनते समय पानी की कमी न होने दें। {texture} मिट्टी में 24 घंटे से ज्यादा पानी जमा न रहने दें ताकि जड़ें सड़ने से बच सकें।"
+        elif is_pest:
+            ans = f"{crop_name} में कीट व फफूंद नियंत्रण के लिए हफ्ते में एक बार निरीक्षण करें। जैविक उपाय हेतु 5% नीम तेल (1500 ppm @ 5 ml/लीटर) का छिड़काव करें। गंभीर प्रकोप होने पर अनुशंसित फफूंदनाशक का लेबल देखकर ही उपयोग करें।"
+        elif is_sow:
+            ans = f"प्रमाणित बीजों का ही चयन करें। बुवाई से पूर्व ट्राइकोडर्मा (5 ग्राम/किग्रा) से बीजोपचार अवश्य करें। बीज को 3 से 5 सेमी गहराई पर नमी वाली मिट्टी में बोएं ताकि 90% से अधिक अंकुरण मिल सके।"
+        else:
+            ans = f"आपके 1 km² क्षेत्र ({texture} मिट्टी, {temp}°C तापमान) में {crop_name} की खेती के लिए अनुशंसित खाद व समय पर सिंचाई का पालन करें ताकि अधिकतम पैदावार मिल सके।"
+
+    # --- MARATHI RESPONSES ---
+    elif lang == "mr":
+        if is_fert:
+            ans = f"{crop_name} पिकासाठी तुमच्या {texture} मातीमध्ये रासायनिक खतांचा संतुलित वापर (NPK 120:60:40 किलो/हेक्टर) करा. पेरणीच्या वेळी संपूर्ण फॉस्फरस आणि निम्मे पोटॅश द्या. युरियाचे तीन समान हप्ते करा (पेरणीवेळी, 30 दिवसांनी आणि फुलधारणेच्या वेळी). मातीचा pH {ph} असल्याने उन्हात युरिया टाकू नका."
+        elif is_water:
+            ans = f"{temp}°C तापमानात {crop_name} पिकाला साधारणतः 7 ते 9 दिवसांच्या अंतराने पाण्याची गरज असते. फुलधारणा आणि दाणे भरण्याच्या काळात पाणी तोडू नका. {texture} जमिनीत पाणी साचून राहणार नाही याची काळजी घ्या."
+        elif is_pest:
+            ans = f"{crop_name} वरील किडींच्या नियंत्रणासाठी दर आठवड्याला पाहणी करा. सेंद्रिय नियंत्रणासाठी निंबोळी अर्क 5% किंवा निम तेल (1500 ppm @ 5 मिली/लिटर) फवारा. जास्त प्रादुर्भाव असल्यास योग्य कीटकनाशकाची फवारणी तज्ज्ञांच्या सल्ल्याने करा."
+        elif is_sow:
+            ans = f"पेरणीपूर्वी बियाणास ट्रायकोडर्मा (5 ग्रॅम प्रति किलो) चोळावे. पेरणी योग्य ओलावा असताना 3 ते 5 सेमी खोलीवर करावी आणि योग्य अंतर राखावे."
+        else:
+            ans = f"तुमच्या 1 km² शेतातील {texture} जमीन आणि {temp}°C हवामानामध्ये {crop_name} पिकासाठी खत व्यवस्थापन आणि पाणी नियोजन वेळेवर केल्यास चांगले उत्पादन मिळेल."
+
+    # --- TELUGU RESPONSES ---
+    elif lang == "te":
+        if is_fert:
+            ans = f"{crop_name} పంటకు మీ {texture} నేలలో సమతుల్య NPK ఎరువులు వాడండి. భాస్వరం మరియు పొటాష్ విత్తే సమయంలో, యూరియాను మూడు దఫాలుగా వేయండి. నేల pH {ph} ఉన్నందున ఎండలో యూరియా చల్లవద్దు."
+        elif is_water:
+            ans = f"{temp}°C ఉష్ణోగ్రత వద్ద {crop_name} కు 7-8 రోజులకు ఒకసారి నీరు అందించాలి. పూత మరియు గింజ కట్టే దశలలో నీటి ఎద్దడి రాకుండా చూసుకోండి."
+        elif is_pest:
+            ans = f"{crop_name} లో తెగుళ్ళ నివారణకు వేప నూనె (5 ml/లీటరు) పిచికారీ చేయండి. తీవ్రత ఎక్కువగా ఉంటే సిఫార్సు చేసిన పురుగుమందు వాడండి."
+        else:
+            ans = f"మీ 1 km² పొలంలో {crop_name} మంచి దిగుబడి కోసం సకాలంలో నీటి యాజమాన్యం మరియు సిఫార్సు చేసిన ఎరువులు వేయండి."
+
+    # --- TAMIL RESPONSES ---
+    elif lang == "ta":
+        ans = f"{crop_name} பயிருக்கு உங்கள் {texture} மண்ணில் ({temp}°C வெப்பநிலை) பரிந்துரைக்கப்பட்ட NPK உரங்களை வழங்கி, பூக்கும் தருணத்தில் சீரான பாசனம் கொடுங்கள். இயற்கை முறையில் வேப்ப எண்ணெய் (5 மி.லி/லிட்டர்) தெளிக்கவும்."
+
+    # --- KANNADA RESPONSES ---
+    elif lang == "kn":
+        ans = f"{crop_name} ಬೆಳೆಗೆ ನಿಮ್ಮ {texture} ಮಣ್ಣಿನಲ್ಲಿ ಸಮತೋಲಿತ ರಸಗೊಬ್ಬರ (NPK) ಮತ್ತು ಸಮಯಕ್ಕೆ ಸರಿಯಾಗಿ ನೀರಾವರಿ ಒದಗಿಸಿ. ಕೀಟ ಬಾಧೆಗೆ ಬೇವಿನ ಎಣ್ಣೆ (5 ml/ಲೀಟರ್) ಸಿಂಪಡಿಸಿ."
+
+    # --- GUJARATI RESPONSES ---
+    elif lang == "gu":
+        ans = f"{crop_name} પાક માટે તમારી {texture} જમીનમાં સંતુલિત ખાતર (NPK) વાપરો અને {temp}°C તાપમાન મુજબ દર 7-8 દિવસે પિયત આપો. જીવાત નિયંત્રણ માટે લીંબોળીનું તેલ છાંટો."
+
+    # --- ENGLISH (DEFAULT) RESPONSES ---
+    else:
+        lang = "en"
+        if is_fert:
+            ans = (
+                f"For {crop_name} on your {texture} soil, a balanced 120:60:40 N:P:K kg/ha fertilizer ratio is recommended. "
+                f"Apply all Phosphorus (DAP or SSP) as basal at sowing. Split Nitrogen (Urea) into 3 equal doses: at sowing, "
+                f"at 30 days (vegetative/tillering), and at flowering. With soil pH at {ph}, avoid surface broadcasting urea in hot sun."
+            )
+        elif is_water:
+            ans = (
+                f"At current ambient temperatures around {temp}°C, {crop_name} requires irrigation every 6 to 9 days. "
+                f"Critical moisture-sensitive stages are flowering and grain development. "
+                f"Never allow prolonged waterlogging in {texture} soil as roots require oxygenation."
+            )
+        elif is_pest:
+            ans = (
+                f"For pest and disease control in {crop_name}, conduct weekly field scouting. Look under lower leaves for "
+                f"early symptoms. For organic control, spray Neem Seed Kernel Extract (5% NSKE) or Azadirachtin 1500 ppm @ 5ml/L. "
+                f"If chemical control is necessary, use systemic fungicides according to label dosages."
+            )
+        elif is_sow:
+            ans = (
+                f"Ensure seeds are certified germinable (>85%). Treat seeds with Trichoderma harzianum @ 5g/kg seed. "
+                f"Sow at a uniform depth of 3 to 5 cm into moist soil with recommended row-to-row spacing."
+            )
+        else:
+            ans = (
+                f"Regarding '{question}': In your 1 km² area with {texture} soil and {temp}°C temperature, {crop_name} "
+                f"requires balanced nutrient stewardship, proactive pest monitoring, and proper soil aeration to maximize yield potential."
+            )
+
+    return {
+        "crop_name": crop_name,
+        "question": question,
+        "answer": ans,
+        "language": lang,
+        "speech_lang_code": {
+            "hi": "hi-IN",
+            "mr": "mr-IN",
+            "te": "te-IN",
+            "ta": "ta-IN",
+            "kn": "kn-IN",
+            "gu": "gu-IN",
+            "en": "en-IN"
+        }.get(lang, "en-IN")
+    }

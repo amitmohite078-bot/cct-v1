@@ -17,14 +17,21 @@ class CropSelectionRequest(BaseModel):
     latitude: float
     longitude: float
     growth_stage: Optional[str] = "mid_season"
+    farm_size_acres: Optional[float] = 2.5
 
 class CropDoctorQuestionRequest(BaseModel):
     crop_name: str
     question: str
     field_context: Optional[Dict[str, Any]] = None
+    language: Optional[str] = "en"
 
 class CropComparisonRequest(BaseModel):
-    crop_ids: List[str] = Field(..., min_items=2, max_items=4, description="List of 2 to 4 crop IDs to compare")
+    crop_ids: List[str] = Field(..., min_length=2, max_length=4, description="List of 2 to 4 crop IDs to compare")
     latitude: float
     longitude: float
 
+class MarketProfitabilityRequest(BaseModel):
+    crop_id: Optional[str] = None
+    latitude: float
+    longitude: float
+    farm_size_acres: float = Field(2.5, ge=0.25, le=500.0)

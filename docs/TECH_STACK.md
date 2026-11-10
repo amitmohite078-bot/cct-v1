@@ -112,3 +112,4 @@ The platform accesses free, open-access, and cloud-hosted planetary datasets:
 - **Testing:** `pytest` (unit & integration test suite covering live API fallbacks, geospatial calculations, and suitability logic)
 - **Editor / IDE:** Antigravity IDE / VS Code
 - **Operating Environment:** Windows / Linux / macOS (Cross-platform Python runtime)
+

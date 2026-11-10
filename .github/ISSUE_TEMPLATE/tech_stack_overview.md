@@ -34,3 +34,4 @@ assignees: ''
 - **AHP & MCDA:** Multi-Criteria Decision Analysis weighting soil, climate, water, terrain, and season.
 - **Liebig's Law of the Minimum:** Limiting factor bottleneck detection.
 - **ICAR NBSS&LUP & Planning Commission:** 15 Indian Agro-Climatic Zones classification.
+

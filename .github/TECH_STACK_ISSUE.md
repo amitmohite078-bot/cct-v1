@@ -74,3 +74,4 @@
 - **FAO-56 Penman-Monteith:** Daily Reference Evapotranspiration ($ET_0$) and Crop Evapotranspiration ($ET_c = K_c \times ET_0$) for 7-day irrigation scheduling.
 - **Soil Test Crop Response (STCR):** Target yield fertilizer recommendations (N-P-K splits and soil amendments: Agricultural Lime & Gypsum).
 - **ICAR NBSS&LUP & Planning Commission:** Classification of 15 Indian Agro-Climatic Zones.
+

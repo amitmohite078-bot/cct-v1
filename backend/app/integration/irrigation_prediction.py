@@ -55,7 +55,16 @@ def calculate_irrigation_schedule(
 
     # 2. Select Kc based on growth stage
     kc_list = CROP_KC_VALUES.get(crop_id, [0.4, 0.75, 1.15, 0.6])
-    stage_idx = {"initial": 0, "development": 1, "mid_season": 2, "late_season": 3}.get(growth_stage, 2)
+    stage_idx = {
+        "initial": 0,
+        "development": 1,
+        "vegetative": 1,
+        "mid_season": 2,
+        "flowering": 2,
+        "fruiting": 2,
+        "late_season": 3,
+        "maturity": 3
+    }.get((growth_stage or "mid_season").lower(), 2)
     kc = kc_list[stage_idx]
     
     # 3. Crop Evapotranspiration (ETc in mm/day)
@@ -63,10 +72,23 @@ def calculate_irrigation_schedule(
 
     # 4. Available Water Capacity (AWC in mm/meter of soil depth)
     awc_map = {
-        "Sand": 60, "Loamy Sand": 85, "Sandy Loam": 120, "Loam": 160,
-        "Silt Loam": 180, "Clay Loam": 170, "Clay": 150
+        "Sand": 60,
+        "Loamy Sand": 85,
+        "Sandy Loam": 120,
+        "Sandy Clay Loam": 145,
+        "Loam": 160,
+        "Silt": 165,
+        "Silt Loam": 180,
+        "Silty Clay Loam": 175,
+        "Clay Loam": 170,
+        "Sandy Clay": 140,
+        "Silty Clay": 160,
+        "Clay": 150
     }
-    awc = awc_map.get(soil_texture, 150)
+    awc = awc_map.get(soil_texture)
+    if awc is None:
+        tex_lower = (soil_texture or "").lower()
+        awc = next((v for k, v in awc_map.items() if k.lower() in tex_lower), 150)
     effective_root_depth_m = 0.6 # average effective rooting depth
     total_available_water_mm = awc * effective_root_depth_m # ~90 mm
     management_allowed_depletion = 0.50 # irrigate when 50% depleted
@@ -74,7 +96,7 @@ def calculate_irrigation_schedule(
 
     # 5. 7-Day Water Balance Simulation
     daily_schedule = []
-    current_depletion = 15.0 # start at 15 mm depletion
+    current_depletion = min(22.0, round(readily_available_water_mm * 0.55, 1))
     total_irrigation_needed_mm = 0.0
 
     days_names = ["Day 1 (Today)", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"]
@@ -111,9 +133,13 @@ def calculate_irrigation_schedule(
             "status": "Irrigation Due" if irrigate_today else ("Rain Protected" if eff_rain >= etc_daily else "Moisture Adequate")
         })
 
-    next_irrigation_day = "Day 1 (Today)" if daily_schedule[0]["irrigation_recommended"] else (
-        next((d["day"] for d in daily_schedule if d["irrigation_recommended"]), "Day 4 - 5")
-    )
+    first_due = next((d["day"] for d in daily_schedule if d["irrigation_recommended"]), None)
+    if first_due:
+        next_irrigation_day = first_due
+    else:
+        remaining_raw = max(0.0, readily_available_water_mm - current_depletion)
+        extra_days = max(1, math.ceil(remaining_raw / max(0.5, etc_daily)))
+        next_irrigation_day = f"Day {7 + extra_days} (Adequate)"
 
     return {
         "crop_id": crop_id,

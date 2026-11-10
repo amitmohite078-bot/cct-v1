@@ -16,14 +16,16 @@ from app.main import (
     search_location,
     get_integrated_crop_modules,
     chat_with_crop_doctor,
-    compare_crops
+    compare_crops,
+    get_market_profitability
 )
 from app.models.schemas import (
     CoordinatesRequest,
     LocationSearchRequest,
     CropSelectionRequest,
     CropDoctorQuestionRequest,
-    CropComparisonRequest
+    CropComparisonRequest,
+    MarketProfitabilityRequest
 )
 
 def test_health_check():
@@ -57,6 +59,10 @@ def test_geospatial_analyze():
     assert prov["overall_data_confidence_pct"] > 70
     assert len(prov["provenance_registry"]) >= 10
 
+    mkt = res["market_profitability"]
+    assert len(mkt) >= 12
+    assert len({m["crop_id"] for m in mkt}) >= 12
+
 def test_reverse_geocode_and_search():
     rev = asyncio.run(reverse_geocode(lat=19.9975, lon=73.7898))
     assert "Nashik" in rev["location_name"] or "India" in rev["location_name"]
@@ -88,6 +94,16 @@ def test_crop_comparison():
     res = asyncio.run(compare_crops(req))
     assert len(res["crops_compared"]) == 3
 
+def test_market_profitability_endpoint():
+    req_all = MarketProfitabilityRequest(latitude=19.9975, longitude=73.7898, farm_size_acres=3.0)
+    res_all = asyncio.run(get_market_profitability(req_all))
+    assert len(res_all["ranked_profitability"]) >= 12
+
+    req_one = MarketProfitabilityRequest(crop_id="onion", latitude=19.9975, longitude=73.7898, farm_size_acres=2.0)
+    res_one = asyncio.run(get_market_profitability(req_one))
+    assert res_one["crop_id"] == "onion"
+    assert "Lasalgaon" in res_one["benchmark_mandi"]
+
 if __name__ == "__main__":
     test_health_check()
     test_geospatial_analyze()
@@ -95,4 +111,5 @@ if __name__ == "__main__":
     test_crop_modules_integration()
     test_crop_doctor_chat()
     test_crop_comparison()
-    print("ALL 6 DIRECT INTEGRATION TESTS PASSED SUCCESSFULLY!")
+    test_market_profitability_endpoint()
+    print("ALL 7 DIRECT INTEGRATION TESTS PASSED SUCCESSFULLY!")

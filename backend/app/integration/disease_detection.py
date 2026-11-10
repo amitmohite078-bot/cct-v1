@@ -143,6 +143,42 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "chemical_control": "Kitazin 48% EC @ 2 ml/L or Tricyclazole 75% WP @ 0.6 g/L.",
             "preventive_measures": "Grow blast-tolerant varieties like GPU-28, ML-365; balanced nitrogen fertilization."
         }
+    ],
+    "jowar": [
+        {
+            "disease_id": "jowar_shoot_fly",
+            "name": "Sorghum Shoot Fly (Atherigona soccata)",
+            "pathogen_type": "Pest / Insect Larva",
+            "symptoms": "Deadheart in central whorl of 1-4 week old seedlings; foul-smelling rotting shoot.",
+            "favorable_conditions": "Late Kharif sowing, warm humid mornings (25-32°C).",
+            "organic_control": "Spray Neem Seed Kernel Extract (5% NSKE) @ 5 ml/L at 7 and 14 days after emergence.",
+            "chemical_control": "Imidacloprid 70% WS seed treatment @ 5 g/kg seed or Thiamethoxam 25% WG @ 0.3 g/L.",
+            "preventive_measures": "Sow immediately after onset of monsoon; use higher seed rate and rogue deadhearts."
+        }
+    ],
+    "sugarcane": [
+        {
+            "disease_id": "sugarcane_red_rot",
+            "name": "Red Rot (Colletotrichum falcatum)",
+            "pathogen_type": "Fungal",
+            "symptoms": "Yellowing and drying of 3rd/4th leaves; split stalks emit alcoholic odor with red internal tissue and white cross-bands.",
+            "favorable_conditions": "Waterlogged fields, high humidity, infected seed setts.",
+            "organic_control": "Dip setts in Trichoderma viride slurry @ 5 g/L before planting.",
+            "chemical_control": "Sett treatment with Carbendazim 50% WP @ 1 g/L for 15 minutes.",
+            "preventive_measures": "Use disease-free nursery setts; avoid ratooning infected fields; ensure proper drainage."
+        }
+    ],
+    "mustard": [
+        {
+            "disease_id": "mustard_alternaria_blight",
+            "name": "Alternaria Blight & Aphids (Alternaria brassicae)",
+            "pathogen_type": "Fungal / Pest Complex",
+            "symptoms": "Concentric dark brown target spots on leaves and siliquae; sticky honeydew from aphid colonies on flower stalks.",
+            "favorable_conditions": "Cool humid winter mornings (14-24°C) with morning fog and dew.",
+            "organic_control": "Spray Neem oil 1500 ppm @ 5 ml/L for aphids; install yellow sticky traps @ 10/acre.",
+            "chemical_control": "Mancozeb 75% WP @ 2 g/L for blight; Imidacloprid 17.8% SL @ 0.3 ml/L for aphids.",
+            "preventive_measures": "Timely sowing by mid-October; clean cultivation and balanced sulfur/potash nutrition."
+        }
     ]
 }
 

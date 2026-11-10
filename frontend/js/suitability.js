@@ -491,14 +491,16 @@ class SuitabilityRenderer {
 
     const activeSeasonLocalized = this.localizeSeason(cropSuitabilityData.active_season || "Kharif");
 
+    const ic = (name, size = 14) => (typeof window.kbvIcon === "function" ? window.kbvIcon(name, size) : "");
+
     let html = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
-        <span style="font-size:0.82rem; color:#a5a79b;">
-          ${LBL.season}: <b style="color:#e8d2b5;">${activeSeasonLocalized}</b> | 
-          ${LBL.evaluated}: <b style="color:#f5eedf;">${cropSuitabilityData.total_crops_evaluated || 15}</b> ${LBL.crops}
+        <span style="font-size:0.82rem; color:#4F5E46;">
+          ${LBL.season}: <b style="color:#2D5A27;">${activeSeasonLocalized}</b> | 
+          ${LBL.evaluated}: <b style="color:#1A2412;">${cropSuitabilityData.total_crops_evaluated || 15}</b> ${LBL.crops}
         </span>
-        <button class="btn btn-secondary" style="font-size:0.75rem; padding:4px 10px; background:rgba(165,167,155,0.15); border:1px solid rgba(165,167,155,0.3); color:#e8d2b5; border-radius:6px; cursor:pointer;" onclick="window.app.openComparisonModal()">
-          ${LBL.compare}
+        <button class="btn btn-secondary" style="font-size:0.75rem; padding:4px 10px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); color:#2D5A27; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" onclick="window.app.openComparisonModal()">
+          ${ic("scale", 13)} ${(LBL.compare || "").replace(/^⚖\s*/, "")}
         </button>
       </div>
     `;
@@ -507,6 +509,7 @@ class SuitabilityRenderer {
       const isSelected = crop.id === this.selectedCropId;
       const score = crop.suitability_score;
       const fb = crop.factor_breakdown || { soil_suitability: 80, climate_suitability: 80, rainfall_water_suitability: 80, terrain_suitability: 80, growing_season_suitability: 80 };
+      const cropIcoName = typeof window.kbvCropIcon === "function" ? window.kbvCropIcon(crop.id) : "crops";
 
       const cropLocalizedName = this.localizeCropName(crop);
       const categoryLocalized = this.localizeCategory(crop.category);
@@ -517,71 +520,74 @@ class SuitabilityRenderer {
       const limitingFactorLocalized = crop.limiting_factor ? this.localizeLimitingFactor(crop.limiting_factor.factor) : "";
 
       html += `
-        <div class="crop-card ${isSelected ? 'selected' : ''}" data-crop-id="${crop.id}" onclick="window.suitabilityRenderer.selectCrop('${crop.id}')" style="background:rgba(26,20,18,0.92); border:1.5px solid ${isSelected ? '#590907' : 'rgba(165,167,155,0.22)'}; border-radius:14px; padding:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s ease;">
+        <div class="crop-card ${isSelected ? 'selected' : ''}" data-crop-id="${crop.id}" onclick="window.suitabilityRenderer.selectCrop('${crop.id}')" style="background:#FFFFFF; border:1.5px solid ${isSelected ? '#2D5A27' : 'rgba(45,90,39,0.18)'}; border-radius:14px; padding:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s ease;">
           <div class="crop-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
-            <div>
-              <div class="crop-title" style="font-size:1.05rem; font-weight:800; color:#e8d2b5;">#${idx + 1} ${cropLocalizedName}</div>
-              <div class="crop-scientific" style="font-size:0.75rem; color:#a5a79b;">${crop.scientific_name || ''} &bull; ${categoryLocalized}</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:34px; height:34px; border-radius:10px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.22); color:#2D5A27; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${ic(cropIcoName, 18)}</div>
+              <div>
+                <div class="crop-title" style="font-size:1.05rem; font-weight:800; color:#1A2412;">#${idx + 1} ${cropLocalizedName}</div>
+                <div class="crop-scientific" style="font-size:0.75rem; color:#4F5E46;">${crop.scientific_name || ''} &bull; ${categoryLocalized}</div>
+              </div>
             </div>
-            <div style="background:rgba(89,9,7,0.3); border:1px solid #590907; padding:4px 10px; border-radius:8px; text-align:right;">
-              <span style="font-size:1.15rem; font-weight:900; color:#e8d2b5; display:block; line-height:1;">${score}</span>
-              <span style="font-size:0.65rem; font-weight:700; color:#a5a79b; text-transform:uppercase;">${recommendationLocalized}</span>
+            <div style="background:rgba(45,90,39,0.1); border:1px solid #2D5A27; padding:4px 10px; border-radius:8px; text-align:right;">
+              <span style="font-size:1.15rem; font-weight:900; color:#2D5A27; display:block; line-height:1;">${score}</span>
+              <span style="font-size:0.65rem; font-weight:700; color:#4F5E46; text-transform:uppercase;">${recommendationLocalized}</span>
             </div>
           </div>
 
-          <div class="crop-specs-row" style="display:flex; gap:12px; font-size:0.75rem; color:#f5eedf; margin-bottom:10px; flex-wrap:wrap;">
-            <span>🗓 <b style="color:#a5a79b;">${LBL.season}:</b> ${seasonLocalized}</span>
-            <span>⏱ <b style="color:#a5a79b;">${LBL.duration}:</b> ${durationLocalized}</span>
-            <span>💧 <b style="color:#a5a79b;">${LBL.water}:</b> ${waterLocalized}</span>
+          <div class="crop-specs-row" style="display:flex; gap:14px; font-size:0.75rem; color:#1A2412; margin-bottom:10px; flex-wrap:wrap; align-items:center;">
+            <span style="display:inline-flex; align-items:center; gap:4px; color:#2D5A27;">${ic("calendar", 13)} <b style="color:#4F5E46;">${LBL.season}:</b> <span style="color:#1A2412;">${seasonLocalized}</span></span>
+            <span style="display:inline-flex; align-items:center; gap:4px; color:#2D5A27;">${ic("clock", 13)} <b style="color:#4F5E46;">${LBL.duration}:</b> <span style="color:#1A2412;">${durationLocalized}</span></span>
+            <span style="display:inline-flex; align-items:center; gap:4px; color:#2D5A27;">${ic("water", 13)} <b style="color:#4F5E46;">${LBL.water}:</b> <span style="color:#1A2412;">${waterLocalized}</span></span>
           </div>
 
           <!-- Factor Breakdown Mini-bars -->
           <div class="factor-bars-mini" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; margin-bottom:10px;">
             <div class="factor-bar-col">
-              <div style="height:4px; background:rgba(165,167,155,0.2); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.soil_suitability}%; background:linear-gradient(90deg, #590907, #a5a79b);"></div></div>
-              <div style="font-size:0.68rem; color:#a5a79b; margin-top:2px; font-weight:600;">${LBL.soil} ${Math.round(fb.soil_suitability)}</div>
+              <div style="height:4px; background:rgba(45,90,39,0.16); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.soil_suitability}%; background:linear-gradient(90deg, #2D5A27, #6B9433);"></div></div>
+              <div style="font-size:0.68rem; color:#4F5E46; margin-top:2px; font-weight:600;">${LBL.soil} ${Math.round(fb.soil_suitability)}</div>
             </div>
             <div class="factor-bar-col">
-              <div style="height:4px; background:rgba(165,167,155,0.2); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.climate_suitability}%; background:linear-gradient(90deg, #590907, #a5a79b);"></div></div>
-              <div style="font-size:0.68rem; color:#a5a79b; margin-top:2px; font-weight:600;">${LBL.climate} ${Math.round(fb.climate_suitability)}</div>
+              <div style="height:4px; background:rgba(45,90,39,0.16); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.climate_suitability}%; background:linear-gradient(90deg, #2D5A27, #6B9433);"></div></div>
+              <div style="font-size:0.68rem; color:#4F5E46; margin-top:2px; font-weight:600;">${LBL.climate} ${Math.round(fb.climate_suitability)}</div>
             </div>
             <div class="factor-bar-col">
-              <div style="height:4px; background:rgba(165,167,155,0.2); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.rainfall_water_suitability}%; background:linear-gradient(90deg, #590907, #a5a79b);"></div></div>
-              <div style="font-size:0.68rem; color:#a5a79b; margin-top:2px; font-weight:600;">${LBL.water} ${Math.round(fb.rainfall_water_suitability)}</div>
+              <div style="height:4px; background:rgba(45,90,39,0.16); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.rainfall_water_suitability}%; background:linear-gradient(90deg, #2D5A27, #6B9433);"></div></div>
+              <div style="font-size:0.68rem; color:#4F5E46; margin-top:2px; font-weight:600;">${LBL.water} ${Math.round(fb.rainfall_water_suitability)}</div>
             </div>
             <div class="factor-bar-col">
-              <div style="height:4px; background:rgba(165,167,155,0.2); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.terrain_suitability}%; background:linear-gradient(90deg, #590907, #a5a79b);"></div></div>
-              <div style="font-size:0.68rem; color:#a5a79b; margin-top:2px; font-weight:600;">${LBL.terrain} ${Math.round(fb.terrain_suitability)}</div>
+              <div style="height:4px; background:rgba(45,90,39,0.16); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.terrain_suitability}%; background:linear-gradient(90deg, #2D5A27, #6B9433);"></div></div>
+              <div style="font-size:0.68rem; color:#4F5E46; margin-top:2px; font-weight:600;">${LBL.terrain} ${Math.round(fb.terrain_suitability)}</div>
             </div>
             <div class="factor-bar-col">
-              <div style="height:4px; background:rgba(165,167,155,0.2); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.growing_season_suitability}%; background:linear-gradient(90deg, #590907, #a5a79b);"></div></div>
-              <div style="font-size:0.68rem; color:#a5a79b; margin-top:2px; font-weight:600;">${LBL.season_bar} ${Math.round(fb.growing_season_suitability)}</div>
+              <div style="height:4px; background:rgba(45,90,39,0.16); border-radius:2px; overflow:hidden;"><div style="height:100%; width:${fb.growing_season_suitability}%; background:linear-gradient(90deg, #2D5A27, #6B9433);"></div></div>
+              <div style="font-size:0.68rem; color:#4F5E46; margin-top:2px; font-weight:600;">${LBL.season_bar} ${Math.round(fb.growing_season_suitability)}</div>
             </div>
           </div>
 
-          <div style="font-size:0.75rem; color:#f5eedf; margin-top:6px; line-height:1.4;">
+          <div style="font-size:0.75rem; color:#33402B; margin-top:6px; line-height:1.4;">
             ${crop.explanation ? crop.explanation.substring(0, 190) + '...' : ''}
           </div>
 
           ${crop.limiting_factor ? `
-            <div style="font-size:0.72rem; color:#e8d2b5; background:rgba(89,9,7,0.2); border:1px solid rgba(89,9,7,0.4); padding:4px 8px; border-radius:6px; margin-top:8px; display:flex; align-items:center; gap:4px;">
-              ⚠ <b style="color:#f5eedf;">${LBL.limiting}</b> ${limitingFactorLocalized} (${crop.limiting_factor.score}/100)
+            <div style="font-size:0.72rem; color:#7C2D12; background:rgba(217,119,6,0.12); border:1px solid rgba(217,119,6,0.3); padding:4px 8px; border-radius:6px; margin-top:8px; display:flex; align-items:center; gap:6px;">
+              <span style="color:#B45309; display:inline-flex;">${ic("alert", 13)}</span> <b style="color:#7C2D12;">${LBL.limiting}</b> ${limitingFactorLocalized} (${crop.limiting_factor.score}/100)
             </div>
           ` : ''}
 
           ${crop.estimated_produce ? `
-            <div style="background:rgba(232,210,181,0.07); border:1.5px solid rgba(232,210,181,0.25); border-radius:12px; padding:12px 14px; margin-top:10px;">
+            <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); border-radius:12px; padding:12px 14px; margin-top:10px;">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <!-- Per Acre Main Highlight -->
                 <div style="display:flex; align-items:center; gap:10px;">
-                  <div style="width:36px; height:36px; border-radius:10px; background:rgba(89,9,7,0.4); border:1px solid #7c1512; display:flex; align-items:center; justify-content:center; font-size:18px;">🌾</div>
+                  <div style="width:36px; height:36px; border-radius:10px; background:rgba(45,90,39,0.14); border:1px solid rgba(45,90,39,0.35); color:#2D5A27; display:flex; align-items:center; justify-content:center;">${ic(cropIcoName, 18)}</div>
                   <div>
-                    <div style="font-size:0.68rem; color:#a5a79b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${LBL.est_produce_acre || 'Estimated Produce (Per Acre)'}</div>
-                    <div style="font-size:1.08rem; font-weight:900; color:#e8d2b5; line-height:1.2;">
+                    <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${LBL.est_produce_acre || 'Estimated Produce (Per Acre)'}</div>
+                    <div style="font-size:1.08rem; font-weight:900; color:#1A2412; line-height:1.2;">
                       ${crop.estimated_produce.yield_ton_per_acre_range || ((crop.estimated_produce.yield_ton_per_ha_avg / 2.471).toFixed(2) + ' Tonnes / Acre')}
                     </div>
                     ${crop.estimated_produce.yield_quintals_per_acre_range ? `
-                      <div style="font-size:0.72rem; color:#10b981; font-weight:700; margin-top:2px;">
+                      <div style="font-size:0.72rem; color:#2D5A27; font-weight:700; margin-top:2px;">
                         ${crop.estimated_produce.yield_quintals_per_acre_range}
                       </div>
                     ` : ''}
@@ -590,11 +596,11 @@ class SuitabilityRenderer {
 
                 <!-- 1 km² / Per Hectare Reference -->
                 <div style="text-align:right;">
-                  <div style="font-size:0.68rem; color:#a5a79b; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${LBL.total_1km_produce || '1 km² Total (247.1 Acres)'}</div>
-                  <div style="font-size:0.98rem; font-weight:900; color:#10b981; line-height:1.2;">
+                  <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${LBL.total_1km_produce || '1 km² Total (247.1 Acres)'}</div>
+                  <div style="font-size:0.98rem; font-weight:900; color:#2D5A27; line-height:1.2;">
                     ${crop.estimated_produce.total_produce_1km2_ton_range}
                   </div>
-                  <div style="font-size:0.70rem; color:#cbd5e1; margin-top:2px;">
+                  <div style="font-size:0.70rem; color:#4F5E46; margin-top:2px;">
                     ${crop.estimated_produce.yield_ton_per_ha_range}
                   </div>
                 </div>
@@ -602,11 +608,11 @@ class SuitabilityRenderer {
             </div>
           ` : ''}
 
-          <div class="crop-card-footer" style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid rgba(165,167,155,0.15);">
-            <span style="font-size:0.72rem; color:${isSelected ? '#e8d2b5' : '#a5a79b'}; font-weight:600;">
-              ${isSelected ? LBL.active : LBL.click_to_select}
+          <div class="crop-card-footer" style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid rgba(45,90,39,0.14);">
+            <span style="font-size:0.72rem; color:${isSelected ? '#2D5A27' : '#4F5E46'}; font-weight:600; display:inline-flex; align-items:center; gap:5px;">
+              ${isSelected ? `${ic("check", 13)} ${(LBL.active || "").replace(/^✓\s*/, "")}` : LBL.click_to_select}
             </span>
-            <button class="btn btn-primary" style="font-size:0.75rem; padding:6px 14px; background:linear-gradient(135deg, #7c1512 0%, #590907 100%); color:#f5eedf; border:1px solid #7c1512; border-radius:8px; font-weight:700; cursor:pointer;" onclick="event.stopPropagation(); window.suitabilityRenderer.activateAndOpenModules('${crop.id}')">
+            <button class="btn btn-primary" style="font-size:0.75rem; padding:6px 14px; color:#FFFFFF; border-radius:8px; font-weight:700; cursor:pointer;" onclick="event.stopPropagation(); window.suitabilityRenderer.activateAndOpenModules('${crop.id}')">
               ${LBL.select}
             </button>
           </div>
@@ -622,10 +628,10 @@ class SuitabilityRenderer {
     document.querySelectorAll(".crop-card").forEach(c => {
       if (c.getAttribute("data-crop-id") === cropId) {
         c.classList.add("selected");
-        c.style.borderColor = "#590907";
+        c.style.borderColor = "#2D5A27";
       } else {
         c.classList.remove("selected");
-        c.style.borderColor = "rgba(165,167,155,0.22)";
+        c.style.borderColor = "rgba(45,90,39,0.18)";
       }
     });
     if (this.onSelectCropCallback) {
@@ -635,8 +641,25 @@ class SuitabilityRenderer {
 
   activateAndOpenModules(cropId) {
     this.selectCrop(cropId);
-    if (window.app) {
-      window.app.switchTab("modules");
+    const dashCropSelect = document.getElementById("kbvDashCropSelect");
+    if (dashCropSelect) {
+      for (const opt of dashCropSelect.options) {
+        if (opt.value === cropId) {
+          dashCropSelect.value = cropId;
+          break;
+        }
+      }
+    }
+    if (window.kbvApp) {
+      window.kbvApp.selectedCrop = cropId;
+      if (typeof window.kbvApp.switchDashboardTab === "function") {
+        window.kbvApp.switchDashboardTab("irrigation");
+        return;
+      }
+    }
+    const modContainer = document.getElementById("kbvDedicatedIrrigationContainer") || document.getElementById("integratedModulesContainer");
+    if (modContainer) {
+      modContainer.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }
 
@@ -665,39 +688,39 @@ class SuitabilityRenderer {
     }
 
     let headerCols = cropsToCompare.map(c => `
-      <th style="text-align:center; padding:12px; border-bottom:1px solid rgba(165,167,155,0.3);">
-        <div style="font-size:1rem; font-weight:bold; color:#e8d2b5;">${this.localizeCropName(c)}</div>
-        <div style="font-size:0.75rem; color:#a5a79b;">${c.scientific_name || ''}</div>
-        <div style="font-size:1.2rem; font-weight:800; color:#f5eedf; margin-top:4px;">${c.suitability_score}/100</div>
+      <th style="text-align:center; padding:12px; border-bottom:1px solid rgba(45,90,39,0.2);">
+        <div style="font-size:1rem; font-weight:bold; color:#1A2412;">${this.localizeCropName(c)}</div>
+        <div style="font-size:0.75rem; color:#4F5E46;">${c.scientific_name || ''}</div>
+        <div style="font-size:1.2rem; font-weight:800; color:#2D5A27; margin-top:4px;">${c.suitability_score}/100</div>
       </th>
     `).join("");
 
-    let waterCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#f5eedf;">${this.localizeWater(c.water_requirement)}</td>`).join("");
-    let durationCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#f5eedf;">${this.localizeDuration(c.expected_growing_duration)}</td>`).join("");
-    let seasonCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#f5eedf;">${this.localizeSeason(c.recommended_planting_season)}</td>`).join("");
-    let limitCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#e8d2b5; font-size:0.75rem;">${c.limiting_factor ? this.localizeLimitingFactor(c.limiting_factor.factor) : 'None'}</td>`).join("");
-    let prosCols = cropsToCompare.map(c => `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#f5eedf;"><ul style="padding-left:14px;">${(c.pros || []).map(p => `<li>${p}</li>`).join('')}</ul></td>`).join("");
-    let challengesCols = cropsToCompare.map(c => `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#e8d2b5;"><ul style="padding-left:14px; color:#e8d2b5;">${(c.potential_cultivation_challenges || []).slice(0, 2).map(ch => `<li>${ch}</li>`).join('')}</ul></td>`).join("");
+    let waterCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#1A2412;">${this.localizeWater(c.water_requirement)}</td>`).join("");
+    let durationCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#1A2412;">${this.localizeDuration(c.expected_growing_duration)}</td>`).join("");
+    let seasonCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#1A2412;">${this.localizeSeason(c.recommended_planting_season)}</td>`).join("");
+    let limitCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#7C2D12; font-size:0.75rem;">${c.limiting_factor ? this.localizeLimitingFactor(c.limiting_factor.factor) : 'None'}</td>`).join("");
+    let prosCols = cropsToCompare.map(c => `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#1A2412;"><ul style="padding-left:14px;">${(c.pros || []).map(p => `<li>${p}</li>`).join('')}</ul></td>`).join("");
+    let challengesCols = cropsToCompare.map(c => `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#4F5E46;"><ul style="padding-left:14px; color:#4F5E46;">${(c.potential_cultivation_challenges || []).slice(0, 2).map(ch => `<li>${ch}</li>`).join('')}</ul></td>`).join("");
 
     modalBody.innerHTML = `
-      <div style="margin-bottom:20px; height:260px; max-width:480px; margin-left:auto; margin-right:auto;">
+      <div id="comparisonRadarWrapper" style="margin-bottom:20px; height:260px; max-width:480px; margin-left:auto; margin-right:auto; display:${typeof Chart === 'undefined' ? 'none' : 'block'};">
         <canvas id="comparisonRadarCanvas"></canvas>
       </div>
 
       <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
         <thead>
-          <tr style="background:rgba(89,9,7,0.35); border-bottom:1px solid rgba(165,167,155,0.3);">
-            <th style="padding:12px; text-align:left; color:#e8d2b5;">${LBL.param}</th>
+          <tr style="background:#F0EEE9; border-bottom:1.5px solid rgba(45,90,39,0.22);">
+            <th style="padding:12px; text-align:left; color:#2D5A27;">${LBL.param}</th>
             ${headerCols}
           </tr>
         </thead>
         <tbody>
-          <tr><td style="padding:10px; font-weight:bold; color:#e8d2b5;">${LBL.water}</td>${waterCols}</tr>
-          <tr style="background:rgba(255,255,255,0.02);"><td style="padding:10px; font-weight:bold; color:#e8d2b5;">${LBL.dur}</td>${durationCols}</tr>
-          <tr><td style="padding:10px; font-weight:bold; color:#e8d2b5;">${LBL.season}</td>${seasonCols}</tr>
-          <tr style="background:rgba(255,255,255,0.02);"><td style="padding:10px; font-weight:bold; color:#e8d2b5;">${LBL.limit}</td>${limitCols}</tr>
-          <tr><td style="padding:10px; font-weight:bold; color:#e8d2b5;">${LBL.pros}</td>${prosCols}</tr>
-          <tr style="background:rgba(255,255,255,0.02);"><td style="padding:10px; font-weight:bold; color:#e8d2b5;">${LBL.chal}</td>${challengesCols}</tr>
+          <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.water}</td>${waterCols}</tr>
+          <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.dur}</td>${durationCols}</tr>
+          <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.season}</td>${seasonCols}</tr>
+          <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.limit}</td>${limitCols}</tr>
+          <tr><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.pros}</td>${prosCols}</tr>
+          <tr style="background:#F0EEE9;"><td style="padding:10px; font-weight:bold; color:#2D5A27;">${LBL.chal}</td>${challengesCols}</tr>
         </tbody>
       </table>
     `;
@@ -706,7 +729,7 @@ class SuitabilityRenderer {
       const ctx = document.getElementById("comparisonRadarCanvas");
       if (!ctx || typeof Chart === "undefined") return;
 
-      const colors = ["#590907", "#e8d2b5", "#a5a79b", "#c4915a"];
+      const colors = ["#2D5A27", "#6B9433", "#0284c7", "#B45309"];
       const datasets = cropsToCompare.map((c, i) => {
         const fb = c.factor_breakdown || {};
         return {
@@ -751,14 +774,14 @@ class SuitabilityRenderer {
           maintainAspectRatio: false,
           scales: {
             r: {
-              angleLines: { color: "rgba(165,167,155,0.2)" },
-              grid: { color: "rgba(165,167,155,0.2)" },
-              pointLabels: { color: "#e8d2b5", font: { size: 11, weight: "bold" } },
+              angleLines: { color: "rgba(45,90,39,0.2)" },
+              grid: { color: "rgba(45,90,39,0.2)" },
+              pointLabels: { color: "#1A2412", font: { size: 11, weight: "bold" } },
               ticks: { display: false, min: 0, max: 100 }
             }
           },
           plugins: {
-            legend: { labels: { color: "#f5eedf", font: { size: 11 } } }
+            legend: { labels: { color: "#1A2412", font: { size: 11 } } }
           }
         }
       });

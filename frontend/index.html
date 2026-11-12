@@ -103,13 +103,13 @@
       z-index: 0;
     }
 
-    .kbv-snapshot-card > *,
-    .kbv-editorial-card > *,
-    .kbv-map-card-web > *,
-    .kbv-lang-grid-card > *,
-    .kbv-hero-banner > *,
-    .kbv-loc-badge-banner > *,
-    .modal-card > * {
+    .kbv-snapshot-card>*,
+    .kbv-editorial-card>*,
+    .kbv-map-card-web>*,
+    .kbv-lang-grid-card>*,
+    .kbv-hero-banner>*,
+    .kbv-loc-badge-banner>*,
+    .modal-card>* {
       position: relative;
       z-index: 1;
     }
@@ -271,8 +271,15 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .kbv-map-snapshot-grid {
@@ -286,6 +293,7 @@
       .kbv-map-snapshot-grid {
         grid-template-columns: 1fr;
       }
+
       .kbv-dashboard-control-grid {
         grid-template-columns: 1fr !important;
       }
@@ -382,7 +390,8 @@
       transition: all 0.2s ease;
     }
 
-    .kbv-lang-dropdown:hover, .kbv-lang-dropdown:focus {
+    .kbv-lang-dropdown:hover,
+    .kbv-lang-dropdown:focus {
       border-color: var(--kbv-primary);
       box-shadow: 0 0 12px var(--kbv-primary-glow);
     }
@@ -1181,6 +1190,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
+
     .kbv-preset-chip:hover,
     .kbv-crop-chip.active {
       background: #2D5A27 !important;
@@ -1200,6 +1210,7 @@
       outline: none;
       transition: border-color 0.2s;
     }
+
     .kbv-loc-search-input:focus {
       border-color: #2D5A27;
       box-shadow: 0 0 0 3px rgba(45, 90, 39, 0.14);
@@ -1219,6 +1230,7 @@
       box-shadow: 0 12px 28px rgba(26, 36, 18, 0.14);
       margin-top: 4px;
     }
+
     .kbv-search-item {
       padding: 10px 14px;
       border-bottom: 1px solid rgba(45, 90, 39, 0.08);
@@ -1227,11 +1239,12 @@
       color: #1A2412;
       transition: background 0.15s;
     }
+
     .kbv-search-item:hover {
       background: #F0EEE9;
       color: #2D5A27;
     }
-  
+
     /* Header Screen Navigation */
     .kbv-nav-screen-btn {
       background: rgba(255, 255, 255, 0.05);
@@ -1247,11 +1260,13 @@
       align-items: center;
       gap: 6px;
     }
+
     .kbv-nav-screen-btn:hover {
       background: rgba(232, 210, 181, 0.15);
       border-color: var(--kbv-cream);
       color: #ffffff;
     }
+
     .kbv-nav-screen-btn.active {
       background: var(--kbv-primary-gradient);
       border-color: #1E3F1A;
@@ -1270,6 +1285,7 @@
       align-items: center;
       gap: 6px;
     }
+
     .kbv-nav-feature-btn:hover {
       transform: translateY(-1px);
       filter: brightness(1.15);
@@ -1283,15 +1299,16 @@
       padding: 20px;
       cursor: pointer;
       transition: all 0.25s ease;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
+
     .kbv-feature-highlight-card:hover {
       transform: translateY(-4px);
       border-color: var(--kbv-cream);
-      box-shadow: 0 14px 35px rgba(0,0,0,0.7);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
     }
 
     .kbv-quick-link-btn {
@@ -1316,19 +1333,23 @@
       border: none;
       transition: all 0.2s;
     }
+
     .btn-primary {
       background: var(--kbv-primary-gradient);
       color: #FFFFFF;
       border: 1px solid rgba(30, 63, 26, 0.55);
     }
+
     .btn-primary:hover {
       filter: brightness(1.08);
     }
+
     .btn-secondary {
       background: #F0EEE9;
       color: #1A2412;
       border: 1px solid rgba(45, 90, 39, 0.24);
     }
+
     .btn-secondary:hover {
       border-color: #2D5A27;
       background: rgba(45, 90, 39, 0.1);
@@ -1343,17 +1364,20 @@
       align-items: center;
       justify-content: space-between;
     }
+
     .param-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px;
     }
+
     .param-card {
       background: #FFFFFF;
       border: 1px solid var(--kbv-border);
       border-radius: 10px;
       padding: 10px 12px;
     }
+
     .param-label {
       font-size: 0.7rem;
       color: var(--kbv-sage);
@@ -1361,16 +1385,19 @@
       letter-spacing: 0.03em;
       margin-bottom: 4px;
     }
+
     .param-value {
       font-size: 1.05rem;
       font-weight: 800;
       color: #1A2412;
     }
+
     .param-unit {
       font-size: 0.72rem;
       color: var(--kbv-sage);
       font-weight: 500;
     }
+
     .param-meta {
       font-size: 0.68rem;
       color: #5C6B52;
@@ -1383,6 +1410,7 @@
       font-size: 0.76rem;
       margin-top: 8px;
     }
+
     .irrigation-table th {
       padding: 8px 6px;
       background: #F0EEE9;
@@ -1391,12 +1419,14 @@
       border-bottom: 1.5px solid rgba(45, 90, 39, 0.2);
       font-weight: 700;
     }
+
     .irrigation-table td {
       padding: 7px 6px;
       text-align: center;
       border-bottom: 1px solid rgba(45, 90, 39, 0.1);
       color: #1A2412;
     }
+
     .badge-due {
       background: rgba(185, 28, 28, 0.12);
       color: #991b1b;
@@ -1406,6 +1436,7 @@
       font-weight: 700;
       font-size: 0.7rem;
     }
+
     .badge-ok {
       background: rgba(45, 90, 39, 0.12);
       color: #2D5A27;
@@ -1425,6 +1456,7 @@
       border-radius: 10px;
       overflow: hidden;
     }
+
     .chat-messages {
       flex: 1;
       overflow-y: auto;
@@ -1433,6 +1465,7 @@
       flex-direction: column;
       gap: 10px;
     }
+
     .chat-bubble {
       padding: 10px 13px;
       border-radius: 10px;
@@ -1440,23 +1473,27 @@
       line-height: 1.45;
       max-width: 88%;
     }
+
     .chat-bubble.bot {
       background: #FFFFFF;
       border: 1px solid rgba(45, 90, 39, 0.18);
       align-self: flex-start;
       color: #1A2412;
     }
+
     .chat-bubble.user {
       background: var(--kbv-primary-gradient);
       color: #FFFFFF;
       font-weight: 600;
       align-self: flex-end;
     }
+
     .chat-input-bar {
       padding: 8px;
       background: #FFFFFF;
       border-top: 1px solid var(--kbv-border);
     }
+
     .chat-input-bar input {
       background: #F0EEE9;
       border: 1px solid rgba(45, 90, 39, 0.24);
@@ -1480,10 +1517,12 @@
       opacity: 0;
       transition: all 0.2s ease;
     }
+
     .modal-backdrop.open {
       visibility: visible;
       opacity: 1;
     }
+
     .modal-card {
       background: #FFFFFF;
       border: 1px solid var(--kbv-border);
@@ -1496,6 +1535,7 @@
       box-shadow: 0 24px 50px rgba(26, 36, 18, 0.22);
       overflow: hidden;
     }
+
     .modal-header {
       padding: 16px 22px;
       border-bottom: 1px solid var(--kbv-border);
@@ -1503,11 +1543,13 @@
       align-items: center;
       justify-content: space-between;
     }
+
     .modal-title {
       font-size: 1.1rem;
       font-weight: 800;
       color: #1A2412;
     }
+
     .modal-close-btn {
       background: none;
       border: none;
@@ -1516,17 +1558,20 @@
       cursor: pointer;
       line-height: 1;
     }
+
     .modal-body {
       padding: 20px;
       overflow-y: auto;
       flex: 1;
       color: #1A2412;
     }
+
     .provenance-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.78rem;
     }
+
     .provenance-table th {
       background: #F0EEE9;
       padding: 9px;
@@ -1534,6 +1579,7 @@
       color: #2D5A27;
       border-bottom: 1.5px solid rgba(45, 90, 39, 0.2);
     }
+
     .provenance-table td {
       padding: 9px;
       border-bottom: 1px solid rgba(45, 90, 39, 0.1);
@@ -1546,6 +1592,7 @@
       vertical-align: -0.15em;
       flex-shrink: 0;
     }
+
     [data-icon] {
       display: inline-flex;
       align-items: center;
@@ -1560,103 +1607,152 @@
       margin-bottom: 14px;
     }
 
+    .kbv-diagram-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .kbv-tryerror-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .kbv-breed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
     /* Responsive Breakpoints (Tablets, Phablets & Phones 320px–960px) */
     @media (max-width: 720px) {
+      .kbv-tryerror-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kbv-diagram-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .kbv-header-top-row {
         padding: 8px 14px;
         gap: 10px;
       }
+
       .kbv-brand-divider-meta {
         display: none !important;
       }
+
       .kbv-header-actions {
         width: 100%;
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 8px;
       }
+
       .kbv-lang-dropdown {
         flex: 1 1 130px;
         padding: 7px 10px;
         font-size: 0.8rem;
       }
+
       .kbv-header-nav-tabs {
         padding: 6px 12px 8px 12px;
         gap: 6px;
       }
+
       .kbv-nav-tab {
         padding: 6px 11px;
         font-size: 0.76rem;
       }
+
       main.kbv-main-container {
         padding: 16px 12px 64px 12px;
       }
+
       .kbv-hero-banner {
         padding: 26px 16px !important;
         border-radius: 20px;
         margin-bottom: 20px;
       }
+
       .kbv-lang-grid-card {
         padding: 18px 14px !important;
         border-radius: 18px;
         margin-bottom: 20px !important;
       }
+
       .kbv-btn-primary-large#kbvContinueBtn {
         width: 100%;
         justify-content: center;
         padding: 14px 18px !important;
         font-size: 1rem !important;
       }
+
       .kbv-loc-badge-banner {
         padding: 12px 14px;
         border-radius: 16px;
         margin-bottom: 14px !important;
       }
+
       .kbv-loc-banner-meta {
         width: 100%;
         justify-content: space-between !important;
       }
-      .kbv-loc-banner-meta > div:first-child {
+
+      .kbv-loc-banner-meta>div:first-child {
         text-align: left !important;
       }
+
       .kbv-dashboard-control-strip {
         padding: 14px 12px !important;
         border-radius: 16px !important;
         margin-bottom: 14px !important;
       }
+
       .kbv-editorial-card,
       .kbv-snapshot-card,
       .kbv-map-card-web {
         padding: 16px 14px !important;
         border-radius: 18px !important;
       }
+
       .kbv-map-header-web {
         flex-wrap: wrap;
         gap: 6px;
       }
+
       .kbv-map-frame-web {
         height: 300px;
         border-radius: 14px;
       }
+
       .kbv-legend-bar-web {
         flex-wrap: wrap;
         justify-content: flex-start;
         gap: 8px 14px;
         padding: 12px 4px 0 4px;
       }
+
       .chat-window {
         height: auto;
         min-height: 320px;
         max-height: 75vh;
       }
+
       .chat-messages {
         min-height: 180px;
       }
+
       .modal-card {
         width: 96%;
         max-height: 90vh;
         border-radius: 14px;
       }
+
       .modal-body {
         padding: 14px;
       }
@@ -1667,21 +1763,26 @@
         height: 36px !important;
         max-width: 180px !important;
       }
+
       .kbv-mandi-metrics-grid {
         grid-template-columns: 1fr !important;
       }
+
       .factor-bars-mini {
         grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)) !important;
         gap: 8px !important;
       }
-      .kbv-control-actions-row > * {
+
+      .kbv-control-actions-row>* {
         flex: 1 1 auto;
         justify-content: center;
       }
+
       .kbv-snapshot-row {
         flex-wrap: wrap;
         gap: 4px;
       }
+
       .kbv-toast {
         left: 12px;
         right: 12px;
@@ -1689,7 +1790,6 @@
         text-align: center;
       }
     }
-
   </style>
 </head>
 
@@ -1699,7 +1799,9 @@
   <header class="kbv-web-header">
     <div class="kbv-header-top-row">
       <div class="kbv-brand-group" onclick="window.kbvApp.goToScreen(4)" title="AgroNexus — Intelligence That Grows.">
-        <img src="assets/agronexus_logo.png?v=3.2" alt="AgroNexus — Intelligence That Grows." style="height:46px; width:auto; max-width:240px; object-fit:contain; display:block;" onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/static/assets/agronexus_logo.png?v=3.2';}else{this.style.display='none';document.getElementById('kbvBrandFallback').style.display='flex';}" />
+        <img src="assets/agronexus_logo.png?v=3.2" alt="AgroNexus — Intelligence That Grows."
+          style="height:46px; width:auto; max-width:240px; object-fit:contain; display:block;"
+          onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/static/assets/agronexus_logo.png?v=3.2';}else{this.style.display='none';document.getElementById('kbvBrandFallback').style.display='flex';}" />
         <div id="kbvBrandFallback" style="display:none; align-items:center; gap:10px;">
           <div class="kbv-web-logo"><span data-icon="brand_leaf" data-size="22"></span></div>
           <div>
@@ -1707,17 +1809,25 @@
             <div class="kbv-brand-tagline">Intelligence That Grows.</div>
           </div>
         </div>
-        <div class="kbv-brand-divider-meta" style="border-left:1px solid rgba(45,90,39,0.2); padding-left:12px; display:flex; flex-direction:column;">
-          <span style="font-size:0.72rem; font-weight:700; color:#2D5A27; letter-spacing:0.02em;">1 km² Geo-Spatial AI</span>
-          <span style="font-size:0.68rem; color:var(--kbv-sage);" data-i18n="brand_tagline">Crop Suitability, Irrigation & Mandi Intelligence</span>
+        <div class="kbv-brand-divider-meta"
+          style="border-left:1px solid rgba(45,90,39,0.2); padding-left:12px; display:flex; flex-direction:column;">
+          <span style="font-size:0.72rem; font-weight:700; color:#2D5A27; letter-spacing:0.02em;">1 km² Geo-Spatial
+            AI</span>
+          <span style="font-size:0.68rem; color:var(--kbv-sage);" data-i18n="brand_tagline">Crop Suitability, Irrigation
+            & Mandi Intelligence</span>
         </div>
       </div>
 
       <!-- Header Actions (Language Switcher & Primary Health Card CTA) -->
       <div class="kbv-header-actions">
         <div class="kbv-header-nav" id="kbvHeaderFeatureNav" style="display:none; gap:8px; align-items:center;">
-          <button type="button" class="kbv-nav-tab" style="padding:6px 12px; font-size:0.78rem; background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); color:#2D5A27;" onclick="window.kbvApp.goToScreen(1)"><span data-icon="globe" data-size="14"></span> Languages</button>
-          <button type="button" class="kbv-nav-feature-btn" style="background:var(--kbv-primary-gradient); border:1px solid #1E3F1A; color:#FFFFFF; font-weight:800;" onclick="window.kbvApp.downloadHealthCard()"><span data-icon="doc" data-size="14"></span> Health Card PDF</button>
+          <button type="button" class="kbv-nav-tab"
+            style="padding:6px 12px; font-size:0.78rem; background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); color:#2D5A27;"
+            onclick="window.kbvApp.goToScreen(1)"><span data-icon="globe" data-size="14"></span> Languages</button>
+          <button type="button" class="kbv-nav-feature-btn"
+            style="background:var(--kbv-primary-gradient); border:1px solid #1E3F1A; color:#FFFFFF; font-weight:800;"
+            onclick="window.kbvApp.downloadHealthCard()"><span data-icon="doc" data-size="14"></span> Health Card
+            PDF</button>
         </div>
 
         <select class="kbv-lang-dropdown" id="kbvNavLangSelect">
@@ -1738,12 +1848,27 @@
 
     <!-- Tier 2: Focused Editorial Workspace Tabs (Shown on Dashboard) -->
     <nav class="kbv-header-nav-tabs" id="kbvDashboardTabs">
-      <button type="button" class="kbv-nav-tab active" data-tab-view="map" onclick="window.kbvApp.switchDashboardTab('map')"><span data-icon="map" data-size="14"></span> 1 km² Field Map</button>
-      <button type="button" class="kbv-nav-tab" data-tab-view="crops" onclick="window.kbvApp.switchDashboardTab('crops')"><span data-icon="crops" data-size="14"></span> Crop Advisor</button>
-      <button type="button" class="kbv-nav-tab" data-tab-view="soil" onclick="window.kbvApp.switchDashboardTab('soil')"><span data-icon="soil" data-size="14"></span> Soil & Climate</button>
-      <button type="button" class="kbv-nav-tab" data-tab-view="irrigation" onclick="window.kbvApp.switchDashboardTab('irrigation')"><span data-icon="water" data-size="14"></span> Irrigation Plan</button>
-      <button type="button" class="kbv-nav-tab" data-tab-view="mandi" onclick="window.kbvApp.switchDashboardTab('mandi')"><span data-icon="mandi" data-size="14"></span> Mandi Market</button>
-      <button type="button" class="kbv-nav-tab" data-tab-view="doctor" onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="14"></span> AI Crop Doctor</button>
+      <button type="button" class="kbv-nav-tab active" data-tab-view="map"
+        onclick="window.kbvApp.switchDashboardTab('map')"><span data-icon="map" data-size="14"></span> 1 km² Field
+        Map</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="crops"
+        onclick="window.kbvApp.switchDashboardTab('crops')"><span data-icon="crops" data-size="14"></span> Crop
+        Advisor</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="soil"
+        onclick="window.kbvApp.switchDashboardTab('soil')"><span data-icon="soil" data-size="14"></span> Soil &
+        Climate</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="irrigation"
+        onclick="window.kbvApp.switchDashboardTab('irrigation')"><span data-icon="water" data-size="14"></span>
+        Irrigation Plan</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="mandi"
+        onclick="window.kbvApp.switchDashboardTab('mandi')"><span data-icon="mandi" data-size="14"></span> Mandi
+        Market</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="doctor"
+        onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="14"></span> AI Crop
+        Doctor</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="tryerror"
+        onclick="window.kbvApp.switchDashboardTab('tryerror')"><span data-icon="microscope" data-size="14"></span> Try
+        &amp; Error</button>
     </nav>
   </header>
 
@@ -1755,8 +1880,11 @@
          ===================================================================== -->
     <section id="kbvScreen1" style="display:block; max-width:880px; margin:24px auto 60px auto;">
       <div class="kbv-hero-banner" style="padding:45px 32px; text-align:center;">
-        <img src="assets/agronexus_logo.png?v=3.2" alt="AgroNexus — Intelligence That Grows." style="max-width:380px; width:90%; height:auto; margin:0 auto 18px auto; display:block;" onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/static/assets/agronexus_logo.png?v=3.2';}else{this.style.display='none';document.getElementById('kbvHeroTitle').style.cssText='font-size:2.8rem;margin-bottom:8px;color:#1A2412;';}" />
-        <h1 class="kbv-hero-headline" id="kbvHeroTitle" style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">
+        <img src="assets/agronexus_logo.png?v=3.2" alt="AgroNexus — Intelligence That Grows."
+          style="max-width:380px; width:90%; height:auto; margin:0 auto 18px auto; display:block;"
+          onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='/static/assets/agronexus_logo.png?v=3.2';}else{this.style.display='none';document.getElementById('kbvHeroTitle').style.cssText='font-size:2.8rem;margin-bottom:8px;color:#1A2412;';}" />
+        <h1 class="kbv-hero-headline" id="kbvHeroTitle"
+          style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">
           Agro<span class="kbv-highlight">Nexus</span>
         </h1>
         <p class="kbv-hero-sub" style="font-size:1.05rem; margin-bottom:28px; max-width:620px;" data-i18n="hero_desc">
@@ -1764,8 +1892,10 @@
         </p>
 
         <!-- Dedicated Language Selector Card -->
-        <div class="kbv-lang-grid-card" style="margin-bottom:32px; border:1.5px solid rgba(45, 90, 39, 0.22); box-shadow:0 12px 30px rgba(26,36,18,0.08);">
-          <div class="kbv-lang-grid-title" style="font-size:1.25rem; font-weight:800; margin-bottom:22px; color:#1A2412;">
+        <div class="kbv-lang-grid-card"
+          style="margin-bottom:32px; border:1.5px solid rgba(45, 90, 39, 0.22); box-shadow:0 12px 30px rgba(26,36,18,0.08);">
+          <div class="kbv-lang-grid-title"
+            style="font-size:1.25rem; font-weight:800; margin-bottom:22px; color:#1A2412;">
             <span data-icon="globe" data-size="20" style="color:#2D5A27;"></span>
             <span data-i18n="select_lang">Select Your Language / अपनी भाषा चुनें</span>
           </div>
@@ -1773,7 +1903,9 @@
           <div class="kbv-lang-grid">
             <div class="kbv-lang-option active" data-lang="en">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">English</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Default</div>
@@ -1784,7 +1916,9 @@
 
             <div class="kbv-lang-option" data-lang="hi">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">हिंदी</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Hindi</div>
@@ -1795,7 +1929,9 @@
 
             <div class="kbv-lang-option" data-lang="kn">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">ಕನ್ನಡ</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Kannada</div>
@@ -1806,7 +1942,9 @@
 
             <div class="kbv-lang-option" data-lang="te">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">తెలుగు</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Telugu</div>
@@ -1817,7 +1955,9 @@
 
             <div class="kbv-lang-option" data-lang="ta">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">தமிழ்</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Tamil</div>
@@ -1828,7 +1968,9 @@
 
             <div class="kbv-lang-option" data-lang="mr">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">मराठी</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Marathi</div>
@@ -1839,7 +1981,9 @@
 
             <div class="kbv-lang-option" data-lang="gu">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">ગુજરાતી</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Gujarati</div>
@@ -1850,7 +1994,9 @@
 
             <div class="kbv-lang-option" data-lang="bn">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">বাংলা</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Bengali</div>
@@ -1861,7 +2007,9 @@
 
             <div class="kbv-lang-option" data-lang="ml">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">മലയാളം</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Malayalam</div>
@@ -1872,7 +2020,9 @@
 
             <div class="kbv-lang-option" data-lang="pa">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">ਪੰਜਾਬੀ</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Punjabi</div>
@@ -1883,7 +2033,9 @@
 
             <div class="kbv-lang-option" data-lang="or">
               <div class="kbv-lang-option-left">
-                <div class="kbv-radio-circle"><div class="kbv-radio-inner"></div></div>
+                <div class="kbv-radio-circle">
+                  <div class="kbv-radio-inner"></div>
+                </div>
                 <div>
                   <div class="kbv-lang-name">ଓଡ଼ିଆ</div>
                   <div style="font-size:0.72rem; color:var(--kbv-sage);">Odia</div>
@@ -1896,7 +2048,8 @@
 
         <!-- Launch Live Farm Dashboard CTA -->
         <div>
-          <button class="kbv-btn-primary-large" id="kbvContinueBtn" onclick="window.kbvApp.goToScreen(4)" style="font-size:1.18rem; font-weight:800; padding:18px 46px; cursor:pointer; box-shadow:0 0 28px var(--kbv-primary-glow);">
+          <button class="kbv-btn-primary-large" id="kbvContinueBtn" onclick="window.kbvApp.goToScreen(4)"
+            style="font-size:1.18rem; font-weight:800; padding:18px 46px; cursor:pointer; box-shadow:0 0 28px var(--kbv-primary-glow);">
             <span data-icon="rocket" data-size="20"></span>
             <span data-i18n="continue_btn">Enter Live Farm Dashboard →</span>
           </button>
@@ -1912,36 +2065,52 @@
       <!-- Prominent Active Field Banner -->
       <div class="kbv-loc-badge-banner" id="kbvScreen4LocBanner" style="margin-bottom:16px;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <div style="width:42px; height:42px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.22); color:#2D5A27; display:flex; align-items:center; justify-content:center;"><span data-icon="pin" data-size="22"></span></div>
+          <div
+            style="width:42px; height:42px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.22); color:#2D5A27; display:flex; align-items:center; justify-content:center;">
+            <span data-icon="pin" data-size="22"></span></div>
           <div>
-            <div style="font-size:0.7rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Analyzed 1 km² Farm Field</div>
-            <div id="kbvScreen4LocationText" style="font-size:1.15rem; font-weight:800; color:#1A2412;">Bengaluru Urban, Karnataka, India</div>
+            <div
+              style="font-size:0.7rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+              Analyzed 1 km² Farm Field</div>
+            <div id="kbvScreen4LocationText" style="font-size:1.15rem; font-weight:800; color:#1A2412;">Bengaluru Urban,
+              Karnataka, India</div>
           </div>
         </div>
         <div class="kbv-loc-banner-meta" style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
           <div style="text-align:right;">
-            <div id="kbvScreen4CoordsText" style="font-size:0.88rem; font-weight:700; color:#2D5A27;">12.9571°N, 77.5325°E</div>
-            <div style="font-size:0.72rem; color:var(--text-sub);">1.00 km² Geodesic Area • 100 Hectares (247.1 Acres)</div>
+            <div id="kbvScreen4CoordsText" style="font-size:0.88rem; font-weight:700; color:#2D5A27;">12.9571°N,
+              77.5325°E</div>
+            <div style="font-size:0.72rem; color:var(--text-sub);">1.00 km² Geodesic Area • 100 Hectares (247.1 Acres)
+            </div>
           </div>
-          <button type="button" class="kbv-nav-tab" onclick="window.app && window.app.openProvenanceModal()" style="border-color:rgba(45,90,39,0.28); color:#2D5A27; background:#F0EEE9;"><span data-icon="microscope" data-size="14"></span> Audit Data</button>
+          <button type="button" class="kbv-nav-tab" onclick="window.app && window.app.openProvenanceModal()"
+            style="border-color:rgba(45,90,39,0.28); color:#2D5A27; background:#F0EEE9;"><span data-icon="microscope"
+              data-size="14"></span> Audit Data</button>
         </div>
       </div>
 
       <!-- TAB 1: 1 KM² FIELD MAP & SNAPSHOT -->
       <div class="kbv-editorial-tab-panel active" id="kbvTab_map">
         <!-- Field Location, Crop & Photo Control Strip (Scoped to Field Map Tab Only) -->
-        <div class="kbv-dashboard-control-strip" style="background:var(--kbv-surface-card); border:1px solid var(--kbv-border); border-radius:20px; padding:16px 20px; margin-bottom:20px;">
-          <div class="kbv-dashboard-control-grid" style="display:grid; grid-template-columns: 1.25fr 1fr; gap:18px; align-items:start;">
+        <div class="kbv-dashboard-control-strip"
+          style="background:var(--kbv-surface-card); border:1px solid var(--kbv-border); border-radius:20px; padding:16px 20px; margin-bottom:20px;">
+          <div class="kbv-dashboard-control-grid"
+            style="display:grid; grid-template-columns: 1.25fr 1fr; gap:18px; align-items:start;">
             <!-- Column 1: Field Location & GPS Controls -->
             <div>
               <div style="display:flex; gap:8px; margin-bottom:10px;">
-                <button type="button" class="kbv-loc-detect-btn" id="kbvDashUseLocBtn" onclick="window.kbvApp.detectLocationForAnalysis()" style="flex:0 0 auto; width:auto; padding:9px 14px; font-size:0.8rem; white-space:nowrap; background:rgba(45,90,39,0.1); border-color:rgba(45,90,39,0.3); color:#2D5A27;">
+                <button type="button" class="kbv-loc-detect-btn" id="kbvDashUseLocBtn"
+                  onclick="window.kbvApp.detectLocationForAnalysis()"
+                  style="flex:0 0 auto; width:auto; padding:9px 14px; font-size:0.8rem; white-space:nowrap; background:rgba(45,90,39,0.1); border-color:rgba(45,90,39,0.3); color:#2D5A27;">
                   <span data-icon="gps" data-size="15"></span>
                   <span>Detect GPS</span>
                 </button>
                 <div style="position:relative; flex:1;">
-                  <span data-icon="search" data-size="14" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#4F5E46; pointer-events:none;"></span>
-                  <input type="text" id="kbvDashLocSearchInput" class="kbv-loc-search-input" placeholder="Search Indian village, taluk or district..." autocomplete="off" style="padding:9px 14px 9px 34px; font-size:0.82rem;" />
+                  <span data-icon="search" data-size="14"
+                    style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#4F5E46; pointer-events:none;"></span>
+                  <input type="text" id="kbvDashLocSearchInput" class="kbv-loc-search-input"
+                    placeholder="Search Indian village, taluk or district..." autocomplete="off"
+                    style="padding:9px 14px 9px 34px; font-size:0.82rem;" />
                   <div id="kbvDashLocSearchDropdown" class="kbv-search-dropdown" style="display:none;"></div>
                 </div>
               </div>
@@ -1949,19 +2118,33 @@
               <!-- Region Presets -->
               <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
                 <span style="font-size:0.7rem; color:var(--text-sub);">Quick Regions:</span>
-                <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(12.5238, 76.8967, 'Mandya, Karnataka')">Mandya (KA)</button>
-                <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(19.9975, 73.7898, 'Nashik, Maharashtra')">Nashik (MH)</button>
-                <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(16.3067, 80.4365, 'Guntur, Andhra Pradesh')">Guntur (AP)</button>
-                <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(30.9010, 75.8573, 'Ludhiana, Punjab')">Ludhiana (PB)</button>
-                <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(25.3176, 82.9739, 'Varanasi, Uttar Pradesh')">Varanasi (UP)</button>
-                <button type="button" class="kbv-preset-chip" onclick="window.kbvApp.selectFarmLocation(22.7196, 75.8577, 'Indore, Madhya Pradesh')">Indore (MP)</button>
+                <button type="button" class="kbv-preset-chip"
+                  onclick="window.kbvApp.selectFarmLocation(12.5238, 76.8967, 'Mandya, Karnataka')">Mandya (KA)</button>
+                <button type="button" class="kbv-preset-chip"
+                  onclick="window.kbvApp.selectFarmLocation(19.9975, 73.7898, 'Nashik, Maharashtra')">Nashik
+                  (MH)</button>
+                <button type="button" class="kbv-preset-chip"
+                  onclick="window.kbvApp.selectFarmLocation(16.3067, 80.4365, 'Guntur, Andhra Pradesh')">Guntur
+                  (AP)</button>
+                <button type="button" class="kbv-preset-chip"
+                  onclick="window.kbvApp.selectFarmLocation(30.9010, 75.8573, 'Ludhiana, Punjab')">Ludhiana
+                  (PB)</button>
+                <button type="button" class="kbv-preset-chip"
+                  onclick="window.kbvApp.selectFarmLocation(25.3176, 82.9739, 'Varanasi, Uttar Pradesh')">Varanasi
+                  (UP)</button>
+                <button type="button" class="kbv-preset-chip"
+                  onclick="window.kbvApp.selectFarmLocation(22.7196, 75.8577, 'Indore, Madhya Pradesh')">Indore
+                  (MP)</button>
               </div>
             </div>
 
             <!-- Column 2: Active Crop Selector, Media Capture & Analyze Trigger -->
             <div>
-              <div class="kbv-control-actions-row" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; align-items:center;">
-                <select class="kbv-web-select" id="kbvDashCropSelect" onchange="window.kbvApp.setCropSelection(this.value)" style="flex:1; min-width:130px; padding:9px 14px; font-size:0.82rem;">
+              <div class="kbv-control-actions-row"
+                style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; align-items:center;">
+                <select class="kbv-web-select" id="kbvDashCropSelect"
+                  onchange="window.kbvApp.setCropSelection(this.value)"
+                  style="flex:1; min-width:130px; padding:9px 14px; font-size:0.82rem;">
                   <option value="tomato" selected>Tomato</option>
                   <option value="rice">Rice (Paddy)</option>
                   <option value="wheat">Wheat</option>
@@ -1979,13 +2162,19 @@
                   <option value="pulses_moong">Green Gram (Moong)</option>
                 </select>
 
-                <button type="button" class="btn btn-secondary" id="kbvDashAddImageBtn" onclick="window.kbvMedia && window.kbvMedia.pickImage()" style="padding:9px 12px; font-size:0.78rem; border-radius:10px; white-space:nowrap;">
+                <button type="button" class="btn btn-secondary" id="kbvDashAddImageBtn"
+                  onclick="window.kbvMedia && window.kbvMedia.pickImage()"
+                  style="padding:9px 12px; font-size:0.78rem; border-radius:10px; white-space:nowrap;">
                   <span data-icon="image" data-size="14"></span> Add Image
                 </button>
-                <button type="button" class="btn btn-secondary" id="kbvDashTakePhotoBtn" onclick="window.kbvMedia && window.kbvMedia.openCamera()" style="padding:9px 12px; font-size:0.78rem; border-radius:10px; white-space:nowrap;">
+                <button type="button" class="btn btn-secondary" id="kbvDashTakePhotoBtn"
+                  onclick="window.kbvMedia && window.kbvMedia.openCamera()"
+                  style="padding:9px 12px; font-size:0.78rem; border-radius:10px; white-space:nowrap;">
                   <span data-icon="camera" data-size="14"></span> Take Photo
                 </button>
-                <button type="button" class="kbv-btn-primary-large" id="kbvDashAnalyzeBtn" onclick="window.kbvApp.runAnalysisWorkflow()" style="justify-content:center; font-size:0.82rem; padding:8px 18px; border-radius:10px;">
+                <button type="button" class="kbv-btn-primary-large" id="kbvDashAnalyzeBtn"
+                  onclick="window.kbvApp.runAnalysisWorkflow()"
+                  style="justify-content:center; font-size:0.82rem; padding:8px 18px; border-radius:10px;">
                   <span data-icon="bolt" data-size="14"></span>
                   <span>Analyze</span>
                 </button>
@@ -1993,28 +2182,54 @@
 
               <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
                 <span style="font-size:0.7rem; color:var(--text-sub);">Quick Crops:</span>
-                <button type="button" class="kbv-preset-chip kbv-crop-chip active" data-crop="tomato" onclick="window.kbvApp.setCropSelection('tomato')" style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_tomato" data-size="13"></span> Tomato</button>
-                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="rice" onclick="window.kbvApp.setCropSelection('rice')" style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_rice" data-size="13"></span> Rice</button>
-                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="wheat" onclick="window.kbvApp.setCropSelection('wheat')" style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_wheat" data-size="13"></span> Wheat</button>
-                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="maize" onclick="window.kbvApp.setCropSelection('maize')" style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_maize" data-size="13"></span> Maize</button>
-                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="cotton" onclick="window.kbvApp.setCropSelection('cotton')" style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_cotton" data-size="13"></span> Cotton</button>
-                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="soybean" onclick="window.kbvApp.setCropSelection('soybean')" style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_soybean" data-size="13"></span> Soybean</button>
+                <button type="button" class="kbv-preset-chip kbv-crop-chip active" data-crop="tomato"
+                  onclick="window.kbvApp.setCropSelection('tomato')"
+                  style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_tomato"
+                    data-size="13"></span> Tomato</button>
+                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="rice"
+                  onclick="window.kbvApp.setCropSelection('rice')"
+                  style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_rice"
+                    data-size="13"></span> Rice</button>
+                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="wheat"
+                  onclick="window.kbvApp.setCropSelection('wheat')"
+                  style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_wheat"
+                    data-size="13"></span> Wheat</button>
+                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="maize"
+                  onclick="window.kbvApp.setCropSelection('maize')"
+                  style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_maize"
+                    data-size="13"></span> Maize</button>
+                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="cotton"
+                  onclick="window.kbvApp.setCropSelection('cotton')"
+                  style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_cotton"
+                    data-size="13"></span> Cotton</button>
+                <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="soybean"
+                  onclick="window.kbvApp.setCropSelection('soybean')"
+                  style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_soybean"
+                    data-size="13"></span> Soybean</button>
               </div>
             </div>
           </div>
 
           <!-- Attached Field Image / Photo Preview Bar -->
-          <div id="kbvAttachedMediaBar" style="display:none; margin-top:12px; padding:10px 14px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); border-radius:12px; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div id="kbvAttachedMediaBar"
+            style="display:none; margin-top:12px; padding:10px 14px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); border-radius:12px; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:10px;">
-              <img id="kbvAttachedMediaThumb" src="" alt="Attached field photo" style="width:44px; height:44px; border-radius:8px; object-fit:cover; border:1px solid rgba(45,90,39,0.35);" />
+              <img id="kbvAttachedMediaThumb" src="" alt="Attached field photo"
+                style="width:44px; height:44px; border-radius:8px; object-fit:cover; border:1px solid rgba(45,90,39,0.35);" />
               <div>
-                <div id="kbvAttachedMediaTitle" style="font-size:0.8rem; font-weight:700; color:#1A2412;">Field Photo Attached</div>
-                <div id="kbvAttachedMediaMeta" style="font-size:0.7rem; color:#4F5E46;">Ready for AI Crop Doctor advisory</div>
+                <div id="kbvAttachedMediaTitle" style="font-size:0.8rem; font-weight:700; color:#1A2412;">Field Photo
+                  Attached</div>
+                <div id="kbvAttachedMediaMeta" style="font-size:0.7rem; color:#4F5E46;">Ready for AI Crop Doctor
+                  advisory</div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-              <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.75rem;" onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="13"></span> Ask Crop Doctor →</button>
-              <button type="button" class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;" onclick="window.kbvMedia && window.kbvMedia.clearImage()"><span data-icon="close" data-size="13"></span> Remove</button>
+              <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.75rem;"
+                onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="13"></span> Ask
+                Crop Doctor →</button>
+              <button type="button" class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;"
+                onclick="window.kbvMedia && window.kbvMedia.clearImage()"><span data-icon="close" data-size="13"></span>
+                Remove</button>
             </div>
           </div>
         </div>
@@ -2033,13 +2248,25 @@
             </div>
 
             <!-- Editorial Layer Switcher -->
-            <div style="display:flex; gap:6px; flex-wrap:wrap; padding:8px 10px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.14); border-radius:12px; margin-bottom:12px; align-items:center;">
-              <span style="font-size:0.7rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; margin-right:4px;">Layer:</span>
-              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnSatellite" style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('satellite', this)"><span data-icon="satellite" data-size="13"></span> Satellite</button>
-              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnNdvi" style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('ndvi', this)"><span data-icon="crops" data-size="13"></span> NDVI Canopy</button>
-              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnNdwi" style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('ndwi', this)"><span data-icon="water" data-size="13"></span> NDWI Moisture</button>
-              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnSoil" style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('soil', this)"><span data-icon="soil" data-size="13"></span> Soil pH</button>
-              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnElevation" style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('elevation', this)"><span data-icon="mountain" data-size="13"></span> Slope</button>
+            <div
+              style="display:flex; gap:6px; flex-wrap:wrap; padding:8px 10px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.14); border-radius:12px; margin-bottom:12px; align-items:center;">
+              <span
+                style="font-size:0.7rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; margin-right:4px;">Layer:</span>
+              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnSatellite"
+                style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('satellite', this)"><span
+                  data-icon="satellite" data-size="13"></span> Satellite</button>
+              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnNdvi"
+                style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('ndvi', this)"><span
+                  data-icon="crops" data-size="13"></span> NDVI Canopy</button>
+              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnNdwi"
+                style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('ndwi', this)"><span
+                  data-icon="water" data-size="13"></span> NDWI Moisture</button>
+              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnSoil"
+                style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('soil', this)"><span
+                  data-icon="soil" data-size="13"></span> Soil pH</button>
+              <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnElevation"
+                style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('elevation', this)"><span
+                  data-icon="mountain" data-size="13"></span> Slope</button>
             </div>
 
             <div class="kbv-map-frame-web" id="kbvRiskMapContainer"></div>
@@ -2047,7 +2274,8 @@
             <!-- Concentric Risk Legend -->
             <div class="kbv-legend-bar-web">
               <div class="kbv-legend-pill">
-                <div style="width:10px; height:10px; border-radius:50%; background:#B91C1C; border:1px solid #FFFFFF;"></div>
+                <div style="width:10px; height:10px; border-radius:50%; background:#B91C1C; border:1px solid #FFFFFF;">
+                </div>
                 <span data-i18n="high_risk" id="kbvHighRiskLegend">High Risk Zone (32%)</span>
               </div>
               <div class="kbv-legend-pill">
@@ -2066,7 +2294,9 @@
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <h3 style="font-size:1.1rem; font-weight:800; color:#1A2412;">Field Snapshot</h3>
-                <span style="font-size:0.7rem; background:rgba(45,90,39,0.12); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; padding:3px 9px; border-radius:99px; font-weight:700;">Live Telemetry</span>
+                <span
+                  style="font-size:0.7rem; background:rgba(45,90,39,0.12); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; padding:3px 9px; border-radius:99px; font-weight:700;">Live
+                  Telemetry</span>
               </div>
 
               <div>
@@ -2098,14 +2328,17 @@
             </div>
 
             <div style="display:grid; gap:8px;">
-              <button type="button" onclick="window.kbvApp.switchDashboardTab('crops')" style="width:100%; padding:11px 14px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; font-size:0.84rem; font-weight:700; cursor:pointer;">
+              <button type="button" onclick="window.kbvApp.switchDashboardTab('crops')"
+                style="width:100%; padding:11px 14px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; font-size:0.84rem; font-weight:700; cursor:pointer;">
                 Open Full Crop Advisor →
               </button>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                <button type="button" onclick="window.kbvApp.switchDashboardTab('mandi')" style="padding:9px 10px; border-radius:10px; background:#F0EEE9; border:1px solid var(--kbv-border); color:#1A2412; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <button type="button" onclick="window.kbvApp.switchDashboardTab('mandi')"
+                  style="padding:9px 10px; border-radius:10px; background:#F0EEE9; border:1px solid var(--kbv-border); color:#1A2412; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                   <span data-icon="mandi" data-size="14" style="color:#2D5A27;"></span> Mandi Profit
                 </button>
-                <button type="button" onclick="window.kbvApp.switchDashboardTab('doctor')" style="padding:9px 10px; border-radius:10px; background:#F0EEE9; border:1px solid var(--kbv-border); color:#1A2412; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <button type="button" onclick="window.kbvApp.switchDashboardTab('doctor')"
+                  style="padding:9px 10px; border-radius:10px; background:#F0EEE9; border:1px solid var(--kbv-border); color:#1A2412; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                   <span data-icon="doctor" data-size="14" style="color:#2D5A27;"></span> Ask AI Doctor
                 </button>
               </div>
@@ -2117,9 +2350,12 @@
       <!-- TAB 2: CROP ADVISOR (AHP MULTI-CRITERIA RANKING) -->
       <div class="kbv-editorial-tab-panel" id="kbvTab_crops">
         <div class="kbv-editorial-card">
-          <div style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px;">
+          <div
+            style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px;">
             <div>
-              <h3 class="kbv-agro-title" style="display:flex; align-items:center; gap:8px; margin-bottom:2px;"><span data-icon="crops" data-size="20" style="color:#2D5A27;"></span> <span data-i18n="panel_crops">Top Suitable Crops (Ranked by AHP Score)</span></h3>
+              <h3 class="kbv-agro-title" style="display:flex; align-items:center; gap:8px; margin-bottom:2px;"><span
+                  data-icon="crops" data-size="20" style="color:#2D5A27;"></span> <span data-i18n="panel_crops">Top
+                  Suitable Crops (Ranked by AHP Score)</span></h3>
               <p class="kbv-agro-sub" style="margin-bottom:0;" data-i18n="agro_sub">
                 Multi-criteria land evaluation with Liebig's Law of the Minimum and estimated produce per acre & 1 km².
               </p>
@@ -2135,34 +2371,54 @@
       <div class="kbv-editorial-tab-panel" id="kbvTab_soil">
         <div class="kbv-soil-climate-grid">
           <div class="kbv-editorial-card">
-            <div class="kbv-agro-panel-title"><span data-icon="soil" data-size="18" style="color:#2D5A27;"></span> <span data-i18n="panel_soil_weather">1 km² Soil Pedology (ISRIC SoilGrids & ICAR)</span></div>
+            <div class="kbv-agro-panel-title"><span data-icon="soil" data-size="18" style="color:#2D5A27;"></span> <span
+                data-i18n="panel_soil_weather">1 km² Soil Pedology (ISRIC SoilGrids & ICAR)</span></div>
             <div style="font-size:0.85rem; color:#1A2412; line-height:1.85;">
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="field_loc_label">Field Location:</span> <b id="kbvSoilLocName" style="color:#1A2412;">Bengaluru Urban, Karnataka</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_class_label">Soil Classification:</span> <b id="soilClassValue">Red Sandy Loam (Alfisols)</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Primary Taxonomy:</span> <b id="soilTaxonomyMeta">Sandy Clay Loam</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_ph_label">Soil pH (0-30cm):</span> <b id="soilPhValue">6.8 (Optimal Neutral)</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_texture_label">Soil Texture:</span> <b id="soilTextureValue">Sandy Clay Loam (Well Drained)</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Drainage Class:</span> <b id="soilDrainageValue">Well Drained</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Organic Carbon (SOC):</span> <b id="soilSocValue">0.52%</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Nitrogen (N):</span> <b id="soilNValue">210 kg/ha</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Phosphorus (P₂O₅):</span> <b id="soilPValue">16 kg/ha</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Potassium (K₂O):</span> <b id="soilKValue">240 kg/ha</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="field_loc_label">Field
+                  Location:</span> <b id="kbvSoilLocName" style="color:#1A2412;">Bengaluru Urban, Karnataka</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_class_label">Soil
+                  Classification:</span> <b id="soilClassValue">Red Sandy Loam (Alfisols)</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Primary Taxonomy:</span> <b
+                  id="soilTaxonomyMeta">Sandy Clay Loam</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_ph_label">Soil pH
+                  (0-30cm):</span> <b id="soilPhValue">6.8 (Optimal Neutral)</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_texture_label">Soil
+                  Texture:</span> <b id="soilTextureValue">Sandy Clay Loam (Well Drained)</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Drainage Class:</span> <b
+                  id="soilDrainageValue">Well Drained</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Organic Carbon (SOC):</span> <b
+                  id="soilSocValue">0.52%</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Nitrogen (N):</span> <b
+                  id="soilNValue">210 kg/ha</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Phosphorus (P₂O₅):</span> <b
+                  id="soilPValue">16 kg/ha</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Potassium (K₂O):</span> <b
+                  id="soilKValue">240 kg/ha</b></div>
             </div>
           </div>
 
           <div class="kbv-editorial-card">
-            <div class="kbv-agro-panel-title"><span data-icon="weather" data-size="18" style="color:#2D5A27;"></span> Micro-Climate, Hydrology & Topography</div>
+            <div class="kbv-agro-panel-title"><span data-icon="weather" data-size="18" style="color:#2D5A27;"></span>
+              Micro-Climate, Hydrology & Topography</div>
             <div style="font-size:0.85rem; color:#1A2412; line-height:1.85;">
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="temp_label">Temperature:</span> <b id="weatherTempValue">28.5°C</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Relative Humidity:</span> <b id="weatherHumidityValue">68%</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Annual & 7-Day Rainfall:</span> <b id="weatherRainfallValue">880 mm</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Solar Radiation:</span> <b id="weatherSolarValue">20.2 MJ/m²/d</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="elev_slope_label">Elevation (a.s.l.):</span> <b id="terrainElevValue">680 m</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Terrain Slope:</span> <b id="terrainSlopeValue">2.4%</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Hazard Profile:</span> <b id="terrainRiskValue">Flood: Low | Drought: Moderate</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);"
+                  data-i18n="temp_label">Temperature:</span> <b id="weatherTempValue">28.5°C</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Relative Humidity:</span> <b
+                  id="weatherHumidityValue">68%</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Annual & 7-Day Rainfall:</span> <b
+                  id="weatherRainfallValue">880 mm</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Solar Radiation:</span> <b
+                  id="weatherSolarValue">20.2 MJ/m²/d</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="elev_slope_label">Elevation
+                  (a.s.l.):</span> <b id="terrainElevValue">680 m</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Terrain Slope:</span> <b
+                  id="terrainSlopeValue">2.4%</b></div>
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Hazard Profile:</span> <b
+                  id="terrainRiskValue">Flood: Low | Drought: Moderate</b></div>
             </div>
             <div style="margin-top:16px;">
-              <button type="button" onclick="window.app && window.app.openProvenanceModal()" style="width:100%; padding:11px 14px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+              <button type="button" onclick="window.app && window.app.openProvenanceModal()"
+                style="width:100%; padding:11px 14px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                 <span data-icon="microscope" data-size="15"></span> View Full Scientific Data Provenance & Audit Report
               </button>
             </div>
@@ -2173,7 +2429,8 @@
       <!-- TAB 4: FAO-56 WEATHER-DRIVEN IRRIGATION -->
       <div class="kbv-editorial-tab-panel" id="kbvTab_irrigation">
         <div class="kbv-editorial-card">
-          <div class="kbv-agro-panel-title"><span data-icon="water" data-size="18" style="color:#2D5A27;"></span> <span data-i18n="panel_irrigation">FAO-56 Weather-Driven Irrigation Schedule</span></div>
+          <div class="kbv-agro-panel-title"><span data-icon="water" data-size="18" style="color:#2D5A27;"></span> <span
+              data-i18n="panel_irrigation">FAO-56 Weather-Driven Irrigation Schedule</span></div>
           <div id="kbvDedicatedIrrigationContainer">
             <div style="font-size:0.85rem; color:var(--text-sub);">Loading 7-day soil water balance...</div>
           </div>
@@ -2183,7 +2440,8 @@
       <!-- TAB 5: MANDI MARKET & PROFITABILITY -->
       <div class="kbv-editorial-tab-panel" id="kbvTab_mandi">
         <div class="kbv-editorial-card">
-          <div class="kbv-agro-panel-title"><span data-icon="mandi" data-size="18" style="color:#2D5A27;"></span> <span data-i18n="panel_mandi">APMC Mandi Market Prices & Profitability Calculator</span></div>
+          <div class="kbv-agro-panel-title"><span data-icon="mandi" data-size="18" style="color:#2D5A27;"></span> <span
+              data-i18n="panel_mandi">APMC Mandi Market Prices & Profitability Calculator</span></div>
           <div id="kbvDedicatedMandiContainer">
             <div style="font-size:0.85rem; color:var(--text-sub);">Loading APMC Mandi commodity benchmarks...</div>
           </div>
@@ -2193,9 +2451,21 @@
       <!-- TAB 6: MULTILINGUAL VOICE AI CROP DOCTOR -->
       <div class="kbv-editorial-tab-panel" id="kbvTab_doctor">
         <div class="kbv-editorial-card">
-          <div class="kbv-agro-panel-title"><span data-icon="doctor" data-size="18" style="color:#2D5A27;"></span> Multilingual Voice AI Crop Doctor & STCR Advisory</div>
+          <div class="kbv-agro-panel-title"><span data-icon="doctor" data-size="18" style="color:#2D5A27;"></span>
+            Multilingual Voice AI Crop Doctor & STCR Advisory</div>
           <div id="kbvDedicatedDoctorContainer">
             <div style="font-size:0.85rem; color:var(--text-sub);">Loading AI Crop Doctor advisory...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 7: TRY & ERROR PLANTATION LAB -->
+      <div class="kbv-editorial-tab-panel" id="kbvTab_tryerror">
+        <div class="kbv-editorial-card">
+          <div class="kbv-agro-panel-title"><span data-icon="microscope" data-size="18" style="color:#2D5A27;"></span>
+            Try &amp; Error — Plantation Compatibility, Best Regional Breed &amp; Irrigation Lab</div>
+          <div id="kbvDedicatedTryErrorContainer">
+            <div style="font-size:0.85rem; color:var(--text-sub);">Loading plantation evaluation lab...</div>
           </div>
         </div>
       </div>
@@ -2207,7 +2477,8 @@
   <div class="modal-backdrop" id="comparisonModal">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="scale" data-size="18" style="color:#2D5A27;"></span> Multi-Crop Suitability Comparison</div>
+        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="scale"
+            data-size="18" style="color:#2D5A27;"></span> Multi-Crop Suitability Comparison</div>
         <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body" id="comparisonModalBody"></div>
@@ -2218,7 +2489,8 @@
   <div class="modal-backdrop" id="provenanceModal">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="microscope" data-size="18" style="color:#2D5A27;"></span> Scientific Data Provenance & Audit Trail</div>
+        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="microscope"
+            data-size="18" style="color:#2D5A27;"></span> Scientific Data Provenance & Audit Trail</div>
         <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body" id="provenanceModalBody"></div>
@@ -2232,16 +2504,22 @@
   <div class="modal-backdrop" id="cameraCaptureModal">
     <div class="modal-card" style="max-width:520px;">
       <div class="modal-header">
-        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="camera" data-size="18" style="color:#2D5A27;"></span> Take Field or Crop Photo</div>
+        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="camera"
+            data-size="18" style="color:#2D5A27;"></span> Take Field or Crop Photo</div>
         <button type="button" class="modal-close-btn" id="cameraModalCloseBtn" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body" style="text-align:center;">
-        <video id="kbvCameraVideo" autoplay playsinline style="width:100%; max-height:300px; border-radius:12px; background:#1A2412; object-fit:cover; margin-bottom:12px;"></video>
+        <video id="kbvCameraVideo" autoplay playsinline
+          style="width:100%; max-height:300px; border-radius:12px; background:#1A2412; object-fit:cover; margin-bottom:12px;"></video>
         <canvas id="kbvCameraCanvas" style="display:none;"></canvas>
-        <div id="kbvCameraErrorNotice" style="display:none; padding:10px 12px; margin-bottom:12px; border-radius:8px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); font-size:0.8rem; color:#4F5E46;"></div>
+        <div id="kbvCameraErrorNotice"
+          style="display:none; padding:10px 12px; margin-bottom:12px; border-radius:8px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); font-size:0.8rem; color:#4F5E46;">
+        </div>
         <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-          <button type="button" class="btn btn-primary" id="kbvCaptureSnapBtn" style="padding:10px 18px;"><span data-icon="camera" data-size="15"></span> Capture Photo</button>
-          <button type="button" class="btn btn-secondary" id="kbvCameraFallbackFileBtn" style="padding:10px 16px;"><span data-icon="image" data-size="15"></span> Choose Image File Instead</button>
+          <button type="button" class="btn btn-primary" id="kbvCaptureSnapBtn" style="padding:10px 18px;"><span
+              data-icon="camera" data-size="15"></span> Capture Photo</button>
+          <button type="button" class="btn btn-secondary" id="kbvCameraFallbackFileBtn" style="padding:10px 16px;"><span
+              data-icon="image" data-size="15"></span> Choose Image File Instead</button>
         </div>
       </div>
     </div>
@@ -2255,20 +2533,20 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Application Modules -->
-  <script src="js/icons.js?v=3.3"></script>
-  <script src="js/api.js?v=3.3"></script>
-  <script src="js/map.js?v=3.3"></script>
-  <script src="js/suitability.js?v=3.3"></script>
-  <script src="js/modules.js?v=3.3"></script>
-  <script src="js/app.js?v=3.3"></script>
-  <script src="js/kbv_ui.js?v=3.3"></script>
-  <script src="js/voice_assistant.js?v=3.3"></script>
-  <script src="js/report_generator.js?v=3.3"></script>
+  <script src="js/icons.js?v=3.4"></script>
+  <script src="js/api.js?v=3.4"></script>
+  <script src="js/map.js?v=3.4"></script>
+  <script src="js/suitability.js?v=3.4"></script>
+  <script src="js/modules.js?v=3.4"></script>
+  <script src="js/app.js?v=3.4"></script>
+  <script src="js/kbv_ui.js?v=3.4"></script>
+  <script src="js/voice_assistant.js?v=3.4"></script>
+  <script src="js/report_generator.js?v=3.4"></script>
 
   <!-- Bootstrap -->
   <script>
     // Global layer switching dispatcher
-    window.switchMapLayer = function(mode, btnEl) {
+    window.switchMapLayer = function (mode, btnEl) {
       if (btnEl) {
         document.querySelectorAll('.kbv-layer-btn').forEach(b => {
           b.style.background = '#FFFFFF';
@@ -2301,7 +2579,7 @@
       // Bridge mapManager
       if (!window.mapManager) {
         window.mapManager = {
-          setLayerMode: function(m) { window.switchMapLayer(m); }
+          setLayerMode: function (m) { window.switchMapLayer(m); }
         };
       }
       console.log("Starting KBV Website...");

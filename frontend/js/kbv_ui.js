@@ -32,7 +32,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "Start Diagnosis →",
     inspect_pests: "Inspect Pests →",
     view_1km: "View 1 km² Area →",
-        irrigation_plan_title: "Smart Irrigation Plan",
+    irrigation_plan_title: "Smart Irrigation Plan",
     irrigation_plan_desc: "Weather-driven 7-day FAO-56 irrigation schedule, daily crop water demand (ETc), and moisture threshold balance.",
     view_irrigation_btn: "View Irrigation Plan →",
     produce_estimate_title: "Top Crops & Estimated Produce",
@@ -72,7 +72,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 Top Suitable Crops (Ranked by AHP Score)",
     panel_soil_weather: "🧪 1 km² Soil & Micro-Climate Profile",
     panel_irrigation: "💧 FAO-56 Weather-Driven Irrigation",
-        field_loc_label: "Field Location:",
+    field_loc_label: "Field Location:",
     soil_class_label: "Soil Classification:",
     soil_ph_label: "Soil pH (0-30cm):",
     soil_texture_label: "Soil Texture:",
@@ -136,7 +136,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "निदान शुरू करें →",
     inspect_pests: "कीट जांचें →",
     view_1km: "1 किमी² क्षेत्र देखें →",
-        irrigation_plan_title: "स्मार्ट सिंचाई योजना",
+    irrigation_plan_title: "स्मार्ट सिंचाई योजना",
     irrigation_plan_desc: "मौसम-आधारित 7-दिवसीय FAO-56 सिंचाई अनुसूची, दैनिक फसल जल मांग (ETc) और नमी संतुलन परामर्श।",
     view_irrigation_btn: "सिंचाई योजना देखें →",
     produce_estimate_title: "प्रमुख फसलें एवं अनुमानित उत्पादन",
@@ -176,7 +176,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 शीर्ष उपयुक्त फसलें (AHP स्कोर द्वारा रैंक)",
     panel_soil_weather: "🧪 1 किमी² मिट्टी एवं सूक्ष्म जलवायु प्रोफ़ाइल",
     panel_irrigation: "💧 एफएओ-56 मौसम-संचालित सिंचाई अनुसूची",
-        field_loc_label: "खेत का स्थान:",
+    field_loc_label: "खेत का स्थान:",
     soil_class_label: "मृदा वर्गीकरण:",
     soil_ph_label: "मृदा पीएच (0-30 सेमी):",
     soil_texture_label: "मृदा बनावट:",
@@ -240,7 +240,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "ರೋಗ ನಿರ್ಣಯ ಪ್ರಾರಂಭಿಸಿ →",
     inspect_pests: "ಕೀಟಗಳನ್ನು ಪರೀಕ್ಷಿಸಿ →",
     view_1km: "1 ಕಿಮೀ² ಪ್ರದೇಶ ನೋಡಿ →",
-        irrigation_plan_title: "ಸ್ಮಾರ್ಟ್ ನೀರಾವರಿ ಯೋಜನೆ",
+    irrigation_plan_title: "ಸ್ಮಾರ್ಟ್ ನೀರಾವರಿ ಯೋಜನೆ",
     irrigation_plan_desc: "ಹವಾಮಾನ-ಆಧಾರಿತ 7-ದಿನಗಳ FAO-56 ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿ, ದೈನಂದಿನ ನೀರಿನ ಬೇಡಿಕೆ (ETc) ಮತ್ತು ಮಣ್ಣಿನ ತೇವಾಂಶ ನಿರ್ವಹಣೆ.",
     view_irrigation_btn: "ನೀರಾವರಿ ಯೋಜನೆ ವೀಕ್ಷಿಸಿ →",
     produce_estimate_title: "ಅತ್ಯುತ್ತಮ ಬೆಳೆಗಳು & ಅಂದಾಜು ಇಳುವರಿ",
@@ -280,7 +280,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 ಅತ್ಯುತ್ತಮ ಬೆಳೆಗಳು (AHP ಸ್ಕೋರ್ ಪ್ರಕಾರ)",
     panel_soil_weather: "🧪 1 ಕಿಮೀ² ಮಣ್ಣು ಮತ್ತು ಹವಾಮಾನ ವಿವರ",
     panel_irrigation: "💧 ಎಫ್‌ಎಒ-56 ಹವಾಮಾನ ಆಧಾರಿತ ನೀರಾವರಿ",
-        field_loc_label: "ಜಮೀನಿನ ಸ್ಥಳ:",
+    field_loc_label: "ಜಮೀನಿನ ಸ್ಥಳ:",
     soil_class_label: "ಮಣ್ಣಿನ ವರ್ಗೀಕರಣ:",
     soil_ph_label: "ಮಣ್ಣಿನ ಪಿಎಚ್ (0-30 ಸೆಂ.ಮೀ):",
     soil_texture_label: "ಮಣ್ಣಿನ ರಚನೆ:",
@@ -344,7 +344,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "निदान सुरू करा →",
     inspect_pests: "कीड तपासा →",
     view_1km: "1 किमी² क्षेत्र पहा →",
-        irrigation_plan_title: "स्मार्ट सिंचन नियोजन",
+    irrigation_plan_title: "स्मार्ट सिंचन नियोजन",
     irrigation_plan_desc: "हवामान-आधारित 7-दिवसीय FAO-56 सिंचन वेळापत्रक, दैनंदिन पिकांची पाणी गरज (ETc) व ओलावा सल्ला.",
     view_irrigation_btn: "सिंचन नियोजन पहा →",
     produce_estimate_title: "प्रमुख पिके व अंदाजे उत्पादन",
@@ -384,7 +384,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 सर्वाधिक योग्य पिके (AHP स्कोअरनुसार)",
     panel_soil_weather: "🧪 1 किमी² माती व सूक्ष्म हवामान प्रोफाइल",
     panel_irrigation: "💧 एफएओ-56 हवामान-आधारित सिंचन वेळापत्रक",
-        field_loc_label: "शेताचे ठिकाण:",
+    field_loc_label: "शेताचे ठिकाण:",
     soil_class_label: "मातीचे वर्गीकरण:",
     soil_ph_label: "मातीचा पीएच (0-30 सेमी):",
     soil_texture_label: "मातीची पोत:",
@@ -424,7 +424,7 @@ const KBV_TRANSLATIONS = {
   te: {
     brand_sub: "భేటీకి ముందే తెలుసుకోండి",
     brand_tagline: "AI పంట వ్యాధి, చీడపీడల నిర్ధారణ & 1 చ.కి.మీ భౌగోళిక విశ్లేషణ ఇంజిన్",
-        hero_desc: "1 కి.మీ × 1 కి.మీ భౌగోళిక విశ్లేషణ పరిధిలో మెరుగైన వ్యవసాయం కోసం AI ఆధారిత వ్యాధి & తెగుళ్ల విశ్లేషణ.",
+    hero_desc: "1 కి.మీ × 1 కి.మీ భౌగోళిక విశ్లేషణ పరిధిలో మెరుగైన వ్యవసాయం కోసం AI ఆధారిత వ్యాధి & తెగుళ్ల విశ్లేషణ.",
     select_lang: "భాషను ఎంచుకోండి",
     continue_btn: "🚀 లైవ్ ఫార్మ్ డ్యాష్‌బోర్డ్‌ను తెరవండి →",
     choose_analysis: "విశ్లేషణను ఎంచుకోండి",
@@ -441,7 +441,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "రోగనిర్ధారణ ప్రారంభించండి →",
     inspect_pests: "కీటకాలను పరిశీలించండి →",
     view_1km: "1 చ.కి.మీ ప్రాంతం చూడండి →",
-        irrigation_plan_title: "స్మార్ట్ నీటిపారుదల ప్రణాళిక",
+    irrigation_plan_title: "స్మార్ట్ నీటిపారుదల ప్రణాళిక",
     irrigation_plan_desc: "వాతావరణ ఆధారిత 7 రోజుల FAO-56 నీటిపారుదల షెడ్యూల్, రోజువారీ పంట నీటి అవసరం (ETc) మరియు తేమ నిర్వహణ.",
     view_irrigation_btn: "నీటిపారుదల ప్రణాళిక చూడండి →",
     produce_estimate_title: "అనుకూల పంటలు & అంచనా ఉత్పత్తి",
@@ -481,7 +481,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 అత్యంత అనుకూలమైన పంటలు (AHP స్కోరు)",
     panel_soil_weather: "🧪 1 చ.కి.మీ మట్టి & సూక్ష్మ వాతావరణ ప్రొఫైల్",
     panel_irrigation: "💧 FAO-56 వాతావరణ ఆధారిత నీటిపారుదల",
-        field_loc_label: "పొలం స్థానం:",
+    field_loc_label: "పొలం స్థానం:",
     soil_class_label: "నేల వర్గీకరణ:",
     soil_ph_label: "నేల pH (0-30 సెం.మీ):",
     soil_texture_label: "నేల ఆకృతి:",
@@ -521,7 +521,7 @@ const KBV_TRANSLATIONS = {
   ta: {
     brand_sub: "பார்வையிடும் முன் அறிக",
     brand_tagline: "AI பயிர் நோய், பூச்சி கண்டறிதல் & 1 கிமீ² புவிசார் பகுப்பாய்வு இயந்திரம்",
-        hero_desc: "1 கி.மீ × 1 கி.மீ புவியியல் பரப்பளவில் சிறந்த விவசாயத்திற்கான AI நோய் மற்றும் பூச்சி பகுப்பாய்வு.",
+    hero_desc: "1 கி.மீ × 1 கி.மீ புவியியல் பரப்பளவில் சிறந்த விவசாயத்திற்கான AI நோய் மற்றும் பூச்சி பகுப்பாய்வு.",
     select_lang: "மொழியைத் தேர்ந்தெடுக்கவும்",
     continue_btn: "🚀 நேரடி பண்ணை டாஷ்போர்டைத் திறக்கவும் →",
     choose_analysis: "பகுப்பாய்வைத் தேர்ந்தெடுக்கவும்",
@@ -538,7 +538,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "நோய் கண்டறிதலைத் தொடங்கவும் →",
     inspect_pests: "பூச்சிகளை ஆய்வு செய்யவும் →",
     view_1km: "1 கிமீ² பகுதியைப் பார்க்கவும் →",
-        irrigation_plan_title: "ஸ்மார்ட் பாசனத் திட்டம்",
+    irrigation_plan_title: "ஸ்மார்ட் பாசனத் திட்டம்",
     irrigation_plan_desc: "வானிலை சார்ந்த 7 நாள் FAO-56 பாசன அட்டவணை, தினசரி பயிர் நீர் தேவை (ETc) மற்றும் ஈரப்பதம் சமநிலை.",
     view_irrigation_btn: "பாசனத் திட்டத்தைக் காண்க →",
     produce_estimate_title: "சிறந்த பயிர்கள் & மதிப்பிடப்பட்ட மகசூல்",
@@ -578,7 +578,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 மிகவும் பொருத்தமான பயிர்கள் (AHP மதிப்பெண்)",
     panel_soil_weather: "🧪 1 கிமீ² மண் & மைக்ரோ-காலநிலை சுயவிவரம்",
     panel_irrigation: "💧 FAO-56 வானிலை சார்ந்த நீர்ப்பாசனம்",
-        field_loc_label: "வயல் அமைவிடம்:",
+    field_loc_label: "வயல் அமைவிடம்:",
     soil_class_label: "மண் வகைப்பாடு:",
     soil_ph_label: "மண் pH (0-30 செ.மீ):",
     soil_texture_label: "மண் அமைப்பு:",
@@ -618,7 +618,7 @@ const KBV_TRANSLATIONS = {
   gu: {
     brand_sub: "મુલાકાત પહેલાં જાણો",
     brand_tagline: "AI પાક રોગ, જીવાત નિદાન અને 1 કિમી² ભૌગોલિક એન્જિન",
-        hero_desc: "1 કિમી × 1 કિમી ભૌગોલિક ક્ષેત્રમાં બહેતર ખેતી માટે AI આધારિત રોગ અને જીવાત વિશ્લેષણ.",
+    hero_desc: "1 કિમી × 1 કિમી ભૌગોલિક ક્ષેત્રમાં બહેતર ખેતી માટે AI આધારિત રોગ અને જીવાત વિશ્લેષણ.",
     select_lang: "ભાષા પસંદ કરો",
     continue_btn: "🚀 લાઇવ ફાર્મ ડેશબોર્ડ ખોલો →",
     choose_analysis: "વિશ્લેષણ પસંદ કરો",
@@ -635,7 +635,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "નિદાન શરૂ કરો →",
     inspect_pests: "જીવાતો તપાસો →",
     view_1km: "1 કિમી² વિસ્તાર જુઓ →",
-        irrigation_plan_title: "સ્માર્ટ પિયત આયોજન",
+    irrigation_plan_title: "સ્માર્ટ પિયત આયોજન",
     irrigation_plan_desc: "હવામાન-આધારિત 7-દિવસીય FAO-56 પિયત સમયપત્રક, દૈનિક પાક પાણીની જરૂરિયાત (ETc) અને ભેજ સલાહ.",
     view_irrigation_btn: "પિયત આયોજન જુઓ →",
     produce_estimate_title: "યોગ્ય પાકો અને અંદાજિત ઉત્પાદન",
@@ -675,7 +675,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 સૌથી અનુકૂળ પાકો (AHP સ્કોર)",
     panel_soil_weather: "🧪 1 કિમી² જમીન અને સૂક્ષ્મ-આબોહવા પ્રોફાઇલ",
     panel_irrigation: "💧 FAO-56 હવામાન-આધારિત સિંચાઈ",
-        field_loc_label: "ખેતરનું સ્થાન:",
+    field_loc_label: "ખેતરનું સ્થાન:",
     soil_class_label: "જમીનનું વર્ગીકરણ:",
     soil_ph_label: "જમીન pH (0-30 સેમી):",
     soil_texture_label: "જમીનનું બંધારણ:",
@@ -715,7 +715,7 @@ const KBV_TRANSLATIONS = {
   bn: {
     brand_sub: "পরিদর্শনের আগে জানুন",
     brand_tagline: "AI শস্য রোগ, পোকা নির্ণয় ও ১ বর্গকিমি ভৌগোলিক ইঞ্জিন",
-        hero_desc: "১ কিমি × ১ কিমি ভৌগোলিক এলাকায় উন্নত চাষের জন্য AI চালিত রোগ এবং পোকা বিশ্লেষণ।",
+    hero_desc: "১ কিমি × ১ কিমি ভৌগোলিক এলাকায় উন্নত চাষের জন্য AI চালিত রোগ এবং পোকা বিশ্লেষণ।",
     select_lang: "ভাষা নির্বাচন করুন",
     continue_btn: "🚀 লাইভ ফার্ম ড্যাশবোর্ড খুলুন →",
     choose_analysis: "বিশ্লেষণ নির্বাচন করুন",
@@ -732,7 +732,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "রোগ নির্ণয় শুরু করুন →",
     inspect_pests: "পোকা পরীক্ষা করুন →",
     view_1km: "১ বর্গকিমি এলাকা দেখুন →",
-        irrigation_plan_title: "স্মার্ট সেচ পরিকল্পনা",
+    irrigation_plan_title: "স্মার্ট সেচ পরিকল্পনা",
     irrigation_plan_desc: "আবহাওয়া-ভিত্তিক ৭ দিনের FAO-56 সেচ সময়সূচী, দৈনিক ফসলের জলের চাহিদা (ETc) এবং আর্দ্রতা ভারসাম্য।",
     view_irrigation_btn: "সেচ পরিকল্পনা দেখুন →",
     produce_estimate_title: "উপযুক্ত ফসল ও আনুমানিক উৎপাদন",
@@ -772,7 +772,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 শীর্ষ উপযোগী ফসল (AHP স্কোর)",
     panel_soil_weather: "🧪 ১ বর্গকিমি মাটি ও আবহাওয়া প্রোফাইল",
     panel_irrigation: "💧 FAO-56 আবহাওয়া-ভিত্তিক সেচ পরামর্শ",
-        field_loc_label: "জমির অবস্থান:",
+    field_loc_label: "জমির অবস্থান:",
     soil_class_label: "মাটির শ্রেণীবিভাগ:",
     soil_ph_label: "মাটির পিএইচ (০-৩০ সেমি):",
     soil_texture_label: "মাটির গঠন:",
@@ -812,7 +812,7 @@ const KBV_TRANSLATIONS = {
   ml: {
     brand_sub: "സന്ദർശിക്കുന്നതിന് മുമ്പ് അറിയുക",
     brand_tagline: "AI വിള രോഗം, കീട നിർണ്ണയം & 1 ച.കി.മീ ഭൂവിവര വിശകലന എഞ്ചിൻ",
-        hero_desc: "1 കി.മീ × 1 കി.മീ ഭൂമിശാസ്ത്രപരമായ പരിധിയിൽ മികച്ച കൃഷിക്കായി AI അധിഷ്ഠിത രോഗ, കീട വിശകലനം.",
+    hero_desc: "1 കി.മീ × 1 കി.മീ ഭൂമിശാസ്ത്രപരമായ പരിധിയിൽ മികച്ച കൃഷിക്കായി AI അധിഷ്ഠിത രോഗ, കീട വിശകലനം.",
     select_lang: "ഭാഷ തിരഞ്ഞെടുക്കുക",
     continue_btn: "🚀 ലൈവ് ഫാം ഡാഷ്‌ബോർഡ് തുറക്കുക →",
     choose_analysis: "വിശകലനം തിരഞ്ഞെടുക്കുക",
@@ -829,7 +829,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "രോഗനിർണ്ണയം ആരംഭിക്കുക →",
     inspect_pests: "കീടങ്ങളെ പരിശോധിക്കുക →",
     view_1km: "1 ച.കി.മീ പ്രദേശം കാണുക →",
-        irrigation_plan_title: "സ്മാർട്ട് നനയ്ക്കൽ പദ്ധതി",
+    irrigation_plan_title: "സ്മാർട്ട് നനയ്ക്കൽ പദ്ധതി",
     irrigation_plan_desc: "കാലാവസ്ഥാധിഷ്ഠിത 7 ദിവസത്തെ FAO-56 നനയ്ക്കൽ ഷെഡ്യൂൾ, ദൈനംദിന വിള ജല ആവശ്യകത (ETc), ഈർപ്പ സന്തുലനം.",
     view_irrigation_btn: "നനയ്ക്കൽ പദ്ധതി കാണുക →",
     produce_estimate_title: "അനുയോജ്യമായ വിളകളും ഉത്പാദനവും",
@@ -869,7 +869,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 ഏറ്റവും അനുയോജ്യമായ വിളകൾ (AHP സ്കോർ)",
     panel_soil_weather: "🧪 1 ച.കി.മീ മണ്ണും സൂക്ഷ്മ കാലാവസ്ഥാ പ്രൊഫൈലും",
     panel_irrigation: "💧 FAO-56 കാലാവസ്ഥാ അധിഷ്ഠിത ജലസേചനം",
-        field_loc_label: "പാടത്തിന്റെ സ്ഥാനം:",
+    field_loc_label: "പാടത്തിന്റെ സ്ഥാനം:",
     soil_class_label: "മണ്ണ് വർഗ്ഗീകരണം:",
     soil_ph_label: "മണ്ണ് pH (0-30 സെ.മീ):",
     soil_texture_label: "മണ്ണിന്റെ ഘടന:",
@@ -909,7 +909,7 @@ const KBV_TRANSLATIONS = {
   pa: {
     brand_sub: "ਦੌਰੇ ਤੋਂ ਪਹਿਲਾਂ ਜਾਣੋ",
     brand_tagline: "AI ਫ਼ਸਲ ਰੋਗ, ਕੀੜੇ ਦੀ ਪਛਾਣ ਅਤੇ 1 ਕਿਲੋਮੀਟਰ² ਭੂਗੋਲਿਕ ਇੰਜਣ",
-        hero_desc: "1 ਕਿਮੀ × 1 ਕਿਮੀ ਭੂਗੋਲਿਕ ਖੇਤਰ ਵਿੱਚ ਬਿਹਤਰ ਖੇਤੀ ਲਈ AI ਅਧਾਰਿਤ ਬਿਮਾਰੀ ਅਤੇ ਕੀੜਿਆਂ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ।",
+    hero_desc: "1 ਕਿਮੀ × 1 ਕਿਮੀ ਭੂਗੋਲਿਕ ਖੇਤਰ ਵਿੱਚ ਬਿਹਤਰ ਖੇਤੀ ਲਈ AI ਅਧਾਰਿਤ ਬਿਮਾਰੀ ਅਤੇ ਕੀੜਿਆਂ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ।",
     select_lang: "ਭਾਸ਼ਾ ਚੁਣੋ",
     continue_btn: "🚀 ਲਾਈਵ ਫਾਰਮ ਡੈਸ਼ਬੋਰਡ ਖੋਲ੍ਹੋ →",
     choose_analysis: "ਵਿਸ਼ਲੇਸ਼ਣ ਚੁਣੋ",
@@ -926,7 +926,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "ਨਿਦਾਨ ਸ਼ੁਰੂ ਕਰੋ →",
     inspect_pests: "ਕੀੜਿਆਂ ਦੀ ਜਾਂਚ ਕਰੋ →",
     view_1km: "1 ਕਿਲੋਮੀਟਰ² ਖੇਤਰ ਦੇਖੋ →",
-        irrigation_plan_title: "ਸਮਾਰਟ ਸਿੰਚਾਈ ਯੋਜਨਾ",
+    irrigation_plan_title: "ਸਮਾਰਟ ਸਿੰਚਾਈ ਯੋਜਨਾ",
     irrigation_plan_desc: "ਮੌਸਮ-ਅਧਾਰਿਤ 7-ਦਿਨਾਂ ਦਾ FAO-56 ਸਿੰਚਾਈ ਸ਼ਡਿਊਲ, ਰੋਜ਼ਾਨਾ ਫਸਲ ਪਾਣੀ ਦੀ ਮੰਗ (ETc) ਅਤੇ ਨਮੀ ਸੰਤੁਲਨ।",
     view_irrigation_btn: "ਸਿੰਚਾਈ ਯੋਜਨਾ ਵੇਖੋ →",
     produce_estimate_title: "ਮੁੱਖ ਫਸਲਾਂ ਅਤੇ ਅੰਦਾਜ਼ਨ ਉਤਪਾਦਨ",
@@ -966,7 +966,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 ਸਭ ਤੋਂ ਅਨੁਕੂਲ ਫ਼ਸਲਾਂ (AHP ਸਕੋਰ)",
     panel_soil_weather: "🧪 1 ਕਿਲੋਮੀਟਰ² ਮਿੱਟੀ ਅਤੇ ਮਾਈਕ੍ਰੋ-ਜਲਵਾਯੂ ਪ੍ਰੋਫਾਈਲ",
     panel_irrigation: "💧 FAO-56 ਮੌਸਮ-ਅਧਾਰਤ ਸਿੰਚਾਈ",
-        field_loc_label: "ਖੇਤ ਦੀ ਸਥਿਤੀ:",
+    field_loc_label: "ਖੇਤ ਦੀ ਸਥਿਤੀ:",
     soil_class_label: "ਮਿੱਟੀ ਦਾ ਵਰਗੀਕਰਨ:",
     soil_ph_label: "ਮਿੱਟੀ pH (0-30 ਸੈਂਟੀਮੀਟਰ):",
     soil_texture_label: "ਮਿੱਟੀ ਦੀ ਬਣਤਰ:",
@@ -1006,7 +1006,7 @@ const KBV_TRANSLATIONS = {
   or: {
     brand_sub: "ପରିଦର୍ଶନ ପୂର୍ବରୁ ଜାଣନ୍ତୁ",
     brand_tagline: "AI ଫସଲ ରୋଗ, କୀଟ ଚିହ୍ନଟ ଏବଂ ୧ ବର୍ଗ କିମି ଭୌଗୋଳିକ ଇଞ୍ଜିନ",
-        hero_desc: "୧ କିମି × ୧ କିମି ଭୌଗୋଳିକ କ୍ଷେତ୍ରରେ ଉନ୍ନତ ଚାଷ ପାଇଁ AI ଚାଳିତ ରୋଗ ଏବଂ କୀଟ ବିଶ୍ଳେଷଣ।",
+    hero_desc: "୧ କିମି × ୧ କିମି ଭୌଗୋଳିକ କ୍ଷେତ୍ରରେ ଉନ୍ନତ ଚାଷ ପାଇଁ AI ଚାଳିତ ରୋଗ ଏବଂ କୀଟ ବିଶ୍ଳେଷଣ।",
     select_lang: "ଭାଷା ଚୟନ କରନ୍ତୁ",
     continue_btn: "🚀 ଲାଇଭ୍ ଫାର୍ମ ଡ୍ୟାସବୋର୍ଡ ଖୋଲନ୍ତୁ →",
     choose_analysis: "ବିଶ୍ଳେଷଣ ଚୟନ କରନ୍ତୁ",
@@ -1023,7 +1023,7 @@ const KBV_TRANSLATIONS = {
     start_diagnosis: "ରୋଗ ନିର୍ଣ୍ଣୟ ଆରମ୍ଭ କରନ୍ତୁ →",
     inspect_pests: "କୀଟ ପରୀକ୍ଷା କରନ୍ତୁ →",
     view_1km: "୧ ବର୍ଗ କିମି ଅଞ୍ଚଳ ଦେଖନ୍ତୁ →",
-        irrigation_plan_title: "ସ୍ମାର୍ଟ ଜଳସେଚନ ଯୋଜନା",
+    irrigation_plan_title: "ସ୍ମାର୍ଟ ଜଳସେଚନ ଯୋଜନା",
     irrigation_plan_desc: "ପାଣିପାଗ-ଭିତ୍ତିକ ୭-ଦିନର FAO-56 ଜଳସେଚନ ସମୟସାରଣୀ, ଦୈନିକ ଫସଲ ଜଳ ଚାହିଦା (ETc) ଏବଂ ଆର୍ଦ୍ରତା ପରିଚାଳନା।",
     view_irrigation_btn: "ଜଳସେଚନ ଯୋଜନା ଦେଖନ୍ତୁ →",
     produce_estimate_title: "ଉପଯୁକ୍ତ ଫସଲ ଏବଂ ଆନୁମାନିକ ଉତ୍ପାଦନ",
@@ -1063,7 +1063,7 @@ const KBV_TRANSLATIONS = {
     panel_crops: "🌿 ସର୍ବୋତ୍ତମ ଉପଯୁକ୍ତ ଫସଲ (AHP ସ୍କୋର)",
     panel_soil_weather: "🧪 ୧ ବର୍ଗ କିମି ମାଟି ଏବଂ ପାଣିପାଗ ପ୍ରୋଫାଇଲ",
     panel_irrigation: "💧 FAO-56 ପାଣିପାଗ-ଆଧାରିତ ଜଳସେଚନ",
-        field_loc_label: "ଜମିର ଅବସ୍ଥିତି:",
+    field_loc_label: "ଜମିର ଅବସ୍ଥିତି:",
     soil_class_label: "ମାଟିର ଶ୍ରେଣୀବିଭାଗ:",
     soil_ph_label: "ମାଟିର pH (୦-୩୦ ସେମି):",
     soil_texture_label: "ମାଟିର ଗଠନ:",
@@ -2281,7 +2281,7 @@ const MULTILINGUAL_DISEASE_DATA = {
   }
 };
 
-window.switchMapLayer = function(mode, btnEl) {
+window.switchMapLayer = function (mode, btnEl) {
   if (btnEl) {
     document.querySelectorAll('.kbv-layer-btn').forEach(b => {
       b.style.background = '#FFFFFF';
@@ -2557,7 +2557,7 @@ class KBVApp {
     this.currentLanguage = lang;
     const navSelect = document.getElementById("kbvNavLangSelect");
     if (navSelect) navSelect.value = lang;
-    
+
     // Apply translations across DOM
     this.applyTranslations();
 
@@ -2578,7 +2578,7 @@ class KBVApp {
 
   applyTranslations() {
     const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
-    
+
     // 1. Text elements with data-i18n (strip leading emojis so crisp SVG icons stay clean)
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
@@ -2824,9 +2824,11 @@ class KBVApp {
       setTimeout(() => {
         if (this.riskMap) this.riskMap.invalidateSize();
       }, 80);
-    } else if (["irrigation", "mandi", "doctor"].includes(this.activeDashboardTab)) {
+    } else if (["irrigation", "mandi", "doctor", "tryerror"].includes(this.activeDashboardTab)) {
       if (window.modulesManager) {
-        if (window.modulesManager.modulesData) {
+        if (this.activeDashboardTab === "tryerror" && typeof window.modulesManager.ensureTryErrorLoaded === "function") {
+          window.modulesManager.ensureTryErrorLoaded();
+        } else if (window.modulesManager.modulesData) {
           window.modulesManager.render();
         } else {
           const lat = this.currentLat || (window.app && window.app.currentLat) || 12.9571;
@@ -2887,7 +2889,7 @@ class KBVApp {
     const dashLocBtn = document.getElementById("kbvDashUseLocBtn");
     const dashOrigHtml = dashLocBtn ? dashLocBtn.innerHTML : "";
     const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
-    
+
     if (locBtn) {
       locBtn.innerHTML = `<span>${t.locating}</span>`;
       locBtn.disabled = true;
@@ -3144,17 +3146,17 @@ class KBVApp {
 
   updateLocationDisplays(lat, lon, name) {
     this.currentLocationName = name;
-    
+
     // Screen 3 Location Card elements
     const locNameEl = document.getElementById("kbvFetchedLocationName");
     if (locNameEl) locNameEl.textContent = name;
-    
+
     const locCoordsEl = document.getElementById("kbvFetchedCoords");
     if (locCoordsEl) locCoordsEl.textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E • 100 Hectares (247.1 Acres)`;
-    
+
     const locDisplay = document.getElementById("kbvLocationDisplay");
     if (locDisplay) locDisplay.textContent = `📍 ${name} (${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E)`;
-    
+
     const statusPill = document.getElementById("kbvLocStatusPill");
     if (statusPill) {
       statusPill.textContent = "Synced";
@@ -3165,10 +3167,10 @@ class KBVApp {
     // Dedicated Pages Location Labels
     const s4LocText = document.getElementById("kbvScreen4LocationText");
     if (s4LocText) s4LocText.textContent = name;
-    
+
     const s4CoordsText = document.getElementById("kbvScreen4CoordsText");
     if (s4CoordsText) s4CoordsText.textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E • 100 Hectares (247.1 Acres)`;
-    
+
     const soilLoc = document.getElementById("kbvSoilLocName");
     if (soilLoc) soilLoc.textContent = name;
 
@@ -3256,24 +3258,24 @@ class KBVApp {
           if (mode === "ndvi") {
             const ndviVal = (subNdvi[idx] && subNdvi[idx].ndvi !== undefined) ? subNdvi[idx].ndvi : +(0.55 + (Math.sin(idx * 1.5) * 0.18)).toFixed(2);
             fillColor = ndviVal >= 0.65 ? "#16a34a" : (ndviVal >= 0.45 ? "#65a30d" : (ndviVal >= 0.25 ? "#ca8a04" : "#dc2626"));
-            popupText = `<b>Sentinel-2 NDVI: ${ndviVal}</b><br>Canopy Vigor: ${ndviVal >= 0.65 ? 'Dense Healthy' : (ndviVal >= 0.45 ? 'Moderate' : 'Stressed')}<br>Cell: ${r+1}, ${c+1} (4 Hectares)`;
+            popupText = `<b>Sentinel-2 NDVI: ${ndviVal}</b><br>Canopy Vigor: ${ndviVal >= 0.65 ? 'Dense Healthy' : (ndviVal >= 0.45 ? 'Moderate' : 'Stressed')}<br>Cell: ${r + 1}, ${c + 1} (4 Hectares)`;
           } else if (mode === "ndwi") {
             const ndwiVal = (subNdwi[idx] && subNdwi[idx].ndwi !== undefined) ? subNdwi[idx].ndwi : +(0.12 + (Math.cos(idx * 1.2) * 0.12)).toFixed(2);
             fillColor = ndwiVal >= 0.20 ? "#0284c7" : (ndwiVal >= 0.0 ? "#0d9488" : (ndwiVal >= -0.20 ? "#d97706" : "#b91c1c"));
-            popupText = `<b>Sentinel-2 NDWI: ${ndwiVal}</b><br>Moisture: ${ndwiVal >= 0.15 ? 'Optimal Hydration' : (ndwiVal >= 0.0 ? 'Mild Deficit' : 'Moisture Stress')}<br>Cell: ${r+1}, ${c+1} (4 Hectares)`;
+            popupText = `<b>Sentinel-2 NDWI: ${ndwiVal}</b><br>Moisture: ${ndwiVal >= 0.15 ? 'Optimal Hydration' : (ndwiVal >= 0.0 ? 'Mild Deficit' : 'Moisture Stress')}<br>Cell: ${r + 1}, ${c + 1} (4 Hectares)`;
           } else if (mode === "soil") {
             const sCell = subSoil[idx] || {};
             const phVal = sCell.ph !== undefined ? sCell.ph : +((soilData.ph || 6.8) + ((r - 2) * 0.08) - ((c - 2) * 0.04)).toFixed(2);
             const tex = sCell.texture_class || soilData.texture_class || "Clay Loam";
             const drain = soilData.drainage || "Well Drained";
             fillColor = phVal < 6.0 ? "#f97316" : (phVal <= 7.8 ? "#06b6d4" : "#8b5cf6");
-            popupText = `<b>Soil pH: ${phVal}</b><br>Texture: ${tex} (${drain})<br>Cell: ${r+1}, ${c+1}`;
+            popupText = `<b>Soil pH: ${phVal}</b><br>Texture: ${tex} (${drain})<br>Cell: ${r + 1}, ${c + 1}`;
           } else {
             const tCell = subTerrain[idx] || {};
             const slopeVal = tCell.slope_pct !== undefined ? tCell.slope_pct : +((terrainData.slope_pct || 1.4) + (r * 0.15)).toFixed(2);
             const elevVal = tCell.elevation_m !== undefined ? tCell.elevation_m : Math.round((terrainData.elevation_m || 520) + (r * 3));
             fillColor = slopeVal < 2.0 ? "#10b981" : (slopeVal < 4.5 ? "#3b82f6" : "#eab308");
-            popupText = `<b>Slope Gradient: ${slopeVal}%</b><br>Micro-Elevation: ${elevVal}m<br>Cell: ${r+1}, ${c+1}`;
+            popupText = `<b>Slope Gradient: ${slopeVal}%</b><br>Micro-Elevation: ${elevVal}m<br>Cell: ${r + 1}, ${c + 1}`;
           }
 
           const cellBounds = [[c_s, c_w], [c_n, c_e]];
@@ -3307,7 +3309,7 @@ class KBVApp {
     this.showToast(`Active Map Layer: ${mode.toUpperCase()}`, 2500);
   }
 
-    openNdviMap() {
+  openNdviMap() {
     this.goToScreen(4);
     this.switchDashboardTab("map");
     setTimeout(() => {

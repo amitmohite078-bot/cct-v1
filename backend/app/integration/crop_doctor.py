@@ -183,6 +183,22 @@ def answer_crop_doctor_question(
     elif lang == "gu":
         ans = f"{crop_name} પાક માટે તમારી {texture} જમીનમાં સંતુલિત ખાતર (NPK) વાપરો અને {temp}°C તાપમાન મુજબ દર 7-8 દિવસે પિયત આપો. જીવાત નિયંત્રણ માટે લીંબોળીનું તેલ છાંટો."
 
+    # --- BENGALI RESPONSES ---
+    elif lang == "bn":
+        ans = f"{crop_name} ফসলের জন্য আপনার {texture} মাটিতে সুষম NPK সার প্রয়োগ করুন এবং {temp}°C তাপমাত্রায় প্রতি ৭-৮ দিন অন্তর সেচ দিন। পোকামাকড় নিয়ন্ত্রণে নিম তেল (৫ মিলি/লিটার) স্প্রে করুন।"
+
+    # --- MALAYALAM RESPONSES ---
+    elif lang == "ml":
+        ans = f"{crop_name} വിളയ്ക്കായി നിങ്ങളുടെ {texture} മണ്ണിൽ സമതുലിതമായ NPK വളപ്രയോഗം നടത്തുക. {temp}°C താപനിലയിൽ 7-8 ദിവസത്തിലൊരിക്കൽ നനയ്ക്കുക. കീടനിയന്ത്രണത്തിനായി വേപ്പെണ്ണ (5 മില്ലി/ലിറ്റർ) തളിക്കുക."
+
+    # --- PUNJABI RESPONSES ---
+    elif lang == "pa":
+        ans = f"{crop_name} ਫ਼ਸਲ ਲਈ ਆਪਣੀ {texture} ਮਿੱਟੀ ਵਿੱਚ ਸੰਤੁਲਿਤ NPK ਖਾਦ ਪਾਓ ਅਤੇ {temp}°C ਤਾਪਮਾਨ ਵਿੱਚ ਹਰ 7-8 ਦਿਨਾਂ ਬਾਅਦ ਸਿੰਚਾਈ ਕਰੋ। ਕੀੜਿਆਂ ਦੀ ਰੋਕਥਾਮ ਲਈ ਨਿੰਮ ਦਾ ਤੇਲ (5 ਮਿਲੀ/ਲੀਟਰ) ਛਿੜਕੋ।"
+
+    # --- ODIA RESPONSES ---
+    elif lang == "or":
+        ans = f"{crop_name} ଫସଲ ପାଇଁ ଆପଣଙ୍କ {texture} ମାଟିରେ ସନ୍ତୁଳିତ NPK ସାର ଦିଅନ୍ତୁ ଏବଂ {temp}°C ତାପମାତ୍ରାରେ ପ୍ରତି ୭-୮ ଦିନରେ ଜଳସେଚନ କରନ୍ତୁ। କୀଟ ନିୟନ୍ତ୍ରଣ ପାଇଁ ନିମ୍ବ ତେଲ (୫ ମିଲି/ଲିଟର) ସ୍ପ୍ରେ କରନ୍ତୁ।"
+
     # --- ENGLISH (DEFAULT) RESPONSES ---
     else:
         lang = "en"
@@ -227,6 +243,10 @@ def answer_crop_doctor_question(
             "ta": "ta-IN",
             "kn": "kn-IN",
             "gu": "gu-IN",
+            "bn": "bn-IN",
+            "ml": "ml-IN",
+            "pa": "pa-IN",
+            "or": "or-IN",
             "en": "en-IN"
         }.get(lang, "en-IN")
     }

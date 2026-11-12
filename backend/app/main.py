@@ -34,11 +34,13 @@ from app.models.schemas import (
     CropSelectionRequest,
     CropDoctorQuestionRequest,
     CropComparisonRequest,
-    MarketProfitabilityRequest
+    MarketProfitabilityRequest,
+    PlantationTrialRequest
 )
 from app.integration.disease_detection import get_crop_diseases
 from app.integration.irrigation_prediction import calculate_irrigation_schedule
 from app.integration.crop_doctor import generate_crop_doctor_advisory, answer_crop_doctor_question
+from app.integration.plantation_advisor import analyze_plantation_trial
 from app.integration.mandi_market import (
     calculate_crop_profitability,
     rank_crops_by_profitability,
@@ -452,6 +454,31 @@ async def chat_with_crop_doctor(req: CropDoctorQuestionRequest):
         lang=req.language or "en"
     )
     return result
+
+@app.post("/api/integration/plantation-lab")
+async def evaluate_plantation_trial(req: PlantationTrialRequest):
+    """Evaluates any searched plantation/orchard crop against local soil & weather and outputs region-matched breeds & irrigation plan."""
+    grid = calculate_analysis_grid(req.latitude, req.longitude)
+    weather, soil = await asyncio.gather(
+        fetch_weather_data(req.latitude, req.longitude),
+        fetch_soil_data(req.latitude, req.longitude)
+    )
+    terrain = await fetch_terrain_data(
+        req.latitude,
+        req.longitude,
+        grid["corners"],
+        annual_rainfall_mm=weather.get("annual_rainfall", 850.0),
+        drainage_class=soil.get("drainage", "Well Drained")
+    )
+    return analyze_plantation_trial(
+        plant_query=req.plant_query,
+        lat=req.latitude,
+        lon=req.longitude,
+        weather=weather,
+        soil=soil,
+        terrain=terrain,
+        farm_size_acres=req.farm_size_acres
+    )
 
 def _get_indian_state_by_coords(lat: float, lon: float) -> str:
     """Estimates the Indian state based on geographical bounding polygons."""

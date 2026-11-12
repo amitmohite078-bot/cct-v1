@@ -34,7 +34,7 @@ const ApiClient = {
           const data = await res.json();
           if (data.latitude && data.longitude) return data;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // 2. Try Client-side IP Service 1: geojs.io
@@ -57,7 +57,7 @@ const ApiClient = {
           };
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 3. Try Client-side IP Service 2: ipapi.co
     try {
@@ -79,7 +79,7 @@ const ApiClient = {
           };
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return null;
   },
@@ -120,7 +120,7 @@ const ApiClient = {
             return d;
           }
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // 2. Direct browser fetch to BigDataCloud (fast, CORS-friendly, zero API key)
@@ -143,7 +143,7 @@ const ApiClient = {
           };
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 3. Direct browser fetch to Nominatim
     try {
@@ -159,7 +159,7 @@ const ApiClient = {
           };
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 4. Client-side administrative regional lookup
     return {
@@ -181,7 +181,7 @@ const ApiClient = {
     if (lat >= 17.25 && lat <= 17.55 && lon >= 78.30 && lon <= 78.60) return `Hyderabad Peri-Urban Sector, Telangana, India (${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E)`;
     if (lat >= 16.15 && lat <= 16.45 && lon >= 80.30 && lon <= 80.60) return `Guntur Krishna Delta, Andhra Pradesh, India (${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E)`;
     if (lat >= 25.20 && lat <= 25.45 && lon >= 82.85 && lon <= 83.15) return `Varanasi Gangetic Plain, Uttar Pradesh, India (${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E)`;
-    
+
     // Broad State Detection
     const state = this.determineStateByCoords(lat, lon);
     if (state) {
@@ -234,7 +234,7 @@ const ApiClient = {
           const d = await res.json();
           if (d && d.results && d.results.length > 0) return d;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // 2. Direct browser search on Nominatim
@@ -254,7 +254,7 @@ const ApiClient = {
         }));
         if (results.length > 0) return { query, results };
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 3. Fallback Presets Filter
     const presets = [
@@ -308,23 +308,33 @@ const ApiClient = {
         });
         clearTimeout(timeoutId);
         if (res.ok) return await res.json();
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const q = question.toLowerCase();
     let advice = "";
-    if (language === "hi") {
-      advice = `${cropName} के लिए: संतुलित NPK खाद डालें, 7-8 दिनों में सिंचाई करें और नीम तेल (5ml/L) का छिड़काव करें।`;
-    } else if (language === "mr") {
-      advice = `${cropName} पिकासाठी: संतुलित रासायनिक खतांचा वापर करा, वेळेवर पाणी द्या आणि सेंद्रिय निंबोळी अर्क फवारा.`;
+    const langFallbacks = {
+      hi: `${cropName} के लिए: संतुलित NPK खाद डालें, 7-8 दिनों में सिंचाई करें और नीम तेल (5ml/L) का छिड़काव करें।`,
+      mr: `${cropName} पिकासाठी: संतुलित रासायनिक खतांचा वापर करा, वेळेवर पाणी द्या आणि सेंद्रिय निंबोळी अर्क फवारा.`,
+      kn: `${cropName} ಬೆಳೆಗೆ: ಸಮತೋಲಿತ NPK ಗೊಬ್ಬರ ನೀಡಿ, 7-8 ದಿನಕ್ಕೊಮ್ಮೆ ನೀರಾವರಿ ನೀಡಿ ಮತ್ತು ಬೇವಿನ ಎಣ್ಣೆ ಸಿಂಪಡಿಸಿ.`,
+      te: `${cropName} పంటకు: సమతుల్య NPK ఎరువులు వాడండి, 7-8 రోజులకోసారి నీరు పెట్టి వేప నూనె పిచికారీ చేయండి.`,
+      ta: `${cropName} பயிருக்கு: சமச்சீரான NPK உரம் இடுங்கள், 7-8 நாட்களுக்கு ஒருமுறை நீர் பாய்ச்சி வேப்ப எண்ணெய் தெளிக்கவும்.`,
+      gu: `${cropName} પાક માટે: સંતુલિત NPK ખાતર વાપરો, 7-8 દિવસે પિયત આપો અને લીંબોળી તેલનો છંટકાવ કરો.`,
+      bn: `${cropName} ফসলের জন্য: সুষম NPK সার দিন, ৭-৮ দিন পর সেচ দিন এবং নিম তেল স্প্রে করুন।`,
+      ml: `${cropName} വിളയ്ക്ക്: സമതുലിതമായ NPK വളം നൽകുക, 7-8 ദിവസത്തിലൊരിക്കൽ നനയ്ക്കുക, വേപ്പെണ്ണ തളിക്കുക.`,
+      pa: `${cropName} ਫ਼ਸਲ ਲਈ: ਸੰਤੁਲਿਤ NPK ਖਾਦ ਪਾਓ, 7-8 ਦਿਨਾਂ ਬਾਅਦ ਸਿੰਚਾਈ ਕਰੋ ਅਤੇ ਨਿੰਮ ਦਾ ਤੇਲ ਛਿੜਕੋ।`,
+      or: `${cropName} ଫସଲ ପାଇଁ: ସନ୍ତୁଳିତ NPK ସାର ଦିଅନ୍ତୁ, ୭-୮ ଦିନରେ ପାଣି ଦିଅନ୍ତୁ ଏବଂ ନିମ୍ବ ତେଲ ସ୍ପ୍ରେ କରନ୍ତୁ।`
+    };
+    if (langFallbacks[language]) {
+      advice = langFallbacks[language];
     } else if (q.includes("fertilizer") || q.includes("urea") || q.includes("npk")) {
-      advice = `Dr. AgroCloud Prescription for ${cropName}: Apply Nitrogen in three split doses (50% basal at sowing, 25% at tillering/active vegetative stage, 25% at panicle/flowering). Ensure basal application of Phosphorous (SSP) and Potash (MOP) placed 5cm below the seed line to promote deep root development.`;
+      advice = `Dr. AgroNexus Prescription for ${cropName}: Apply Nitrogen in three split doses (50% basal at sowing, 25% at tillering/active vegetative stage, 25% at panicle/flowering). Ensure basal application of Phosphorous (SSP) and Potash (MOP) placed 5cm below the seed line to promote deep root development.`;
     } else if (q.includes("pest") || q.includes("spray") || q.includes("insect")) {
-      advice = `Dr. AgroCloud Pest Advisory: Begin with prophylactic bio-pesticides (Neem Oil 10,000 ppm @ 3 ml/L). If infestation reaches Economic Injury Level (>5 larvae/sq.m), apply target-specific Green-label formulations in late afternoon to safeguard pollinator bees.`;
+      advice = `Dr. AgroNexus Pest Advisory: Begin with prophylactic bio-pesticides (Neem Oil 10,000 ppm @ 3 ml/L). If infestation reaches Economic Injury Level (>5 larvae/sq.m), apply target-specific Green-label formulations in late afternoon to safeguard pollinator bees.`;
     } else if (q.includes("water") || q.includes("irrigation") || q.includes("dry")) {
-      advice = `Dr. AgroCloud Irrigation Advice: Maintain soil moisture between 65% and 80% available water capacity. Avoid waterlogging during flowering and grain fill. Drip irrigation or alternate furrow irrigation saves 35-40% water.`;
+      advice = `Dr. AgroNexus Irrigation Advice: Maintain soil moisture between 65% and 80% available water capacity. Avoid waterlogging during flowering and grain fill. Drip irrigation or alternate furrow irrigation saves 35-40% water.`;
     } else {
-      advice = `Dr. AgroCloud Agronomic Recommendation for ${cropName}: Scout field weekly for early leaf abnormalities. Maintain organic mulch to preserve soil microbiome and balance nitrogen applications with potassium for strong cell wall integrity.`;
+      advice = `Dr. AgroNexus Agronomic Recommendation for ${cropName}: Scout field weekly for early leaf abnormalities. Maintain organic mulch to preserve soil microbiome and balance nitrogen applications with potassium for strong cell wall integrity.`;
     }
 
     return {
@@ -339,6 +349,10 @@ const ApiClient = {
         ta: "ta-IN",
         kn: "kn-IN",
         gu: "gu-IN",
+        bn: "bn-IN",
+        ml: "ml-IN",
+        pa: "pa-IN",
+        or: "or-IN",
         en: "en-IN"
       }[language] || "en-IN"
     };
@@ -361,7 +375,7 @@ const ApiClient = {
       });
       clearTimeout(timeoutId);
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
 
     return null;
   },
@@ -378,7 +392,7 @@ const ApiClient = {
       });
       clearTimeout(timeoutId);
       if (res.ok) return await res.json();
-    } catch (e) {}
+    } catch (e) { }
     return null;
   },
 
@@ -401,7 +415,7 @@ const ApiClient = {
         const c_w = lon - deltaLon + (c * (2 * deltaLon / 5));
         const c_e = c_w + (2 * deltaLon / 5);
         const cellId = `sub_${r}_${c}`;
-        
+
         // Micro-variations
         const microPh = +(7.0 + ((r - 2) * 0.12) + ((c - 2) * 0.08)).toFixed(2);
         const microElev = Math.round(520 + (r * 3.5) - (c * 2.1));
@@ -935,6 +949,362 @@ const ApiClient = {
           farm_size_acres: 2.5
         };
       })()
+    };
+  },
+
+  async analyzePlantationTrial(plantQuery, latitude, longitude, farmSizeAcres = 2.5, fieldContext = {}) {
+    if (!IS_STATIC_HOST) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const res = await fetch(`${API_BASE}/api/integration/plantation-lab`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            plant_query: plantQuery || "Mango",
+            latitude,
+            longitude,
+            farm_size_acres: farmSizeAcres
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) return await res.json();
+      } catch (e) { }
+    }
+    return this.fallbackPlantationTrial(plantQuery, latitude, longitude, farmSizeAcres, fieldContext);
+  },
+
+  fallbackPlantationTrial(plantQuery, lat, lon, farmSizeAcres = 2.5, fieldContext = {}) {
+    const raw = (plantQuery || "Mango").trim();
+    const norm = raw.toLowerCase().replace(/\s+/g, "_");
+    const env = (window.app && window.app.analysisData && window.app.analysisData.environmental_data) || {};
+    const soil = env.soil || {};
+    const weather = env.weather || {};
+    const terrain = env.terrain || {};
+
+    const temp = Number(fieldContext.temperature ?? weather.average_temperature ?? 27.5);
+    const rainfall = Number(fieldContext.annual_rainfall ?? weather.annual_rainfall ?? 880);
+    const eto = Number(weather.et0 ?? 4.6);
+    const ph = Number(fieldContext.ph ?? soil.ph ?? 6.8);
+    const texture = fieldContext.texture || soil.texture_class || "Sandy Clay Loam";
+    const drainage = soil.drainage || "Well Drained";
+    const elevation = Number(fieldContext.elevation_m ?? terrain.elevation_m ?? 550);
+    const slope = Number(terrain.slope_pct ?? 1.8);
+
+    let zkey = "default";
+    let zoneName = "Indian Subtropical Agro Belt";
+    if (lon <= 74.6 && lat >= 8.0 && lat <= 20.5 && rainfall >= 1500) {
+      zkey = "coastal_humid";
+      zoneName = "West Coast / Konkan Humid Belt";
+    } else if (lat >= 8.0 && lat <= 17.8 && lon >= 74.2) {
+      zkey = "southern_plateau";
+      zoneName = elevation >= 750 ? "Southern Highland & Ghats Belt" : "Southern Plateau (KA / AP / TS / TN)";
+    } else if (lat > 17.8 && lat <= 23.2 && lon >= 68.5 && lon <= 79.0) {
+      zkey = "western_deccan";
+      zoneName = "Western Deccan & Gujarat Agro Belt";
+    } else if (lat >= 24.5 && lon >= 73.5 && lon <= 88.0) {
+      zkey = "indo_gangetic";
+      zoneName = "Indo-Gangetic Alluvial Plains";
+    }
+
+    const CATALOG = {
+      mango: {
+        name: "Mango", scientific_name: "Mangifera indica", category: "Perennial Fruit Orchard",
+        ideal_ph: [5.5, 7.5], ideal_temp: [22, 34], ideal_rain: [650, 2200], max_elev: 1100,
+        row_spacing_m: 5.0, col_spacing_m: 5.0,
+        standard_spacing_note: "High-Density Planting (HDP) 5m × 5m (~161 trees/acre; traditional 10m × 10m = ~40 trees/acre)",
+        drippers_per_plant: 4, emitter_lph: 8, daily_liters_mature: 45, irrigation_interval_days: 5,
+        irrigation_method: "Online Ring Dripper System (4 emitters/tree @ 8 LPH) with 10 cm organic mulch basin",
+        yield_boosting_plan: [
+          "Flowering Induction (Oct–Dec): Withhold irrigation 35–45 days before panicle emergence to trigger uniform flowering flush.",
+          "Marble-Stage Critical Hydration (Feb–Apr): Apply 100% ETo drip irrigation (40–55 L/tree/day) to cut fruit drop by up to 45%.",
+          "Pre-Harvest Brix Boost: Stop irrigation 12–15 days prior to picking to raise pulp TSS sweetness & shelf life."
+        ],
+        regional_breeds: {
+          coastal_humid: [
+            { name: "Alphonso (Hapus)", yield: "4.5–6.0 T/acre", trait: "Export-grade aromatic pulp thriving in coastal humid laterite", rootstock: "Vellai Kolamban dwarfing / local sturdy seedling" },
+            { name: "Ratna", yield: "5.5–7.0 T/acre", trait: "Spongy-tissue resistant Neelum × Alphonso hybrid; regular bearer", rootstock: "Mound-planted sturdy seedling" }
+          ],
+          southern_plateau: [
+            { name: "Banganapalle (Benishan)", yield: "6.5–8.5 T/acre", trait: "Large golden commercial fruit with heat tolerance on red sandy loam", rootstock: "Nekkare / monoembryonic hardy seedling" },
+            { name: "Mallika", yield: "6.0–7.5 T/acre", trait: "High-TSS regular cultivar well suited to HDP irrigated southern plateaus", rootstock: "Olour / Nekkare" },
+            { name: "Totapuri (Bangalora)", yield: "8.0–10.5 T/acre", trait: "Heavy annual commercial pulp bearer", rootstock: "Hardy regional seedling" }
+          ],
+          western_deccan: [
+            { name: "Kesar", yield: "6.0–8.0 T/acre", trait: "Saffron-hued sweet pulp thriving in Deccan warm black soils", rootstock: "Khajali hardy seedling" },
+            { name: "Amrapali (HDP 5×5m)", yield: "7.5–9.0 T/acre", trait: "Compact dwarf regular bearer ideal for drip-irrigated HDP blocks", rootstock: "Kurakkan dwarf stock" }
+          ],
+          indo_gangetic: [
+            { name: "Dashehari", yield: "6.0–7.5 T/acre", trait: "Classic North-Indian aromatic dessert benchmark; cold-winter tolerant", rootstock: "Native vigorous alluvial stock" },
+            { name: "Amrapali (HDP)", yield: "7.5–9.5 T/acre", trait: "Dwarf regular-bearing variety ideal for tube-well drip", rootstock: "Alluvial hardy seedling" }
+          ],
+          default: [
+            { name: "Mallika", yield: "6.0–7.5 T/acre", trait: "High-TSS cultivar with broad soil adaptability", rootstock: "Regional hardy seedling" },
+            { name: "Amrapali (HDP)", yield: "7.5–9.0 T/acre", trait: "Compact high-density canopy suited for 5m × 5m drip blocks", rootstock: "Local vigorous stock" }
+          ]
+        }
+      },
+      banana: {
+        name: "Banana", scientific_name: "Musa acuminata", category: "High-Value Fruit Plantation",
+        ideal_ph: [6.0, 7.8], ideal_temp: [20, 35], ideal_rain: [900, 2600], max_elev: 1200,
+        row_spacing_m: 1.8, col_spacing_m: 1.5,
+        standard_spacing_note: "Precision 1.8m × 1.5m (~1,499 tissue-culture plants/acre)",
+        drippers_per_plant: 2, emitter_lph: 4, daily_liters_mature: 18, irrigation_interval_days: 2,
+        irrigation_method: "Inline Drip Laterals (2 × 4 LPH/plant) + Weekly Water-Soluble NPK Fertigation",
+        yield_boosting_plan: [
+          "Zero Moisture Stress Policy: Shallow roots need frequent 2-day drip cycles; even 10% moisture deficit shrinks bunch weight.",
+          "Weekly Fertigation Split: Inject soluble Nitrogen & Potash across 30 weekly splits up to shooting.",
+          "Bunch Care: Trim male bud early and cover bunches with UV-stabilized blue sleeves."
+        ],
+        regional_breeds: {
+          western_deccan: [
+            { name: "Grand Naine (G-9 Tissue Culture)", yield: "32–38 T/acre", trait: "Uniform heavy Cavendish bunches for export & metro markets", rootstock: "Virus-indexed TC plantlets" }
+          ],
+          southern_plateau: [
+            { name: "Yelakki Bale (Ney Poovan)", yield: "14–18 T/acre", trait: "Premium aromatic Karnataka finger banana earning 2.5x mandi rate", rootstock: "Healthy TC / disease-free suckers" },
+            { name: "Grand Naine (G-9)", yield: "30–36 T/acre", trait: "Highest tonnage under red loam drip fertigation", rootstock: "Tissue Culture G-9" }
+          ],
+          coastal_humid: [
+            { name: "Nendran", yield: "18–22 T/acre", trait: "Coastal culinary & chips leader thriving in monsoon rainfall", rootstock: "Certified TC Nendran" }
+          ],
+          default: [
+            { name: "Grand Naine (G-9 Tissue Culture)", yield: "30–36 T/acre", trait: "High-yielding uniform Cavendish cultivar", rootstock: "Virus-indexed TC plantlets" }
+          ]
+        }
+      },
+      coconut: {
+        name: "Coconut", scientific_name: "Cocos nucifera", category: "Perennial Palm Plantation",
+        ideal_ph: [5.2, 8.0], ideal_temp: [22, 35], ideal_rain: [1000, 3200], max_elev: 900,
+        row_spacing_m: 7.5, col_spacing_m: 7.5,
+        standard_spacing_note: "Square Palm Grid 7.5m × 7.5m (~72 palms/acre; supports banana/turmeric intercrop)",
+        drippers_per_plant: 4, emitter_lph: 4, daily_liters_mature: 55, irrigation_interval_days: 3,
+        irrigation_method: "Sub-Surface 4-Pit Micro-Tube Drip at 1.0 m radius + Husk Moisture Trenching",
+        yield_boosting_plan: [
+          "Summer Basin Hydration: Supply 50–65 L/palm/day during dry months to prevent button-nut fall.",
+          "Husk Moisture Bank: Bury 100 coconut husks per trench to hold 4× water in summer.",
+          "Boron & Potash Dose: Apply 1.2 kg MOP + 50 g Borax per palm annually."
+        ],
+        regional_breeds: {
+          coastal_humid: [
+            { name: "West Coast Tall (WCT)", yield: "85–110 nuts/palm/yr", trait: "High copra & oil percentage tailored to coastal humidity", rootstock: "Coastal mother palms" }
+          ],
+          southern_plateau: [
+            { name: "Tiptur Tall × COD (T×D Hybrid)", yield: "120–150 nuts/palm/yr", trait: "Top tender & copra plateau hybrid", rootstock: "Certified F1 hybrid seed garden" }
+          ],
+          default: [
+            { name: "T×D / D×T Coconut Hybrid", yield: "115–145 nuts/palm/yr", trait: "Precocious 4-year bearing hybrid", rootstock: "Certified hybrid nursery" }
+          ]
+        }
+      },
+      pomegranate: {
+        name: "Pomegranate", scientific_name: "Punica granatum", category: "Semi-Arid High-Value Orchard",
+        ideal_ph: [6.0, 8.2], ideal_temp: [20, 36], ideal_rain: [450, 1100], max_elev: 1400,
+        row_spacing_m: 4.5, col_spacing_m: 3.0,
+        standard_spacing_note: "Semi-Arid Orchard 4.5m × 3.0m (~300 bushes/acre)",
+        drippers_per_plant: 4, emitter_lph: 4, daily_liters_mature: 24, irrigation_interval_days: 3,
+        irrigation_method: "Double-Lateral Drip (4 × 4 LPH/bush) synchronized to Bahar schedule",
+        yield_boosting_plan: [
+          "Bahar Moisture Regulation: Apply 30-day rest stress before Hasta/Mrig pruning.",
+          "Prevent Fruit Cracking: Maintain steady 75% field capacity during aril enlargement; avoid dry-wet shocks."
+        ],
+        regional_breeds: {
+          western_deccan: [{ name: "Bhagwa (Sinduri)", yield: "8–11 T/acre", trait: "Export crimson arils & soft seeds", rootstock: "Tissue Culture Bhagwa" }],
+          default: [{ name: "Bhagwa / Super Bhagwa", yield: "8–11 T/acre", trait: "India's export leader with rich glossy arils", rootstock: "Certified TC plantlets" }]
+        }
+      },
+      grapes: {
+        name: "Grapes", scientific_name: "Vitis vinifera", category: "Trellis Vineyard",
+        ideal_ph: [6.2, 8.0], ideal_temp: [18, 34], ideal_rain: [450, 1050], max_elev: 1300,
+        row_spacing_m: 3.0, col_spacing_m: 1.8,
+        standard_spacing_note: "Y-Trellis Vineyard 3.0m × 1.8m (~749 vines/acre)",
+        drippers_per_plant: 2, emitter_lph: 4, daily_liters_mature: 14, irrigation_interval_days: 2,
+        irrigation_method: "Inline Drip @ 45 cm emitter pitch on Dogridge grafted vines",
+        yield_boosting_plan: [
+          "Stage ETo Scaling: Raise irrigation from 60% ETo at bud break to 100% ETo at berry bulking.",
+          "Bunch Thinning: Limit 35–40 uniform clusters/vine for jumbo export berry size."
+        ],
+        regional_breeds: {
+          western_deccan: [{ name: "Thompson Seedless / Sonaka", yield: "12–15 T/acre", trait: "Nashik/Sangli global raisin & table benchmark", rootstock: "Dogridge" }],
+          southern_plateau: [{ name: "Manik Chaman / Bangalore Blue", yield: "11–14 T/acre", trait: "Adapted to Deccan granite soils", rootstock: "Dogridge" }],
+          default: [{ name: "Thompson Seedless", yield: "11–14 T/acre", trait: "All-India table & raisin leader", rootstock: "Dogridge" }]
+        }
+      },
+      guava: {
+        name: "Guava", scientific_name: "Psidium guajava", category: "High-Density Fruit Orchard",
+        ideal_ph: [5.5, 8.0], ideal_temp: [18, 35], ideal_rain: [600, 1800], max_elev: 1400,
+        row_spacing_m: 3.0, col_spacing_m: 2.0,
+        standard_spacing_note: "High-Density 3.0m × 2.0m (~674 trees/acre)",
+        drippers_per_plant: 2, emitter_lph: 4, daily_liters_mature: 16, irrigation_interval_days: 4,
+        irrigation_method: "Online Drip (2 × 4 LPH/tree) with Trichoderma wilt-guard drenching",
+        yield_boosting_plan: [
+          "Branch Bending & May Pruning: Shifts main flush to sweet, fruit-fly-free Nov–Jan Mrig winter crop.",
+          "Wilt Guard: Avoid flood stagnation around trunk collar."
+        ],
+        regional_breeds: {
+          indo_gangetic: [{ name: "Allahabad Safeda / Lalit", yield: "12–16 T/acre", trait: "Cold-winter aroma & dense white/pink flesh", rootstock: "Clonal wilt-tolerant stock" }],
+          default: [{ name: "Taiwan Pink / Lucknow-49", yield: "14–19 T/acre", trait: "Precocious 1st-year fruiting under 3×2m HDP drip", rootstock: "Clonal rootstock" }]
+        }
+      },
+      coffee: {
+        name: "Coffee", scientific_name: "Coffea arabica / canephora", category: "Shade-Grown Estate Plantation",
+        ideal_ph: [5.4, 6.5], ideal_temp: [16, 27], ideal_rain: [1400, 2800], max_elev: 1700,
+        row_spacing_m: 2.4, col_spacing_m: 2.4,
+        standard_spacing_note: "Estate Grid 2.4m × 2.4m (~702 bushes/acre under filtered shade)",
+        drippers_per_plant: 2, emitter_lph: 4, daily_liters_mature: 10, irrigation_interval_days: 7,
+        irrigation_method: "Blossom/Backing Overhead Sprinkler (30 mm pulses) or Under-Shade Drip",
+        yield_boosting_plan: [
+          "Blossom Shower Trigger: Provide 30 mm spring sprinkler pulse if blossom rain delays beyond mid-March.",
+          "Backing Shower: Repeat 25 mm 20 days post-blossom for maximum berry set."
+        ],
+        regional_breeds: {
+          southern_plateau: [
+            { name: "Chandragiri (Arabica)", yield: "0.65–0.85 T clean/acre", trait: "Rust-resistant Western Ghats highlight", rootstock: "CCRI certified stock" },
+            { name: "CxR Robusta", yield: "0.9–1.2 T/acre", trait: "High tonnage below 900m", rootstock: "Robusta clonal" }
+          ],
+          default: [{ name: "Selection 795 / CxR", yield: "0.7–1.1 T/acre", trait: "Balanced yield under 45% filtered shade", rootstock: "CCRI nursery" }]
+        }
+      },
+      turmeric: {
+        name: "Turmeric", scientific_name: "Curcuma longa", category: "High-Curcumin Spice Plantation",
+        ideal_ph: [5.5, 7.5], ideal_temp: [20, 34], ideal_rain: [1000, 2400], max_elev: 1400,
+        row_spacing_m: 0.45, col_spacing_m: 0.25,
+        standard_spacing_note: "Broad Raised Bed 0.45m × 0.25m (~35,972 rhizomes/acre)",
+        drippers_per_plant: 1, emitter_lph: 2, daily_liters_mature: 1.2, irrigation_interval_days: 3,
+        irrigation_method: "Dual Inline Drip Tape on 15 cm raised beds to prevent rhizome rot",
+        yield_boosting_plan: [
+          "Raised-Bed Drip Only: Strictly avoid stagnant flood water around rhizomes.",
+          "Potash Finishing Feed (Days 120–210): Supply 00:00:50 drip fertigation and stop water 25 days before harvest."
+        ],
+        regional_breeds: {
+          western_deccan: [{ name: "Salem / Waigaon", yield: "11–14 T fresh/acre", trait: "Bold bright-yellow high-curcumin fingers", rootstock: "Trichoderma-treated mother rhizomes" }],
+          default: [{ name: "IISR Pratibha / Erode", yield: "13–16 T/acre", trait: "High-curcumin (>6%) ICAR leader", rootstock: "Healthy seed rhizomes" }]
+        }
+      },
+      dragon_fruit: {
+        name: "Dragon Fruit", scientific_name: "Selenicereus undatus", category: "Dryland Superfruit Trellis",
+        ideal_ph: [5.5, 7.5], ideal_temp: [20, 38], ideal_rain: [450, 1400], max_elev: 1200,
+        row_spacing_m: 3.0, col_spacing_m: 2.4,
+        standard_spacing_note: "RCC Pillar Grid 3.0m × 2.4m (~562 pillars × 4 vines = ~2,248 vines/acre)",
+        drippers_per_plant: 2, emitter_lph: 4, daily_liters_mature: 6, irrigation_interval_days: 4,
+        irrigation_method: "Base-Ring Micro Drip (4–6 L/pillar every 4 days)",
+        yield_boosting_plan: [
+          "CAM Cactus Rhythm: Light frequent drip only in upper 20 cm soil; never saturate heavy clay.",
+          "Flowering Wave Moisture: Support May–Nov bloom waves to achieve >450g fruit grade."
+        ],
+        regional_breeds: {
+          default: [{ name: "Jumbo Red (Self-Pollinating)", yield: "8–11 T/acre", trait: "Vibrant crimson flesh with heat resilience", rootstock: "Hardened stem cuttings" }]
+        }
+      }
+    };
+
+    const ALIAS = {
+      aam: "mango", alphonso: "mango", kesar: "mango",
+      kela: "banana", plantain: "banana",
+      nariyal: "coconut", palm: "coconut",
+      anar: "pomegranate", dalimb: "pomegranate",
+      angoor: "grapes", grape: "grapes",
+      amrood: "guava", peru: "guava",
+      haldi: "turmeric", dragon: "dragon_fruit", dragonfruit: "dragon_fruit",
+      arabica: "coffee", robusta: "coffee"
+    };
+    let pKey = ALIAS[norm] || Object.keys(CATALOG).find(k => norm.includes(k) || k.includes(norm));
+    let prof = pKey ? CATALOG[pKey] : null;
+    if (!prof) {
+      const title = raw.charAt(0).toUpperCase() + raw.slice(1);
+      prof = {
+        name: title, scientific_name: `${title} (Plantation Trial)`, category: "Custom Plantation Trial",
+        ideal_ph: [5.8, 7.6], ideal_temp: [20, 33], ideal_rain: [700, 2000], max_elev: 1500,
+        row_spacing_m: 4.0, col_spacing_m: 4.0,
+        standard_spacing_note: `Balanced Orchard Grid 4.0m × 4.0m (~252 plants/acre) calibrated for ${title}`,
+        drippers_per_plant: 2, emitter_lph: 4, daily_liters_mature: 22, irrigation_interval_days: 4,
+        irrigation_method: `Dual-Emitter Online Drip (2 × 4 LPH/plant) tuned for ${texture} soil`,
+        yield_boosting_plan: [
+          `Morning ETo-Aligned Drip (${eto.toFixed(1)} mm/day): Synchronizes root-zone moisture across peak flowering flush.`,
+          `Pit Soil Buffering (pH ${ph}): Mix 5 kg compost + Trichoderma per pit for strong mycorrhizal uptake.`,
+          "Biomass Mulching (8 cm): Cuts soil evaporation by 35% and stabilizes feeder-root temperature."
+        ],
+        regional_breeds: {
+          default: [
+            { name: `High-Density Regional ${title} Selection`, yield: "Commercial HDP Grade", trait: `Adapted to ${zoneName} (pH ${ph}, ${texture})`, rootstock: "Certified grafted / clonal nursery stock" },
+            { name: `Dwarf Precocious ${title} Cultivar`, yield: "+20–30% yield under drip", trait: "Compact canopy responsive to split fertigation", rootstock: "Hardy regional rootstock" }
+          ]
+        }
+      };
+    }
+
+    const [phMin, phMax] = prof.ideal_ph;
+    const [tMin, tMax] = prof.ideal_temp;
+    const [rMin, rMax] = prof.ideal_rain;
+
+    const phScore = (ph >= phMin && ph <= phMax) ? 100 : Math.max(45, 100 - Math.abs(ph - (ph < phMin ? phMin : phMax)) * 28);
+    const tempScore = (temp >= tMin && temp <= tMax) ? 100 : Math.max(45, 100 - Math.abs(temp - (temp < tMin ? tMin : tMax)) * 5);
+    const rainScore = (rainfall >= rMin && rainfall <= rMax) ? 100 : (rainfall < rMin ? Math.max(62, 100 - ((rMin - rainfall) / rMin) * 45) : Math.max(68, 100 - ((rainfall - rMax) / rMax) * 35));
+    const drainScore = (/well|moderate/i.test(drainage)) ? 95 : 72;
+    const elevScore = elevation <= prof.max_elev ? 95 : Math.max(55, 95 - (elevation - prof.max_elev) / 40);
+    const overallScore = +(0.28 * phScore + 0.27 * tempScore + 0.25 * rainScore + 0.12 * drainScore + 0.08 * elevScore).toFixed(1);
+
+    const verdict = overallScore >= 82
+      ? "Highly Suitable (Prime Zone)"
+      : (overallScore >= 68 ? "Suitable with Precision Drip & Mulching" : "Experimental / Marginal — Needs Drip & Pit Soil Buffering");
+
+    const recommendedBreeds = prof.regional_breeds[zkey] || prof.regional_breeds.default || Object.values(prof.regional_breeds)[0];
+
+    const acres = Math.max(0.25, Number(farmSizeAcres) || 2.5);
+    const areaSqM = +(acres * 4046.86).toFixed(1);
+    const rowM = prof.row_spacing_m;
+    const colM = prof.col_spacing_m;
+    const plantsPerAcre = Math.round(4046.86 / (rowM * colM));
+    const totalPlants = Math.round(areaSqM / (rowM * colM));
+
+    let climateFactor = temp >= 30 ? 1.15 : (temp <= 22 ? 0.9 : 1.0);
+    if (rainfall >= 1500) climateFactor *= 0.85;
+    const litersDay = +(prof.daily_liters_mature * climateFactor).toFixed(1);
+    let intervalDays = prof.irrigation_interval_days;
+    if (/sandy/i.test(texture) && intervalDays > 2) intervalDays = Math.max(2, intervalDays - 1);
+    else if (/clay/i.test(texture)) intervalDays += 1;
+
+    const litersEvent = +(litersDay * intervalDays).toFixed(1);
+    const totalLitersEvent = Math.round(totalPlants * litersEvent);
+    const dripHoursEvent = +(litersEvent / Math.max(1, prof.drippers_per_plant * prof.emitter_lph)).toFixed(2);
+
+    const steps = [...prof.yield_boosting_plan];
+    if (ph < phMin) steps.unshift(`Local pH is acidic (${ph}); apply agricultural lime @ 1.5–2.0 T/acre in pits to buffer near ${phMin}–${phMax}.`);
+    else if (ph > phMax) steps.unshift(`Local pH is alkaline (${ph}); mix Gypsum + FYM compost in pits to buffer root-zone near ${phMax}.`);
+    if (rainfall < rMin) steps.unshift(`Annual rainfall (${Math.round(rainfall)} mm) is below rainfed requirement (${rMin}+ mm); precision drip with organic mulch is vital.`);
+
+    return {
+      plant_name: prof.name,
+      scientific_name: prof.scientific_name,
+      category: prof.category,
+      location_analysis: {
+        zone_name: zoneName, zone_key: zkey, coordinates: { lat, lon },
+        soil_texture: texture, soil_ph: ph, mean_temp_c: temp,
+        annual_rainfall_mm: rainfall, elevation_m: elevation, slope_pct: slope
+      },
+      compatibility: {
+        overall_score: overallScore, verdict,
+        ph_score: +phScore.toFixed(1), temp_score: +tempScore.toFixed(1),
+        rain_score: +rainScore.toFixed(1), drainage_score: drainScore
+      },
+      recommended_breeds: recommendedBreeds,
+      planting_geometry: {
+        farm_size_acres: acres, area_sq_m: areaSqM,
+        row_spacing_m: rowM, col_spacing_m: colM,
+        plants_per_acre: plantsPerAcre, total_plants: totalPlants,
+        spacing_note: prof.standard_spacing_note
+      },
+      irrigation_plan: {
+        method: prof.irrigation_method,
+        drippers_per_plant: prof.drippers_per_plant,
+        emitter_lph: prof.emitter_lph,
+        liters_per_plant_day: litersDay,
+        interval_days: intervalDays,
+        liters_per_plant_event: litersEvent,
+        total_liters_per_event: totalLitersEvent,
+        drip_run_hours_per_event: dripHoursEvent,
+        yield_boosting_steps: steps
+      }
     };
   }
 };

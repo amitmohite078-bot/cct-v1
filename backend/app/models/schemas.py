@@ -35,3 +35,9 @@ class MarketProfitabilityRequest(BaseModel):
     latitude: float
     longitude: float
     farm_size_acres: float = Field(2.5, ge=0.25, le=500.0)
+
+class PlantationTrialRequest(BaseModel):
+    plant_query: str = Field(..., min_length=2, description="Plantation or orchard crop name to evaluate")
+    latitude: float = Field(..., ge=-90.0, le=90.0)
+    longitude: float = Field(..., ge=-180.0, le=180.0)
+    farm_size_acres: float = Field(2.5, ge=0.25, le=500.0)

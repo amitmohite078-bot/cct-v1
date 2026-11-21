@@ -36,10 +36,21 @@ def find_available_port(preferred_port: int = 8000, host: str = "127.0.0.1") -> 
             return p
     return preferred_port
 
+def get_local_ip() -> str:
+    """Helper to detect local network IP address."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AgroCloud AI Web Server Runner")
     parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)), help="Port to run on (default: 8000)")
-    parser.add_argument("--host", type=str, default="127.0.0.1", help="Host interface (default: 127.0.0.1)")
+    parser.add_argument("--host", type=str, default="0.0.0.0", help="Host interface (default: 0.0.0.0 for LAN access)")
     args, unknown = parser.parse_known_args()
 
     target_port = args.port
@@ -49,14 +60,18 @@ if __name__ == "__main__":
         print(f"[*] Automatically switching to available port: {alt_port}\n")
         target_port = alt_port
 
+    local_ip = get_local_ip()
+
     print("=" * 65)
     print("  AGROCLOUD AI - GEO-SPATIAL AI CROP SUITABILITY ENGINE")
     print("=" * 65)
     print("  100% Software-Based • No IoT / Sensors Required")
-    print(f"  Serving on: http://{args.host}:{target_port}")
-    print(f"  API Docs:   http://{args.host}:{target_port}/docs")
+    print(f"  Local Access:   http://127.0.0.1:{target_port}")
+    print(f"  Mobile/LAN IP:  http://{local_ip}:{target_port}")
+    print(f"  API Docs:       http://127.0.0.1:{target_port}/docs")
     print("=" * 65)
     
     # Import app directly to avoid module path issues
     from app.main import app
     uvicorn.run(app, host=args.host, port=target_port)
+

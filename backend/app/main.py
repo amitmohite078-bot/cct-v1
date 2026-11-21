@@ -308,6 +308,7 @@ async def search_location(req: LocationSearchRequest):
     return {"query": req.query, "results": _fallback_location_search(req.query)}
 
 @app.post("/api/crops/compare")
+@app.post("/api/integration/crop-comparison")
 async def compare_crops(req: CropComparisonRequest):
     """Side-by-side scientific comparison of 2 to 4 crops."""
     from datetime import datetime

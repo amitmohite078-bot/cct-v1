@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.geospatial.remote_sensing import calculate_remote_sensing_indices
 from app.integration.mandi_market import calculate_crop_profitability, rank_crops_by_profitability, MANDI_COMMODITY_DATA
 from app.integration.crop_doctor import answer_crop_doctor_question
+from app.integration.plantation_advisor import analyze_plantation_trial, detect_indian_agro_region
 
 def test_satellite_remote_sensing_indices():
     soil_mock = {"organic_carbon_pct": 0.72}
@@ -81,3 +82,27 @@ def test_multilingual_crop_doctor():
     res_mr = answer_crop_doctor_question("सोयाबीन", "पाणी कधी द्यावे?", field_context, lang="mr")
     assert "पाणी" in res_mr["answer"] or "जमीन" in res_mr["answer"]
     assert res_mr["speech_lang_code"] == "mr-IN"
+
+    # Test all 11 languages coverage
+    all_langs = ["en", "hi", "mr", "te", "ta", "kn", "gu", "bn", "ml", "pa", "or"]
+    for l in all_langs:
+        r = answer_crop_doctor_question("Tomato", "water management", field_context, lang=l)
+        assert r["speech_lang_code"] == f"{l}-IN"
+        assert len(r["answer"]) > 10
+
+def test_plantation_advisor_geometry_and_breeds():
+    w = {"average_temperature": 27.5, "annual_rainfall": 920.0, "annual_rainfall_mm": 920.0}
+    s = {"ph": 6.8, "texture_class": "Red Sandy Loam", "drainage": "Well Drained"}
+    t = {"elevation_m": 450.0, "slope_pct": 1.8}
+    
+    # 1. Mango in Bengaluru (Southern Plateau)
+    blr = analyze_plantation_trial("Mango", 12.9571, 77.5325, w, s, t, farm_size_acres=3.0)
+    assert blr["plant_name"] == "Mango"
+    assert blr["planting_geometry"]["total_plants"] == round((3.0 * 4046.86) / (5.0 * 5.0))
+    assert "Banganapalle" in blr["recommended_breeds"][0]["name"] or "Mallika" in blr["recommended_breeds"][0]["name"]
+    assert blr["irrigation_plan"]["total_liters_per_event"] > 0
+
+    # 2. Custom crop fallback (e.g. Dragon Fruit / Avocado)
+    df = analyze_plantation_trial("Dragon Fruit", 12.9571, 77.5325, w, s, t, farm_size_acres=2.0)
+    assert df["plant_name"] == "Dragon Fruit"
+    assert len(df["recommended_breeds"]) > 0

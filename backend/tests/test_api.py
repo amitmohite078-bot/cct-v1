@@ -17,7 +17,8 @@ from app.main import (
     get_integrated_crop_modules,
     chat_with_crop_doctor,
     compare_crops,
-    get_market_profitability
+    get_market_profitability,
+    evaluate_plantation_trial
 )
 from app.models.schemas import (
     CoordinatesRequest,
@@ -25,7 +26,8 @@ from app.models.schemas import (
     CropSelectionRequest,
     CropDoctorQuestionRequest,
     CropComparisonRequest,
-    MarketProfitabilityRequest
+    MarketProfitabilityRequest,
+    PlantationTrialRequest
 )
 
 def test_health_check():
@@ -104,6 +106,33 @@ def test_market_profitability_endpoint():
     assert res_one["crop_id"] == "onion"
     assert "Lasalgaon" in res_one["benchmark_mandi"]
 
+def test_plantation_lab_endpoint():
+    # 1. Konkan Coastal Mango -> Alphonso
+    req_konkan = PlantationTrialRequest(plant_query="Mango", latitude=18.95, longitude=72.85, farm_size_acres=4.0)
+    res_konkan = asyncio.run(evaluate_plantation_trial(req_konkan))
+    assert res_konkan["plant_name"] == "Mango"
+    assert "Alphonso" in res_konkan["recommended_breeds"][0]["name"]
+    assert res_konkan["planting_geometry"]["total_plants"] > 0
+    assert "method" in res_konkan["irrigation_plan"]
+
+    # 2. Bengaluru Southern Plateau Mango -> Banganapalle / Mallika
+    req_blr = PlantationTrialRequest(plant_query="Mango", latitude=12.9571, longitude=77.5325, farm_size_acres=2.5)
+    res_blr = asyncio.run(evaluate_plantation_trial(req_blr))
+    assert "Banganapalle" in res_blr["recommended_breeds"][0]["name"] or "Mallika" in res_blr["recommended_breeds"][0]["name"]
+
+    # 3. Varanasi Indo-Gangetic Mango -> Dashehari
+    req_vns = PlantationTrialRequest(plant_query="Mango", latitude=25.3176, longitude=82.9739, farm_size_acres=2.0)
+    res_vns = asyncio.run(evaluate_plantation_trial(req_vns))
+    assert "Dashehari" in res_vns["recommended_breeds"][0]["name"]
+
+def test_multilingual_crop_doctor_chat_all_11():
+    langs = ["en", "hi", "kn", "te", "ta", "mr", "gu", "bn", "ml", "pa", "or"]
+    for l in langs:
+        req = CropDoctorQuestionRequest(crop_name="Tomato", question="irrigation", language=l)
+        res = asyncio.run(chat_with_crop_doctor(req))
+        assert res["speech_lang_code"] == f"{l}-IN"
+        assert len(res["answer"]) > 5
+
 if __name__ == "__main__":
     test_health_check()
     test_geospatial_analyze()
@@ -112,4 +141,6 @@ if __name__ == "__main__":
     test_crop_doctor_chat()
     test_crop_comparison()
     test_market_profitability_endpoint()
-    print("ALL 7 DIRECT INTEGRATION TESTS PASSED SUCCESSFULLY!")
+    test_plantation_lab_endpoint()
+    test_multilingual_crop_doctor_chat_all_11()
+    print("ALL 9 DIRECT INTEGRATION TESTS PASSED SUCCESSFULLY!")

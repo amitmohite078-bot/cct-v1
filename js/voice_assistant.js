@@ -293,4 +293,5 @@ class VoiceAssistant {
   }
 }
 
+window.VoiceAssistant = VoiceAssistant;
 window.voiceAssistant = new VoiceAssistant();

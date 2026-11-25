@@ -10,9 +10,17 @@ target/
 __pycache__/
 *.py[cod]
 *$py.class
-.pytest_cache/
-.venv/
+*.so
+.Python
+env/
 venv/
+.venv/
+ENV/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Local SQLite audit logs & weather caches (runtime data)
 *.db
@@ -27,7 +35,7 @@ agrocloud-java/data/
 *.pem
 *.key
 
-# IDE & OS temporary files
+# IDE, scratch, and OS temporary files
 .idea/
 *.iml
 .classpath
@@ -35,3 +43,4 @@ agrocloud-java/data/
 .settings/
 .DS_Store
 Thumbs.db
+scratch/

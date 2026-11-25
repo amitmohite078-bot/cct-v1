@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AgroCloud AI - Farmer Decision Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-light: #dcfce7;
+            --primary-dark: #166534;
+            --accent: #0284c7;
+            --warning: #d97706;
+            --danger: #b91c1c;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header-subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .badge-iot-free {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: #e2e8f0;
+            border-radius: var(--radius);
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--radius);
+            padding: 30px 20px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+
+        .upload-icon {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .upload-preview {
+            max-width: 100%;
+            max-height: 240px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+            object-fit: contain;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            padding: 8px 12px;
+            width: auto;
+        }
+
+        /* Results Display */
+        .result-box {
+            display: none;
+            margin-top: 20px;
+            border-radius: var(--radius);
+            padding: 18px;
+            border-left: 5px solid;
+            background: white;
+            box-shadow: var(--shadow);
+        }
+
+        .result-box.status-healthy {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+
+        .result-box.status-warning {
+            border-color: var(--warning);
+            background: #fffbeb;
+        }
+
+        .result-box.status-danger {
+            border-color: var(--danger);
+            background: #fef2f2;
+        }
+
+        .result-box.status-abstained {
+            border-color: #64748b;
+            background: #f1f5f9;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .result-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .confidence-pill {
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid var(--border);
+        }
+
+        .advice-list {
+            margin: 12px 0;
+            padding-left: 20px;
+            font-size: 0.9rem;
+        }
+
+        .advice-list li {
+            margin-bottom: 6px;
+        }
+
+        .disclaimer-banner {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+            padding: 10px 12px;
+            font-size: 0.8rem;
+            color: #92400e;
+            border-radius: 4px;
+            margin-top: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .provenance-tag {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* Water balance gauge */
+        .depletion-gauge-container {
+            margin: 20px 0;
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .depletion-bar-wrap {
+            height: 24px;
+            background: #cbd5e1;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .depletion-bar-fill {
+            height: 100%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .depletion-marker-raw {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #b91c1c;
+            z-index: 2;
+        }
+
+        .gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-title">
+        <i class="fa-solid fa-seedling"></i> AgroCloud AI
+    </div>
+    <div class="header-subtitle">
+        Intelligent Crop Disease Screening & Weather-Driven Irrigation Guidance
+    </div>
+    <div class="badge-iot-free">
+        <i class="fa-solid fa-satellite-dish"></i> IoT-Free Decision Support Prototype
+    </div>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('disease')">
+            <i class="fa-solid fa-microscope"></i> Disease Screening
+        </button>
+        <button class="tab-btn" onclick="switchTab('irrigation')">
+            <i class="fa-solid fa-faucet-drip"></i> Irrigation Guidance
+        </button>
+        <button class="tab-btn" onclick="switchTab('about')">
+            <i class="fa-solid fa-circle-info"></i> Provenance & Info
+        </button>
+    </div>
+
+    <!-- TAB 1: DISEASE SCREENING -->
+    <div id="tab-disease" class="tab-content active">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><i class="fa-solid fa-camera"></i> Crop Leaf Photo Upload</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Solanaceae Pilot</span>
+            </div>
+
+            <div class="form-group">
+                <label for="cropSelect"><i class="fa-solid fa-leaf"></i> Crop Type</label>
+                <select id="cropSelect">
+                    <option value="tomato">Tomato (Solanum lycopersicum)</option>
+                    <option value="potato">Potato (Solanum tuberosum)</option>
+                </select>
+            </div>
+
+            <div class="upload-area" id="dropArea" onclick="document.getElementById('leafFileInput').click()">
+                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                <p style="font-weight: 600; font-size: 0.95rem;">Tap to take photo, choose file, or drag &amp; drop</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">JPEG / PNG / WebP, min 224x224 (Max 20MB)</p>
+                <input type="file" id="leafFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+                <img id="imagePreview" class="upload-preview" alt="Preview">
+            </div>
+
+            <div style="margin-top: 16px;">
+                <button class="btn btn-primary" id="screenBtn" onclick="runDiseaseScreening()" disabled>
+                    <span id="btnText"><i class="fa-solid fa-magnifying-glass"></i> Analyze Foliar Image</span>
+                    <div class="spinner" id="btnSpinner"></div>
+                </button>
+            </div>
+
+            <!-- Disease Result Box -->
+            <div id="diseaseResultBox" class="result-box">
+                <div class="result-header">
+                    <div class="result-name" id="diseaseName">--</div>
+                    <div class="confidence-pill" id="confidencePill">--%</div>
+                </div>
+
+                <p id="guidanceSummary" style="font-size: 0.9rem; margin-bottom: 12px; font-weight: 500;"></p>
+
+                <div id="qualityMetricsNote" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;"></div>
+
+                <div id="probBreakdownSection" style="display:none; margin: 12px 0; padding: 10px; background: rgba(255,255,255,0.7); border: 1px solid var(--border); border-radius: 8px;">
+                    <strong style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 6px;">Calibrated Class Probabilities (Crop-Scoped):</strong>
+                    <div id="probBars"></div>
+                </div>
+
+                <div id="ipmSection">
+                    <strong id="ipmHeading" style="font-size: 0.85rem; color: var(--text-main);"><i class="fa-solid fa-shield-halved"></i> Recommended Cultural Management (Non-Chemical):</strong>
+                    <ul class="advice-list" id="adviceList"></ul>
+                </div>
+
+                <div class="disclaimer-banner">
+                    <i class="fa-solid fa-triangle-exclamation" style="margin-top: 2px;"></i>
+                    <div>
+                        <strong>Notice to Farmer:</strong> Visual screening is probabilistic and not a chemical prescription. Do not purchase pesticides based on visual estimates. Contact your district Agricultural Extension Service (e.g. KVK/ICAR or University Extension) for certified laboratory diagnosis and authorized recommendations.
+                    </div>
+                </div>
+
+                <div class="provenance-tag" id="diseaseProvenance"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: IRRIGATION GUIDANCE -->
+    <div id="tab-irrigation" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><i class="fa-solid fa-cloud-sun-rain"></i> Field Agrometeorology</span>
+                <button class="btn btn-secondary" onclick="getLocation()"><i class="fa-solid fa-location-crosshairs"></i> Use GPS</button>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="latInput">Latitude (°N)</label>
+                    <input type="number" id="latInput" step="0.0001" value="28.6139">
+                </div>
+                <div class="form-group">
+                    <label for="lonInput">Longitude (°E)</label>
+                    <input type="number" id="lonInput" step="0.0001" value="77.2090">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="irrCropSelect">Crop</label>
+                    <select id="irrCropSelect">
+                        <option value="tomato">Tomato</option>
+                        <option value="potato">Potato</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sowingDateInput">Sowing / Transplant Date</label>
+                    <input type="date" id="sowingDateInput">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="soilSelect">Soil Texture</label>
+                    <select id="soilSelect">
+                        <option value="sandy_loam">Sandy Loam (Light)</option>
+                        <option value="loam" selected>Loam (Medium Balanced)</option>
+                        <option value="clay_loam">Clay Loam (Heavy Retentive)</option>
+                        <option value="clay">Clay</option>
+                        <option value="sand">Sand (Very Light)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="methodSelect">Irrigation Method</label>
+                    <select id="methodSelect">
+                        <option value="drip" selected>Drip System (90% Eff.)</option>
+                        <option value="sprinkler">Sprinkler (75% Eff.)</option>
+                        <option value="surface_furrow">Furrow / Basin (60% Eff.)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="runIrrigationCalculation()">
+                <i class="fa-solid fa-droplet"></i> Estimate Water Balance (FAO-56)
+            </button>
+
+            <!-- Irrigation Result Box -->
+            <div id="irrigationResultBox" class="result-box" style="margin-top: 20px;">
+                <div class="result-header">
+                    <div class="result-name" id="irrUrgency">--</div>
+                    <div class="confidence-pill" id="irrGrowthStage">Stage: --</div>
+                </div>
+
+                <p id="irrActionSummary" style="font-size: 0.95rem; font-weight: 600; margin-bottom: 12px;"></p>
+
+                <!-- Depletion Gauge -->
+                <div class="depletion-gauge-container">
+                    <div class="gauge-labels">
+                        <span>Field Capacity (0 mm)</span>
+                        <span id="rawLabel">Stress Limit (RAW: -- mm)</span>
+                        <span id="tawLabel">Dry (TAW: -- mm)</span>
+                    </div>
+                    <div class="depletion-bar-wrap">
+                        <div id="depletionFill" class="depletion-bar-fill" style="width: 0%; background: #15803d;"></div>
+                        <div id="rawMarker" class="depletion-marker-raw" style="left: 40%;"></div>
+                    </div>
+                    <div style="font-size: 0.8rem; display: flex; justify-content: space-between;">
+                        <span>Current Depletion: <strong id="currentDepletionVal">-- mm</strong></span>
+                        <span>Depletion of RAW: <strong id="depletionPctVal">--%</strong></span>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 12px;">
+                    <div class="card" style="margin: 0; padding: 12px; text-align: center; background: #f8fafc;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Net Irrigation Needed</span>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--accent);" id="netIrrVal">-- mm</div>
+                    </div>
+                    <div class="card" style="margin: 0; padding: 12px; text-align: center; background: #f8fafc;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Gross Applied (at Eff.)</span>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);" id="grossIrrVal">-- mm</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; font-size: 0.8rem; background: #f1f5f9; padding: 10px; border-radius: 6px;">
+                    <strong><i class="fa-solid fa-arrows-split-up-and-left"></i> Soil Spatial Sensitivity (±15% AWC):</strong>
+                    <div id="sensitivitySpreadNote" style="color: var(--text-muted); margin-top: 4px;">--</div>
+                </div>
+
+                <div class="disclaimer-banner">
+                    <i class="fa-solid fa-circle-info" style="margin-top: 2px;"></i>
+                    <div>
+                        <strong>Agrometeorological Simulation:</strong> Calculated using UN FAO-56 Penman-Monteith physics and Open-Meteo weather forecasts. Not a direct in-situ physical probe measurement. No water savings or yield claims are asserted without randomized on-farm trials.
+                    </div>
+                </div>
+
+                <div class="provenance-tag" id="irrProvenance"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: PROVENANCE & ARCHITECTURE -->
+    <div id="tab-about" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><i class="fa-solid fa-microchip"></i> System Architecture & Standards</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                AgroCloud AI is an <strong>IoT-free cloud advisory prototype</strong> that eliminates farm sensors and valve automation, operating purely from farmer-provided visual images and public agrometeorological weather data.
+            </p>
+
+            <div style="margin-bottom: 14px;">
+                <strong style="font-size: 0.85rem;">Key Architecture Components:</strong>
+                <ul class="advice-list" style="font-size: 0.8rem;">
+                    <li><strong>Backend Core:</strong> Enterprise Java 21 / Spring Boot 3 running on Virtual Threads.</li>
+                    <li><strong>Embedded ONNX Inference:</strong> Microsoft ONNX Runtime Java with calibrated temperature scaling.</li>
+                    <li><strong>Agrometeorological Engine:</strong> FAO Irrigation and Drainage Paper No. 56 Penman-Monteith standard.</li>
+                    <li><strong>Public Weather Source:</strong> Open-Meteo Global Agrometeorological Model (CC-BY 4.0 / ODbL).</li>
+                    <li><strong>Privacy & Provenance:</strong> SHA-256 image digests, zero user photo retention, coordinate blurring (~1.1 km).</li>
+                </ul>
+            </div>
+
+            <div class="provenance-tag" id="systemStatusTag">Loading system status...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedLeafFile = null;
+
+    // Set default sowing date to 45 days ago
+    const defaultSowing = new Date();
+    defaultSowing.setDate(defaultSowing.getDate() - 45);
+    document.getElementById('sowingDateInput').value = defaultSowing.toISOString().split('T')[0];
+
+    // Drag and drop wiring for #dropArea
+    const dropArea = document.getElementById('dropArea');
+    ['dragenter', 'dragover'].forEach(evtName => {
+        dropArea.addEventListener(evtName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropArea.classList.add('dragover');
+        });
+    });
+    ['dragleave', 'drop'].forEach(evtName => {
+        dropArea.addEventListener(evtName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropArea.classList.remove('dragover');
+        });
+    });
+    dropArea.addEventListener('drop', (e) => {
+        const files = e.dataTransfer && e.dataTransfer.files;
+        if (files && files.length > 0) {
+            loadSelectedLeafFile(files[0]);
+        }
+    });
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        if (tab === 'disease') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('tab-disease').classList.add('active');
+        } else if (tab === 'irrigation') {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('tab-irrigation').classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            document.getElementById('tab-about').classList.add('active');
+            fetchSystemStatus();
+        }
+    }
+
+    function handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        loadSelectedLeafFile(file);
+    }
+
+    function loadSelectedLeafFile(file) {
+        selectedLeafFile = file;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const preview = document.getElementById('imagePreview');
+            preview.src = evt.target.result;
+            preview.style.display = 'block';
+            document.getElementById('screenBtn').disabled = false;
+            document.getElementById('diseaseResultBox').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Normalizes WebP/AVIF/BMP/oversized images into clean RGB JPEG via Canvas
+    async function normalizeImageForUpload(file, forceReencode = false) {
+        const mime = (file.type || '').toLowerCase();
+        const isStandardFormat = mime === 'image/jpeg' || mime === 'image/jpg' || mime === 'image/png';
+        if (!forceReencode && isStandardFormat && file.size <= 4 * 1024 * 1024) {
+            return { blob: file, filename: file.name || 'leaf.jpg' };
+        }
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            const objUrl = URL.createObjectURL(file);
+            img.onload = () => {
+                URL.revokeObjectURL(objUrl);
+                const maxSide = 1600;
+                let w = img.naturalWidth || img.width;
+                let h = img.naturalHeight || img.height;
+                if (Math.max(w, h) > maxSide) {
+                    const scale = maxSide / Math.max(w, h);
+                    w = Math.round(w * scale);
+                    h = Math.round(h * scale);
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                canvas.toBlob((blob) => {
+                    if (!blob) reject(new Error('Failed to encode image as JPEG'));
+                    else resolve({ blob, filename: 'leaf_normalized.jpg' });
+                }, 'image/jpeg', 0.92);
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(objUrl);
+                if (!forceReencode) resolve({ blob: file, filename: file.name || 'leaf.img' });
+                else reject(new Error('Unsupported or corrupted image file.'));
+            };
+            img.src = objUrl;
+        });
+    }
+
+    async function runDiseaseScreening() {
+        if (!selectedLeafFile) return;
+
+        const crop = document.getElementById('cropSelect').value;
+        const btn = document.getElementById('screenBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('btnSpinner');
+        btnText.style.display = 'none';
+        spinner.style.display = 'block';
+        btn.disabled = true;
+
+        try {
+            let payload = await normalizeImageForUpload(selectedLeafFile, false);
+            let formData = new FormData();
+            formData.append('file', payload.blob, payload.filename);
+            formData.append('crop', crop);
+
+            let resp = await fetch('/api/v1/disease/screen', {
+                method: 'POST',
+                body: formData
+            });
+
+            // Auto-retry via browser Canvas JPEG re-encode if server could not decode raw format (e.g. CMYK JPEG / WebP)
+            if (resp.status === 422 || resp.status === 415) {
+                try {
+                    payload = await normalizeImageForUpload(selectedLeafFile, true);
+                    formData = new FormData();
+                    formData.append('file', payload.blob, payload.filename);
+                    formData.append('crop', crop);
+                    resp = await fetch('/api/v1/disease/screen', {
+                        method: 'POST',
+                        body: formData
+                    });
+                } catch (_) {}
+            }
+
+            if (!resp.ok) {
+                let errMsg = `HTTP ${resp.status}`;
+                try {
+                    const errJson = await resp.json();
+                    errMsg = errJson.error || errJson.guidanceSummary || errJson.message || errMsg;
+                } catch (_) {
+                    errMsg = await resp.text();
+                }
+                displayDiseaseError(errMsg);
+                return;
+            }
+
+            const data = await resp.json();
+            displayDiseaseResult(data);
+        } catch (e) {
+            displayDiseaseError('Network error connecting to AgroCloud AI server: ' + e.message);
+        } finally {
+            btnText.style.display = 'inline-flex';
+            spinner.style.display = 'none';
+            btn.disabled = false;
+        }
+    }
+
+    function displayDiseaseError(message) {
+        const box = document.getElementById('diseaseResultBox');
+        box.style.display = 'block';
+        box.className = 'result-box status-danger';
+        document.getElementById('diseaseName').innerText = 'Unable to Screen Image';
+        document.getElementById('confidencePill').innerText = 'Error';
+        document.getElementById('guidanceSummary').innerText = message;
+        document.getElementById('qualityMetricsNote').innerText = '';
+        document.getElementById('probBreakdownSection').style.display = 'none';
+        document.getElementById('ipmHeading').innerHTML = '<i class="fa-solid fa-circle-info"></i> Troubleshooting Steps:';
+        const adviceList = document.getElementById('adviceList');
+        adviceList.innerHTML = '<li>Try uploading a clear JPEG or PNG close-up photo of a crop leaf.</li><li>Ensure the image file is not corrupted and is under 20 MB.</li>';
+        document.getElementById('diseaseProvenance').innerHTML = '';
+    }
+
+    function displayDiseaseResult(data) {
+        const box = document.getElementById('diseaseResultBox');
+        box.style.display = 'block';
+
+        box.className = 'result-box';
+        const predClass = data.predictedClass || 'Unknown';
+        if (data.abstained) {
+            box.classList.add('status-abstained');
+        } else if (predClass.includes('Healthy')) {
+            box.classList.add('status-healthy');
+        } else {
+            box.classList.add('status-warning');
+        }
+
+        const readableName = predClass.replace(/___/g, ' - ').replace(/_/g, ' ');
+        document.getElementById('diseaseName').innerText = data.abstained ? 'Decision Abstained' : readableName;
+        document.getElementById('confidencePill').innerText = data.abstained && data.calibratedConfidence === 0
+            ? 'Abstained'
+            : (data.calibratedConfidence * 100).toFixed(1) + '% Confidence';
+        document.getElementById('guidanceSummary').innerText = data.guidanceSummary || '';
+
+        const q = data.qualityMetrics;
+        if (q && q.width > 0) {
+            document.getElementById('qualityMetricsNote').innerHTML =
+                `Photo Quality: ${q.width}x${q.height}px | Blur Laplacian Score: ${q.laplacianVariance.toFixed(1)} | Exposure: ${q.meanBrightness.toFixed(1)}`;
+        } else {
+            document.getElementById('qualityMetricsNote').innerText = '';
+        }
+
+        const probs = data.classProbabilities || {};
+        const probEntries = Object.entries(probs);
+        const probSection = document.getElementById('probBreakdownSection');
+        const probBars = document.getElementById('probBars');
+        if (probEntries.length > 0) {
+            probSection.style.display = 'block';
+            probBars.innerHTML = probEntries.map(([cls, p]) => {
+                const pct = (p * 100).toFixed(1);
+                const label = cls.replace(/___/g, ' - ').replace(/_/g, ' ');
+                const barColor = cls.includes('Healthy') ? '#15803d' : '#d97706';
+                return `<div style="margin-bottom:4px; font-size:0.75rem;">
+                    <div style="display:flex; justify-content:space-between;"><span>${label}</span><span><strong>${pct}%</strong></span></div>
+                    <div style="height:6px; background:#e2e8f0; border-radius:4px; overflow:hidden;"><div style="width:${pct}%; height:100%; background:${barColor};"></div></div>
+                </div>`;
+            }).join('');
+        } else {
+            probSection.style.display = 'none';
+        }
+
+        document.getElementById('ipmHeading').innerHTML = data.abstained
+            ? '<i class="fa-solid fa-camera-rotate"></i> Next Steps / Retake Guidance:'
+            : '<i class="fa-solid fa-shield-halved"></i> Recommended Cultural Management (Non-Chemical):';
+
+        const adviceList = document.getElementById('adviceList');
+        adviceList.innerHTML = '';
+        (data.culturalIpmAdvice || []).forEach(adv => {
+            const li = document.createElement('li');
+            li.innerText = adv;
+            adviceList.appendChild(li);
+        });
+
+        const prov = data.provenance || {};
+        document.getElementById('diseaseProvenance').innerHTML =
+            `<span><i class="fa-solid fa-fingerprint"></i> Engine: ${prov.execution_engine || 'Java ONNX'}</span>` +
+            `<span><i class="fa-solid fa-code-branch"></i> Model: ${prov.model_version || 'v1.1.0'}</span>` +
+            `<span><i class="fa-solid fa-stopwatch"></i> Latency: ${prov.inference_latency_ms || 0}ms</span>`;
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('latInput').value = pos.coords.latitude.toFixed(4);
+                    document.getElementById('lonInput').value = pos.coords.longitude.toFixed(4);
+                },
+                (err) => alert('Geolocation error: ' + err.message)
+            );
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
+    }
+
+    async function runIrrigationCalculation() {
+        const payload = {
+            crop: document.getElementById('irrCropSelect').value,
+            latitude: parseFloat(document.getElementById('latInput').value),
+            longitude: parseFloat(document.getElementById('lonInput').value),
+            sowingDate: document.getElementById('sowingDateInput').value,
+            soilTexture: document.getElementById('soilSelect').value,
+            irrigationMethod: document.getElementById('methodSelect').value,
+            pastDays: 7,
+            forecastDays: 7
+        };
+
+        try {
+            const resp = await fetch('/api/v1/irrigation/guidance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!resp.ok) {
+                alert('Irrigation calculation failed.');
+                return;
+            }
+
+            const data = await resp.json();
+            displayIrrigationResult(data);
+        } catch (e) {
+            alert('Error connecting to weather/irrigation service: ' + e.message);
+        }
+    }
+
+    function displayIrrigationResult(data) {
+        const box = document.getElementById('irrigationResultBox');
+        box.style.display = 'block';
+
+        box.className = 'result-box';
+        if (data.urgency === 'NO_STRESS') {
+            box.classList.add('status-healthy');
+            document.getElementById('irrUrgency').innerText = 'Adequate Moisture (No Irrigation Today)';
+        } else if (data.urgency === 'MONITOR') {
+            box.classList.add('status-healthy');
+            document.getElementById('irrUrgency').innerText = 'Soil Moisture Adequate (Monitor Forecast)';
+        } else if (data.urgency === 'IRRIGATE_SOON') {
+            box.classList.add('status-warning');
+            document.getElementById('irrUrgency').innerText = 'Irrigation Recommended Soon';
+        } else {
+            box.classList.add('status-danger');
+            document.getElementById('irrUrgency').innerText = 'Critical Root-Zone Water Stress';
+        }
+
+        document.getElementById('irrGrowthStage').innerText = `Stage: ${data.growthStage} (DAP ${data.dap})`;
+        document.getElementById('irrActionSummary').innerText = data.actionSummary;
+
+        // Gauge update
+        const taw = data.tawMm;
+        const raw = data.rawMm;
+        const dr = data.currentDepletionMm;
+
+        document.getElementById('rawLabel').innerText = `Stress (RAW: ${raw.toFixed(1)} mm)`;
+        document.getElementById('tawLabel').innerText = `TAW: ${taw.toFixed(1)} mm`;
+        document.getElementById('currentDepletionVal').innerText = `${dr.toFixed(1)} mm`;
+        document.getElementById('depletionPctVal').innerText = `${data.depletionPercentOfRaw.toFixed(1)}%`;
+
+        const fillPct = Math.min(100, Math.max(0, (dr / taw) * 100));
+        const rawMarkerPct = Math.min(100, Math.max(0, (raw / taw) * 100));
+
+        const fillBar = document.getElementById('depletionFill');
+        fillBar.style.width = fillPct + '%';
+        if (dr < raw * 0.7) {
+            fillBar.style.background = '#15803d';
+        } else if (dr < raw) {
+            fillBar.style.background = '#d97706';
+        } else {
+            fillBar.style.background = '#b91c1c';
+        }
+
+        document.getElementById('rawMarker').style.left = rawMarkerPct + '%';
+
+        document.getElementById('netIrrVal').innerText = `${data.recommendedNetIrrigationMm.toFixed(1)} mm`;
+        document.getElementById('grossIrrVal').innerText = `${data.recommendedGrossIrrigationMm.toFixed(1)} mm`;
+
+        const unc = data.uncertaintyBounds || {};
+        document.getElementById('sensitivitySpreadNote').innerText =
+            `Nominal Depletion: ${unc.depletion_nominal_mm} mm | Coarser Soil: ${unc.depletion_coarser_soil_mm} mm | Retentive Soil: ${unc.depletion_retentive_soil_mm} mm (Sensitivity Spread: ±${unc.sensitivity_spread_mm} mm)`;
+
+        const prov = data.provenance || {};
+        document.getElementById('irrProvenance').innerHTML =
+            `<span><i class="fa-solid fa-cloud"></i> Weather Source: ${prov.source || 'Open-Meteo'}</span>` +
+            `<span><i class="fa-solid fa-book"></i> Reference: FAO-56 Penman-Monteith</span>` +
+            `<span><i class="fa-solid fa-clock"></i> Timestamp: ${new Date().toLocaleTimeString()}</span>`;
+    }
+
+    async function fetchSystemStatus() {
+        try {
+            const resp = await fetch('/api/v1/status');
+            const data = await resp.json();
+            document.getElementById('systemStatusTag').innerHTML =
+                `<span><i class="fa-brands fa-java"></i> JVM: ${data.java_version} (${data.jvm_vendor})</span>` +
+                `<span><i class="fa-solid fa-brain"></i> ONNX Engine: ${data.embedded_onnx_loaded ? 'Active' : 'Fallback'}</span>` +
+                `<span><i class="fa-brands fa-python"></i> Python Sidecar: ${data.python_sidecar_connected ? 'Connected' : 'Offline'}</span>` +
+                `<span><i class="fa-solid fa-circle-check"></i> Status: ${data.status}</span>`;
+        } catch (e) {
+            document.getElementById('systemStatusTag').innerText = 'Could not fetch status: ' + e.message;
+        }
+    }
+</script>
+</body>
+</html>
+

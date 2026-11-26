@@ -706,6 +706,10 @@ class ModulesManager {
       this.bindTryErrorEvents();
     }
 
+    if (window.diseaseScanner && typeof window.diseaseScanner.render === "function") {
+      window.diseaseScanner.render();
+    }
+
     // If dedicated editorial tabs are active and no legacy #integratedModulesContainer exists, skip duplicate render
     if (!this.container || dedicatedIrrEl || dedicatedMandiEl || dedicatedDocEl || dedicatedTryEl) {
       return;
@@ -1431,6 +1435,16 @@ class ModulesManager {
           <button type="button" class="kbv-preset-chip" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion('Best bio-control for stem rot and leaf blight?')">${ic("crops", 12)} Bio-control (English)</button>
           <button type="button" class="kbv-preset-chip" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion('How much water does this crop need this week?')">${ic("water", 12)} Irrigation Timing</button>
         </div>
+        <div id="doctorPendingImagePreview" style="display:none; align-items:center; justify-content:space-between; gap:10px; padding:8px 12px; margin-bottom:8px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); border-radius:8px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="doctorPendingImageThumb" src="" alt="Attached leaf photo" style="width:42px; height:42px; object-fit:cover; border-radius:6px; border:1px solid #2D5A27;" />
+            <div>
+              <div id="doctorPendingImageName" style="font-size:0.78rem; font-weight:700; color:#1A2412;"></div>
+              <div id="doctorPendingImageScan" style="font-size:0.71rem; color:#4F5E46;">Attached leaf photo ready for Crop Doctor discussion</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.72rem;" onclick="window.kbvApp.switchDashboardTab('disease')">View Scan</button>
+        </div>
         <div class="chat-window">
           <div class="chat-messages" id="cropDoctorChatMessages">
             <div class="chat-bubble bot">
@@ -1515,6 +1529,10 @@ class ModulesManager {
     const voiceIndicator = document.getElementById("voiceStatusIndicator");
     const msgBox = document.getElementById("cropDoctorChatMessages");
     if (!input || !sendBtn) return;
+
+    if (window.kbvMedia && typeof window.kbvMedia.syncPreviews === "function") {
+      window.kbvMedia.syncPreviews();
+    }
 
     const speakerIc = typeof window.kbvIcon === "function" ? window.kbvIcon("speaker", 12) : "";
     if (autoVoiceBtn && window.voiceAssistant) {

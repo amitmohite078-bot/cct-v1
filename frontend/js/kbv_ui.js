@@ -2824,6 +2824,14 @@ class KBVApp {
       setTimeout(() => {
         if (this.riskMap) this.riskMap.invalidateSize();
       }, 80);
+    } else if (this.activeDashboardTab === "disease") {
+      if (window.diseaseScanner) {
+        window.diseaseScanner.render();
+        const media = window.kbvMedia?.currentImage;
+        if (media && (!window.diseaseScanner.lastResult || window.diseaseScanner.lastResult?.model_provenance?.filename !== media.name || window.diseaseScanner.lastResult?.crop_id !== (this.selectedCrop || "tomato"))) {
+          window.diseaseScanner.analyzeImage(media, this.selectedCrop || "tomato");
+        }
+      }
     } else if (["irrigation", "mandi", "doctor", "tryerror"].includes(this.activeDashboardTab)) {
       if (window.modulesManager) {
         if (this.activeDashboardTab === "tryerror" && typeof window.modulesManager.ensureTryErrorLoaded === "function") {
@@ -2872,6 +2880,19 @@ class KBVApp {
       }
       window.modulesManager.setCrop(cropKey, cropName, ctx);
       window.modulesManager.loadModules(lat, lon).catch(e => console.warn("Module sync notice:", e));
+    }
+
+    // Keep Visual Disease Identifier aligned with newly selected crop
+    if (window.diseaseScanner) {
+      const dsCrop = document.getElementById("kbvDiseaseCropSelect");
+      if (dsCrop && dsCrop.value !== cropKey) {
+        dsCrop.value = cropKey;
+      }
+      if (window.kbvMedia?.currentImage && typeof window.diseaseScanner.analyzeImage === "function") {
+        window.diseaseScanner.analyzeImage(window.kbvMedia.currentImage, cropKey);
+      } else if (typeof window.diseaseScanner.render === "function") {
+        window.diseaseScanner.render();
+      }
     }
   }
 
@@ -2960,6 +2981,7 @@ class KBVApp {
       dashAnalyzeBtn.disabled = true;
     }
 
+    const hasAttachedImage = !!(window.kbvMedia && window.kbvMedia.currentImage);
     try {
       const cropKey = this.selectedCrop || "tomato";
       const lat = (window.app && window.app.currentLat) || this.currentLat || 12.9571;
@@ -2980,6 +3002,11 @@ class KBVApp {
         }
       }
 
+      // Run Visual Leaf Disease Screening when a crop photo is attached
+      if (hasAttachedImage && window.diseaseScanner && typeof window.diseaseScanner.analyzeImage === "function") {
+        await window.diseaseScanner.analyzeImage(window.kbvMedia.currentImage, cropKey);
+      }
+
       if (window.app && window.app.analysisData) {
         window.lastAnalysisData = window.app.analysisData;
       }
@@ -2993,6 +3020,9 @@ class KBVApp {
         dashAnalyzeBtn.disabled = false;
       }
       this.goToScreen(4);
+      if (hasAttachedImage) {
+        this.switchDashboardTab("disease");
+      }
     }
   }
 
@@ -3530,18 +3560,33 @@ window.kbvMedia = {
   setImage(dataUrl, name, source) {
     this.currentImage = { dataUrl, name, source };
     this.syncPreviews();
+    if (window.diseaseScanner && typeof window.diseaseScanner.analyzeImage === "function") {
+      const crop = window.kbvApp?.selectedCrop || window.diseaseScanner.getSelectedCrop();
+      window.diseaseScanner.analyzeImage(this.currentImage, crop);
+    }
     if (window.kbvApp && typeof window.kbvApp.showToast === "function") {
-      window.kbvApp.showToast(`📷 ${source} attached: ${name}`, 3000);
+      window.kbvApp.showToast(`📷 ${source} attached: ${name} — Leaf screening started`, 3200);
     }
   },
 
   clearImage() {
     this.currentImage = null;
+    if (window.diseaseScanner) {
+      window.diseaseScanner.lastResult = null;
+      window.diseaseScanner.errorMessage = null;
+      window.diseaseScanner.isAnalyzing = false;
+      window.diseaseScanner.render();
+    }
     this.syncPreviews();
   },
 
   syncPreviews() {
     const img = this.currentImage;
+    const scanRes = window.diseaseScanner?.lastResult;
+    const scanSummary = scanRes
+      ? (scanRes.abstained ? `Screening: ${scanRes.predicted_condition}` : `Detected: ${scanRes.predicted_condition} (${scanRes.confidence_pct}%)`)
+      : null;
+
     const bar = document.getElementById("kbvAttachedMediaBar");
     const thumb = document.getElementById("kbvAttachedMediaThumb");
     const title = document.getElementById("kbvAttachedMediaTitle");
@@ -3551,7 +3596,7 @@ window.kbvMedia = {
       if (img) {
         thumb.src = img.dataUrl;
         title.textContent = img.name;
-        meta.textContent = `${img.source} • Attached for AI Crop Doctor`;
+        meta.textContent = scanSummary ? `${img.source} • ${scanSummary}` : `${img.source} • Ready for Disease ID & AI Crop Doctor`;
         bar.style.display = "flex";
       } else {
         bar.style.display = "none";
@@ -3561,10 +3606,14 @@ window.kbvMedia = {
     const docPrev = document.getElementById("doctorPendingImagePreview");
     const docThumb = document.getElementById("doctorPendingImageThumb");
     const docName = document.getElementById("doctorPendingImageName");
+    const docScan = document.getElementById("doctorPendingImageScan");
     if (docPrev && docThumb && docName) {
       if (img) {
         docThumb.src = img.dataUrl;
         docName.textContent = `${img.name} (${img.source})`;
+        if (docScan) {
+          docScan.textContent = scanSummary || "Attached leaf photo ready for Crop Doctor discussion";
+        }
         docPrev.style.display = "flex";
       } else {
         docPrev.style.display = "none";

@@ -14,7 +14,7 @@ if str(backend_dir) not in sys.path:
 import httpx
 import asyncio
 from typing import Dict, Any, List, Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -38,6 +38,7 @@ from app.models.schemas import (
     PlantationTrialRequest
 )
 from app.integration.disease_detection import get_crop_diseases
+from app.integration.leaf_screening import analyze_crop_leaf_image, MAX_UPLOAD_BYTES
 from app.integration.irrigation_prediction import calculate_irrigation_schedule
 from app.integration.crop_doctor import generate_crop_doctor_advisory, answer_crop_doctor_question
 from app.integration.plantation_advisor import analyze_plantation_trial
@@ -512,6 +513,42 @@ def _get_indian_state_by_coords(lat: float, lon: float) -> str:
     elif 27.6 <= lat <= 30.9 and 74.4 <= lon <= 77.6:
         return "Haryana"
     return "India"
+
+@app.post("/api/integration/disease/screen")
+@app.post("/api/disease/screen")
+async def screen_crop_leaf_disease(
+    image: UploadFile = File(...),
+    crop_id: Optional[str] = Form(None),
+    latitude: Optional[float] = Form(None),
+    longitude: Optional[float] = Form(None),
+):
+    """
+    Visual Crop Disease Screening Endpoint (Software-Only).
+    Accepts multipart leaf image upload and optional crop_id, performs image quality
+    and foliar-presence gates plus spectral-texture disease screening.
+    """
+    try:
+        payload = await image.read(MAX_UPLOAD_BYTES + 1)
+        if len(payload) > MAX_UPLOAD_BYTES:
+            raise HTTPException(
+                status_code=413,
+                detail=f"Image exceeds maximum allowed size of {MAX_UPLOAD_BYTES // (1024 * 1024)} MB."
+            )
+        result = analyze_crop_leaf_image(
+            image_bytes=payload,
+            crop_id=crop_id,
+            filename=image.filename,
+        )
+        if latitude is not None and longitude is not None:
+            result["location"] = {"latitude": latitude, "longitude": longitude}
+        return result
+    except HTTPException:
+        raise
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Disease screening failed: {str(exc)}")
+
 
 def _fallback_reverse_geocode(lat: float, lon: float) -> Dict[str, Any]:
     state = _get_indian_state_by_coords(lat, lon)

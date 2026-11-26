@@ -65,11 +65,23 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "disease_id": "wheat_yellow_rust",
             "name": "Yellow / Stripe Rust (Puccinia striiformis)",
             "pathogen_type": "Fungal",
+            "visual_signature": "rust_pustule",
             "symptoms": "Bright yellow pustules arranged in linear stripes between leaf veins, producing yellow powdery mass.",
             "favorable_conditions": "Cool humid weather (10-18°C), persistent fog and morning dew.",
             "organic_control": "Bio-spray with Trichoderma viride @ 5 g/L with cow urine solution (10%).",
             "chemical_control": "Propiconazole 25% EC (Tilt) @ 1 ml/L or Tebuconazole 25% WG @ 1 g/L.",
             "preventive_measures": "Grow resistant cultivars (e.g., HD-2967, DBW-187); avoid late sowing."
+        },
+        {
+            "disease_id": "wheat_leaf_blight",
+            "name": "Spot Blotch / Leaf Blight (Bipolaris sorokiniana)",
+            "pathogen_type": "Fungal",
+            "visual_signature": "fungal_blight_dark",
+            "symptoms": "Dark brown oblong spots coalescing into irregular necrotic blighted areas across leaf blades.",
+            "favorable_conditions": "Warm humid late-winter conditions (22-30°C) with overnight dew.",
+            "organic_control": "Trichoderma harzianum seed bio-priming @ 5 g/kg seed.",
+            "chemical_control": "Azoxystrobin + Propiconazole foliar spray @ 1 ml/L.",
+            "preventive_measures": "Timely sowing and balanced potash nutrition."
         }
     ],
     "cotton": [
@@ -77,11 +89,34 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "disease_id": "cotton_pink_bollworm",
             "name": "Pink Bollworm (Pectinophora gossypiella)",
             "pathogen_type": "Pest / Moth Larva",
+            "visual_signature": "pest_foliar_damage",
             "symptoms": "Rosetted flowers, premature boll opening, damaged locules, stained lint, circular exit holes in mature bolls.",
             "favorable_conditions": "Continuous warm weather (26-34°C) with sporadic rainfall.",
             "organic_control": "Install pheromone traps @ 8/acre for monitoring; release Trichogramma egg parasitoids @ 60,000/acre.",
             "chemical_control": "Profenofos 50% EC @ 2 ml/L or Emamectin benzoate 5% SG @ 0.5 g/L.",
             "preventive_measures": "Terminate crop by December; avoid ratoon cotton cultivation."
+        },
+        {
+            "disease_id": "cotton_leaf_spot_blight",
+            "name": "Alternaria Leaf Spot / Bacterial Blight",
+            "pathogen_type": "Fungal / Bacterial",
+            "visual_signature": "fungal_blight_dark",
+            "symptoms": "Circular brown necrotic target spots or angular water-soaked lesions along leaf veins.",
+            "favorable_conditions": "Warm monsoon spells (26-34°C) with persistent leaf wetness.",
+            "organic_control": "Pseudomonas fluorescens @ 10 g/L foliar spray.",
+            "chemical_control": "Copper Oxychloride 50% WP @ 2.5 g/L or Mancozeb 75% WP @ 2 g/L.",
+            "preventive_measures": "Acid-delinted certified seed and balanced row spacing."
+        },
+        {
+            "disease_id": "cotton_leaf_curl_chlorosis",
+            "name": "Cotton Leaf Curl & Mosaic (CLCuV / Aphid Stress)",
+            "pathogen_type": "Viral (Vector: Whitefly)",
+            "visual_signature": "chlorosis_mosaic",
+            "symptoms": "Leaf yellowing, vein thickening, and upward or downward cupping of young leaves.",
+            "favorable_conditions": "Hot dry weather favoring whitefly build-up.",
+            "organic_control": "Install yellow sticky traps @ 10/acre and spray Neem oil @ 3 ml/L.",
+            "chemical_control": "Flonicamid 50% WG @ 0.3 g/L or Diafenthiuron 50% WP @ 1 g/L.",
+            "preventive_measures": "Remove weed hosts around field bunds."
         }
     ],
     "tomato": [
@@ -89,11 +124,58 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "disease_id": "tomato_early_blight",
             "name": "Early Blight (Alternaria solani)",
             "pathogen_type": "Fungal",
+            "visual_signature": "gray_tan_spot",
             "symptoms": "Concentric dark brown rings ('target board' pattern) on older lower leaves, followed by leaf yellowing and defoliation.",
             "favorable_conditions": "Warm temperatures (24-29°C) with alternating wet and dry periods.",
             "organic_control": "Spray Bacillus subtilis @ 5 ml/L or Trichoderma @ 5 g/L mixed with bio-potassium soap.",
             "chemical_control": "Chlorothalonil 75% WP @ 2 g/L or Azoxystrobin 23% SC @ 1 ml/L.",
             "preventive_measures": "Mulch beds to prevent soil splashing; stake plants and prune lower sucker branches."
+        },
+        {
+            "disease_id": "tomato_late_blight",
+            "name": "Late Blight (Phytophthora infestans)",
+            "pathogen_type": "Oomycete / Water Mold",
+            "visual_signature": "fungal_blight_dark",
+            "symptoms": "Irregular water-soaked dark brown-black lesions on leaf margins and stems with pale white downy growth underneath.",
+            "favorable_conditions": "Cool nights (12-20°C), fog, heavy dew or continuous rain (RH >90%).",
+            "organic_control": "Preventive foliar spray of Copper Hydroxide 53.8% DF @ 2 g/L or potassium bicarbonate.",
+            "chemical_control": "Metalaxyl-M 4% + Mancozeb 64% WP @ 2.5 g/L or Cymoxanil 8% + Mancozeb 64% WP @ 2.5 g/L.",
+            "preventive_measures": "Ensure wide row aeration; avoid evening overhead irrigation; destroy infected plant debris."
+        },
+        {
+            "disease_id": "tomato_leaf_curl",
+            "name": "Tomato Leaf Curl & Chlorosis (ToLCV / Septoria Halo)",
+            "pathogen_type": "Viral (Vector: Whitefly)",
+            "visual_signature": "chlorosis_mosaic",
+            "symptoms": "Pronounced interveinal leaf yellowing, upward curling of leaf margins, stunted apical shoots.",
+            "favorable_conditions": "Warm dry spells (26-34°C) favoring whitefly vector populations.",
+            "organic_control": "Install yellow sticky traps @ 12/acre; spray Neem oil (Azadirachtin 1500 ppm @ 3 ml/L).",
+            "chemical_control": "Imidacloprid 17.8% SL @ 0.4 ml/L or Thiamethoxam 25% WG @ 0.3 g/L for vector control.",
+            "preventive_measures": "Use insect-proof net nurseries; rogue infected seedlings early; grow resistant hybrids (Arka Rakshak)."
+        }
+    ],
+    "potato": [
+        {
+            "disease_id": "potato_late_blight",
+            "name": "Potato Late Blight (Phytophthora infestans)",
+            "pathogen_type": "Oomycete / Water Mold",
+            "visual_signature": "fungal_blight_dark",
+            "symptoms": "Dark olive-brown to black water-soaked patches rapidly expanding across leaflets with pale border.",
+            "favorable_conditions": "Cool, humid cloudy weather (12-21°C, RH >90%).",
+            "organic_control": "Preventive Copper Oxychloride 50% WP @ 2.5 g/L spray before canopy closure.",
+            "chemical_control": "Cymoxanil 8% + Mancozeb 64% WP @ 2.5 g/L or Dimethomorph + Mancozeb.",
+            "preventive_measures": "Plant certified disease-free seed tubers (Kufri Jyoti / Kufri Himalini); earth up ridges well."
+        },
+        {
+            "disease_id": "potato_early_blight",
+            "name": "Potato Early Blight (Alternaria solani)",
+            "pathogen_type": "Fungal",
+            "visual_signature": "gray_tan_spot",
+            "symptoms": "Dry angular tan-brown concentric rings bounded by leaf veins with surrounding chlorotic halo.",
+            "favorable_conditions": "Warm fluctuating moisture (22-30°C) on stressed or maturing canopies.",
+            "organic_control": "Trichoderma viride / Bacillus subtilis foliar spray @ 5 g/L.",
+            "chemical_control": "Mancozeb 75% WP @ 2 g/L or Azoxystrobin 23% SC @ 1 ml/L.",
+            "preventive_measures": "Balanced NPK fertilization; avoid nitrogen deficiency and moisture shock."
         }
     ],
     "onion": [
@@ -101,11 +183,23 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "disease_id": "onion_purple_blotch",
             "name": "Purple Blotch (Alternaria porri)",
             "pathogen_type": "Fungal",
+            "visual_signature": "purple_blotch",
             "symptoms": "Small water-soaked lesions that turn purple-brown with concentric rings; leaves break at lesion site.",
             "favorable_conditions": "Warm humid conditions (25-30°C, RH >80%) with intermittent rain.",
             "organic_control": "Spray garlic bulb extract (5%) or Neem seed kernel extract (NSKE 5%).",
             "chemical_control": "Difenoconazole 25% EC @ 1 ml/L or Mancozeb 75% WP @ 2.5 g/L.",
             "preventive_measures": "Maintain spacing for air circulation; avoid overhead sprinkler irrigation."
+        },
+        {
+            "disease_id": "onion_stemphylium_blight",
+            "name": "Stemphylium Blight & Tip Burn",
+            "pathogen_type": "Fungal",
+            "visual_signature": "chlorosis_mosaic",
+            "symptoms": "Yellow-to-tan elongated streaks starting at leaf tips turning dark olive-brown with powdery spores.",
+            "favorable_conditions": "Dense canopy with morning dew and moderate warmth (20-28°C).",
+            "organic_control": "Pseudomonas fluorescens @ 5 g/L foliar spray during early vegetative stage.",
+            "chemical_control": "Tebuconazole 25.9% EC @ 1 ml/L rotated with Mancozeb 75% WP @ 2 g/L.",
+            "preventive_measures": "Adopt raised-bed drip irrigation; avoid excess nitrogen top-dressing."
         }
     ],
     "soybean": [
@@ -113,11 +207,23 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "disease_id": "soybean_yellow_mosaic",
             "name": "Yellow Mosaic Virus (MYMV)",
             "pathogen_type": "Viral (Vector: Whitefly)",
+            "visual_signature": "chlorosis_mosaic",
             "symptoms": "Bright yellow and green mosaic patches on leaves, stunted growth, reduced pod filling.",
             "favorable_conditions": "Hot dry weather (28-36°C) favoring rapid whitefly vector multiplication.",
             "organic_control": "Install yellow sticky traps @ 15/acre; spray Neem oil @ 5 ml/L.",
             "chemical_control": "Thiamethoxam 25% WG @ 0.3 g/L or Acetamiprid 20% SP @ 0.4 g/L to control whitefly vector.",
             "preventive_measures": "Rogue out infected plants early; cultivate tolerant varieties like JS-20-29, JS-20-34."
+        },
+        {
+            "disease_id": "soybean_rust",
+            "name": "Soybean Asian Rust (Phakopsora pachyrhizi)",
+            "pathogen_type": "Fungal",
+            "visual_signature": "rust_pustule",
+            "symptoms": "Small tan to reddish-brown rust pustules mainly on leaf undersides with premature yellowing.",
+            "favorable_conditions": "Humid overcast rainy weeks (18-28°C).",
+            "organic_control": "Wettable sulfur 80% WP @ 3 g/L early spray.",
+            "chemical_control": "Hexaconazole 5% EC @ 1 ml/L or Azoxystrobin + Tebuconazole.",
+            "preventive_measures": "Early sowing and field scouting at flowering."
         }
     ],
     "groundnut": [
@@ -125,11 +231,23 @@ CROP_DISEASES: Dict[str, List[Dict[str, Any]]] = {
             "disease_id": "groundnut_tikka",
             "name": "Tikka Leaf Spot (Cercospora personata)",
             "pathogen_type": "Fungal",
+            "visual_signature": "gray_tan_spot",
             "symptoms": "Circular dark necrotic spots surrounded by bright yellow halo on older leaves, causing defoliation.",
             "favorable_conditions": "Prolonged high humidity (RH >85%) and temperatures between 24-28°C.",
             "organic_control": "Foliar spray with Pseudomonas fluorescens @ 10 g/L or Neem oil 1500 ppm @ 3 ml/L.",
             "chemical_control": "Mancozeb 75% WP @ 2 g/L or Carbendazim 50% WP @ 1 g/L.",
             "preventive_measures": "Seed treatment with Trichoderma harzianum @ 10 g/kg seed; crop rotation."
+        },
+        {
+            "disease_id": "groundnut_rust",
+            "name": "Groundnut Rust (Puccinia arachidis)",
+            "pathogen_type": "Fungal",
+            "visual_signature": "rust_pustule",
+            "symptoms": "Orange-red pustules erupting on lower leaf surfaces causing necrosis and pod shrink.",
+            "favorable_conditions": "Warm rainy periods with morning dew.",
+            "organic_control": "Trichoderma viride / Sulfur 80% WP spray.",
+            "chemical_control": "Chlorothalonil 75% WP @ 2 g/L or Tebuconazole 25% EC @ 1 ml/L.",
+            "preventive_measures": "Intercrop pearl millet; clear volunteer groundnut plants."
         }
     ],
     "ragi": [

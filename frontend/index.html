@@ -1857,6 +1857,9 @@
       <button type="button" class="kbv-nav-tab" data-tab-view="soil"
         onclick="window.kbvApp.switchDashboardTab('soil')"><span data-icon="soil" data-size="14"></span> Soil &
         Climate</button>
+      <button type="button" class="kbv-nav-tab" data-tab-view="disease"
+        onclick="window.kbvApp.switchDashboardTab('disease')"><span data-icon="microscope" data-size="14"></span>
+        Disease ID</button>
       <button type="button" class="kbv-nav-tab" data-tab-view="irrigation"
         onclick="window.kbvApp.switchDashboardTab('irrigation')"><span data-icon="water" data-size="14"></span>
         Irrigation Plan</button>
@@ -2146,6 +2149,7 @@
                   onchange="window.kbvApp.setCropSelection(this.value)"
                   style="flex:1; min-width:130px; padding:9px 14px; font-size:0.82rem;">
                   <option value="tomato" selected>Tomato</option>
+                  <option value="potato">Potato</option>
                   <option value="rice">Rice (Paddy)</option>
                   <option value="wheat">Wheat</option>
                   <option value="maize">Maize (Corn)</option>
@@ -2223,8 +2227,11 @@
                   advisory</div>
               </div>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.75rem;"
+                onclick="window.kbvApp.switchDashboardTab('disease')"><span data-icon="microscope" data-size="13"></span>
+                Identify Disease →</button>
+              <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.75rem;"
                 onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="13"></span> Ask
                 Crop Doctor →</button>
               <button type="button" class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;"
@@ -2459,6 +2466,17 @@
         </div>
       </div>
 
+      <!-- TAB 6: VISUAL CROP DISEASE IDENTIFIER -->
+      <div class="kbv-editorial-tab-panel" id="kbvTab_disease">
+        <div class="kbv-editorial-card">
+          <div class="kbv-agro-panel-title"><span data-icon="microscope" data-size="18" style="color:#2D5A27;"></span>
+            Visual Crop Disease Screening &amp; Pathology Reference</div>
+          <div id="kbvDedicatedDiseaseContainer">
+            <div style="font-size:0.85rem; color:var(--text-sub);">Upload or capture a leaf photo to begin screening...</div>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB 7: TRY & ERROR PLANTATION LAB -->
       <div class="kbv-editorial-tab-panel" id="kbvTab_tryerror">
         <div class="kbv-editorial-card">
@@ -2537,9 +2555,10 @@
   <script src="js/api.js?v=3.4"></script>
   <script src="js/map.js?v=3.4"></script>
   <script src="js/suitability.js?v=3.4"></script>
-  <script src="js/modules.js?v=3.4"></script>
+  <script src="js/disease_scanner.js?v=3.5"></script>
+  <script src="js/modules.js?v=3.5"></script>
   <script src="js/app.js?v=3.4"></script>
-  <script src="js/kbv_ui.js?v=3.4"></script>
+  <script src="js/kbv_ui.js?v=3.5"></script>
   <script src="js/voice_assistant.js?v=3.4"></script>
   <script src="js/report_generator.js?v=3.4"></script>
 

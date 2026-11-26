@@ -1806,12 +1806,12 @@
           <div class="kbv-web-logo"><span data-icon="brand_leaf" data-size="22"></span></div>
           <div>
             <div class="kbv-brand-text">Agro<span style="color:#2D5A27; font-weight:900;">Nexus</span></div>
-            <div class="kbv-brand-tagline">Intelligence That Grows.</div>
+            <div class="kbv-brand-tagline" data-i18n="brand_tagline">Intelligence That Grows.</div>
           </div>
         </div>
         <div class="kbv-brand-divider-meta"
           style="border-left:1px solid rgba(45,90,39,0.2); padding-left:12px; display:flex; flex-direction:column;">
-          <span style="font-size:0.72rem; font-weight:700; color:#2D5A27; letter-spacing:0.02em;">1 km² Geo-Spatial
+          <span style="font-size:0.72rem; font-weight:700; color:#2D5A27; letter-spacing:0.02em;" data-i18n="geo_ai_badge">1 km² Geo-Spatial
             AI</span>
           <span style="font-size:0.68rem; color:var(--kbv-sage);" data-i18n="brand_tagline">Crop Suitability, Irrigation
             & Mandi Intelligence</span>
@@ -1823,25 +1823,25 @@
         <div class="kbv-header-nav" id="kbvHeaderFeatureNav" style="display:none; gap:8px; align-items:center;">
           <button type="button" class="kbv-nav-tab"
             style="padding:6px 12px; font-size:0.78rem; background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); color:#2D5A27;"
-            onclick="window.kbvApp.goToScreen(1)"><span data-icon="globe" data-size="14"></span> Languages</button>
+            onclick="window.kbvApp.goToScreen(1)"><span data-icon="globe" data-size="14"></span> <span data-i18n="lang_btn">Languages</span></button>
           <button type="button" class="kbv-nav-feature-btn"
             style="background:var(--kbv-primary-gradient); border:1px solid #1E3F1A; color:#FFFFFF; font-weight:800;"
-            onclick="window.kbvApp.downloadHealthCard()"><span data-icon="doc" data-size="14"></span> Health Card
-            PDF</button>
+            onclick="window.kbvApp.downloadHealthCard()"><span data-icon="doc" data-size="14"></span> <span data-i18n="health_card_btn">Health Card
+            PDF</span></button>
         </div>
 
         <select class="kbv-lang-dropdown" id="kbvNavLangSelect">
           <option value="en" selected>English (EN)</option>
-          <option value="hi">हिंदी - Hindi (HI)</option>
-          <option value="kn">ಕನ್ನಡ - Kannada (KN)</option>
-          <option value="te">తెలుగు - Telugu (TE)</option>
-          <option value="ta">தமிழ் - Tamil (TA)</option>
-          <option value="mr">मराठी - Marathi (MR)</option>
-          <option value="gu">ગુજરાતી - Gujarati (GU)</option>
-          <option value="bn">বাংলা - Bengali (BN)</option>
-          <option value="ml">മലയാളം - Malayalam (ML)</option>
-          <option value="pa">ਪੰਜਾਬੀ - Punjabi (PA)</option>
-          <option value="or">ଓଡ଼ିଆ - Odia (OR)</option>
+          <option value="hi">हिन्दी (HI)</option>
+          <option value="kn">ಕನ್ನಡ (KN)</option>
+          <option value="te">తెలుగు (TE)</option>
+          <option value="ta">தமிழ் (TA)</option>
+          <option value="mr">मराठी (MR)</option>
+          <option value="gu">ગુજરાતી (GU)</option>
+          <option value="bn">বাংলা (BN)</option>
+          <option value="ml">മലയാളം (ML)</option>
+          <option value="pa">ਪੰਜਾਬੀ (PA)</option>
+          <option value="or">ଓଡ଼ିଆ (OR)</option>
         </select>
       </div>
     </div>
@@ -1849,29 +1849,29 @@
     <!-- Tier 2: Focused Editorial Workspace Tabs (Shown on Dashboard) -->
     <nav class="kbv-header-nav-tabs" id="kbvDashboardTabs">
       <button type="button" class="kbv-nav-tab active" data-tab-view="map"
-        onclick="window.kbvApp.switchDashboardTab('map')"><span data-icon="map" data-size="14"></span> 1 km² Field
-        Map</button>
+        onclick="window.kbvApp.switchDashboardTab('map')"><span data-icon="map" data-size="14"></span> <span data-i18n="tab_map">1 km² Field
+        Map</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="crops"
-        onclick="window.kbvApp.switchDashboardTab('crops')"><span data-icon="crops" data-size="14"></span> Crop
-        Advisor</button>
+        onclick="window.kbvApp.switchDashboardTab('crops')"><span data-icon="crops" data-size="14"></span> <span data-i18n="tab_crops">Crop
+        Advisor</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="soil"
-        onclick="window.kbvApp.switchDashboardTab('soil')"><span data-icon="soil" data-size="14"></span> Soil &
-        Climate</button>
+        onclick="window.kbvApp.switchDashboardTab('soil')"><span data-icon="soil" data-size="14"></span> <span data-i18n="tab_soil">Soil &amp;
+        Climate</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="disease"
         onclick="window.kbvApp.switchDashboardTab('disease')"><span data-icon="microscope" data-size="14"></span>
-        Disease ID</button>
+        <span data-i18n="tab_disease">Disease ID</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="irrigation"
         onclick="window.kbvApp.switchDashboardTab('irrigation')"><span data-icon="water" data-size="14"></span>
-        Irrigation Plan</button>
+        <span data-i18n="tab_irrigation">Irrigation Plan</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="mandi"
-        onclick="window.kbvApp.switchDashboardTab('mandi')"><span data-icon="mandi" data-size="14"></span> Mandi
-        Market</button>
+        onclick="window.kbvApp.switchDashboardTab('mandi')"><span data-icon="mandi" data-size="14"></span> <span data-i18n="tab_mandi">Mandi
+        Market</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="doctor"
-        onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="14"></span> AI Crop
-        Doctor</button>
+        onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="14"></span> <span data-i18n="tab_doctor">AI Crop
+        Doctor</span></button>
       <button type="button" class="kbv-nav-tab" data-tab-view="tryerror"
-        onclick="window.kbvApp.switchDashboardTab('tryerror')"><span data-icon="microscope" data-size="14"></span> Try
-        &amp; Error</button>
+        onclick="window.kbvApp.switchDashboardTab('tryerror')"><span data-icon="microscope" data-size="14"></span> <span data-i18n="tab_tryerror">Try
+        &amp; Error</span></button>
     </nav>
   </header>
 
@@ -1911,7 +1911,7 @@
                 </div>
                 <div>
                   <div class="kbv-lang-name">English</div>
-                  <div style="font-size:0.72rem; color:var(--kbv-sage);">Default</div>
+                  <div data-i18n="lang_default" style="font-size:0.72rem; color:var(--kbv-sage);">Default</div>
                 </div>
               </div>
               <span class="kbv-lang-code">EN</span>
@@ -2072,7 +2072,7 @@
             style="width:42px; height:42px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.22); color:#2D5A27; display:flex; align-items:center; justify-content:center;">
             <span data-icon="pin" data-size="22"></span></div>
           <div>
-            <div
+            <div data-i18n="analyzed_field_badge"
               style="font-size:0.7rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
               Analyzed 1 km² Farm Field</div>
             <div id="kbvScreen4LocationText" style="font-size:1.15rem; font-weight:800; color:#1A2412;">Bengaluru Urban,
@@ -2083,12 +2083,12 @@
           <div style="text-align:right;">
             <div id="kbvScreen4CoordsText" style="font-size:0.88rem; font-weight:700; color:#2D5A27;">12.9571°N,
               77.5325°E</div>
-            <div style="font-size:0.72rem; color:var(--text-sub);">1.00 km² Geodesic Area • 100 Hectares (247.1 Acres)
+            <div data-i18n="area_meta_line" style="font-size:0.72rem; color:var(--text-sub);">1.00 km² Geodesic Area • 100 Hectares (247.1 Acres)
             </div>
           </div>
           <button type="button" class="kbv-nav-tab" onclick="window.app && window.app.openProvenanceModal()"
             style="border-color:rgba(45,90,39,0.28); color:#2D5A27; background:#F0EEE9;"><span data-icon="microscope"
-              data-size="14"></span> Audit Data</button>
+              data-size="14"></span> <span data-i18n="audit_data_btn">Audit Data</span></button>
         </div>
       </div>
 
@@ -2106,13 +2106,13 @@
                   onclick="window.kbvApp.detectLocationForAnalysis()"
                   style="flex:0 0 auto; width:auto; padding:9px 14px; font-size:0.8rem; white-space:nowrap; background:rgba(45,90,39,0.1); border-color:rgba(45,90,39,0.3); color:#2D5A27;">
                   <span data-icon="gps" data-size="15"></span>
-                  <span>Detect GPS</span>
+                  <span data-i18n="detect_gps">Detect GPS</span>
                 </button>
                 <div style="position:relative; flex:1;">
                   <span data-icon="search" data-size="14"
                     style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#4F5E46; pointer-events:none;"></span>
                   <input type="text" id="kbvDashLocSearchInput" class="kbv-loc-search-input"
-                    placeholder="Search Indian village, taluk or district..." autocomplete="off"
+                    data-i18n-ph="search_loc_ph" placeholder="Search Indian village, taluk or district..." autocomplete="off"
                     style="padding:9px 14px 9px 34px; font-size:0.82rem;" />
                   <div id="kbvDashLocSearchDropdown" class="kbv-search-dropdown" style="display:none;"></div>
                 </div>
@@ -2120,22 +2120,22 @@
 
               <!-- Region Presets -->
               <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
-                <span style="font-size:0.7rem; color:var(--text-sub);">Quick Regions:</span>
-                <button type="button" class="kbv-preset-chip"
+                <span style="font-size:0.7rem; color:var(--text-sub);" data-i18n="quick_regions">Quick Regions:</span>
+                <button type="button" class="kbv-preset-chip" data-place-chip="mandya, karnataka"
                   onclick="window.kbvApp.selectFarmLocation(12.5238, 76.8967, 'Mandya, Karnataka')">Mandya (KA)</button>
-                <button type="button" class="kbv-preset-chip"
+                <button type="button" class="kbv-preset-chip" data-place-chip="nashik, maharashtra"
                   onclick="window.kbvApp.selectFarmLocation(19.9975, 73.7898, 'Nashik, Maharashtra')">Nashik
                   (MH)</button>
-                <button type="button" class="kbv-preset-chip"
+                <button type="button" class="kbv-preset-chip" data-place-chip="guntur, andhra pradesh"
                   onclick="window.kbvApp.selectFarmLocation(16.3067, 80.4365, 'Guntur, Andhra Pradesh')">Guntur
                   (AP)</button>
-                <button type="button" class="kbv-preset-chip"
+                <button type="button" class="kbv-preset-chip" data-place-chip="ludhiana, punjab"
                   onclick="window.kbvApp.selectFarmLocation(30.9010, 75.8573, 'Ludhiana, Punjab')">Ludhiana
                   (PB)</button>
-                <button type="button" class="kbv-preset-chip"
+                <button type="button" class="kbv-preset-chip" data-place-chip="varanasi, uttar pradesh"
                   onclick="window.kbvApp.selectFarmLocation(25.3176, 82.9739, 'Varanasi, Uttar Pradesh')">Varanasi
                   (UP)</button>
-                <button type="button" class="kbv-preset-chip"
+                <button type="button" class="kbv-preset-chip" data-place-chip="indore, madhya pradesh"
                   onclick="window.kbvApp.selectFarmLocation(22.7196, 75.8577, 'Indore, Madhya Pradesh')">Indore
                   (MP)</button>
               </div>
@@ -2169,47 +2169,47 @@
                 <button type="button" class="btn btn-secondary" id="kbvDashAddImageBtn"
                   onclick="window.kbvMedia && window.kbvMedia.pickImage()"
                   style="padding:9px 12px; font-size:0.78rem; border-radius:10px; white-space:nowrap;">
-                  <span data-icon="image" data-size="14"></span> Add Image
+                  <span data-icon="image" data-size="14"></span> <span data-i18n="add_image">Add Image</span>
                 </button>
                 <button type="button" class="btn btn-secondary" id="kbvDashTakePhotoBtn"
                   onclick="window.kbvMedia && window.kbvMedia.openCamera()"
                   style="padding:9px 12px; font-size:0.78rem; border-radius:10px; white-space:nowrap;">
-                  <span data-icon="camera" data-size="14"></span> Take Photo
+                  <span data-icon="camera" data-size="14"></span> <span data-i18n="take_photo">Take Photo</span>
                 </button>
                 <button type="button" class="kbv-btn-primary-large" id="kbvDashAnalyzeBtn"
                   onclick="window.kbvApp.runAnalysisWorkflow()"
                   style="justify-content:center; font-size:0.82rem; padding:8px 18px; border-radius:10px;">
                   <span data-icon="bolt" data-size="14"></span>
-                  <span>Analyze</span>
+                  <span data-i18n="analyze_btn">Analyze</span>
                 </button>
               </div>
 
               <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
-                <span style="font-size:0.7rem; color:var(--text-sub);">Quick Crops:</span>
+                <span style="font-size:0.7rem; color:var(--text-sub);" data-i18n="quick_crops">Quick Crops:</span>
                 <button type="button" class="kbv-preset-chip kbv-crop-chip active" data-crop="tomato"
                   onclick="window.kbvApp.setCropSelection('tomato')"
                   style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_tomato"
-                    data-size="13"></span> Tomato</button>
+                    data-size="13"></span> <span data-crop-label="tomato">Tomato</span></button>
                 <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="rice"
                   onclick="window.kbvApp.setCropSelection('rice')"
                   style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_rice"
-                    data-size="13"></span> Rice</button>
+                    data-size="13"></span> <span data-crop-label="rice">Rice</span></button>
                 <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="wheat"
                   onclick="window.kbvApp.setCropSelection('wheat')"
                   style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_wheat"
-                    data-size="13"></span> Wheat</button>
+                    data-size="13"></span> <span data-crop-label="wheat">Wheat</span></button>
                 <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="maize"
                   onclick="window.kbvApp.setCropSelection('maize')"
                   style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_maize"
-                    data-size="13"></span> Maize</button>
+                    data-size="13"></span> <span data-crop-label="maize">Maize</span></button>
                 <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="cotton"
                   onclick="window.kbvApp.setCropSelection('cotton')"
                   style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_cotton"
-                    data-size="13"></span> Cotton</button>
+                    data-size="13"></span> <span data-crop-label="cotton">Cotton</span></button>
                 <button type="button" class="kbv-preset-chip kbv-crop-chip" data-crop="soybean"
                   onclick="window.kbvApp.setCropSelection('soybean')"
                   style="display:inline-flex; align-items:center; gap:5px;"><span data-icon="crop_soybean"
-                    data-size="13"></span> Soybean</button>
+                    data-size="13"></span> <span data-crop-label="soybean">Soybean</span></button>
               </div>
             </div>
           </div>
@@ -2221,22 +2221,22 @@
               <img id="kbvAttachedMediaThumb" src="" alt="Attached field photo"
                 style="width:44px; height:44px; border-radius:8px; object-fit:cover; border:1px solid rgba(45,90,39,0.35);" />
               <div>
-                <div id="kbvAttachedMediaTitle" style="font-size:0.8rem; font-weight:700; color:#1A2412;">Field Photo
+                <div id="kbvAttachedMediaTitle" data-i18n="field_photo_attached" style="font-size:0.8rem; font-weight:700; color:#1A2412;">Field Photo
                   Attached</div>
-                <div id="kbvAttachedMediaMeta" style="font-size:0.7rem; color:#4F5E46;">Ready for AI Crop Doctor
+                <div id="kbvAttachedMediaMeta" data-i18n="ready_screening" style="font-size:0.7rem; color:#4F5E46;">Ready for AI Crop Doctor
                   advisory</div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <button type="button" class="btn btn-primary" style="padding:6px 12px; font-size:0.75rem;"
                 onclick="window.kbvApp.switchDashboardTab('disease')"><span data-icon="microscope" data-size="13"></span>
-                Identify Disease →</button>
+                <span data-i18n="identify_disease_btn">Identify Disease →</span></button>
               <button type="button" class="btn btn-secondary" style="padding:6px 12px; font-size:0.75rem;"
-                onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="13"></span> Ask
-                Crop Doctor →</button>
+                onclick="window.kbvApp.switchDashboardTab('doctor')"><span data-icon="doctor" data-size="13"></span> <span data-i18n="ask_doctor_btn">Ask
+                Crop Doctor →</span></button>
               <button type="button" class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;"
                 onclick="window.kbvMedia && window.kbvMedia.clearImage()"><span data-icon="close" data-size="13"></span>
-                Remove</button>
+                <span data-i18n="remove_btn">Remove</span></button>
             </div>
           </div>
         </div>
@@ -2257,23 +2257,23 @@
             <!-- Editorial Layer Switcher -->
             <div
               style="display:flex; gap:6px; flex-wrap:wrap; padding:8px 10px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.14); border-radius:12px; margin-bottom:12px; align-items:center;">
-              <span
+              <span data-i18n="layer_prefix"
                 style="font-size:0.7rem; color:var(--kbv-sage); font-weight:700; text-transform:uppercase; margin-right:4px;">Layer:</span>
               <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnSatellite"
                 style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('satellite', this)"><span
-                  data-icon="satellite" data-size="13"></span> Satellite</button>
+                  data-icon="satellite" data-size="13"></span> <span data-i18n="layer_sat">Satellite</span></button>
               <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnNdvi"
                 style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('ndvi', this)"><span
-                  data-icon="crops" data-size="13"></span> NDVI Canopy</button>
+                  data-icon="crops" data-size="13"></span> <span data-i18n="layer_ndvi">NDVI Canopy</span></button>
               <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnNdwi"
                 style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('ndwi', this)"><span
-                  data-icon="water" data-size="13"></span> NDWI Moisture</button>
+                  data-icon="water" data-size="13"></span> <span data-i18n="layer_ndwi">NDWI Moisture</span></button>
               <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnSoil"
                 style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('soil', this)"><span
-                  data-icon="soil" data-size="13"></span> Soil pH</button>
+                  data-icon="soil" data-size="13"></span> <span data-i18n="layer_soil">Soil pH</span></button>
               <button type="button" class="kbv-nav-tab kbv-layer-btn" id="layerBtnElevation"
                 style="padding:4px 10px; font-size:0.74rem;" onclick="window.switchMapLayer('elevation', this)"><span
-                  data-icon="mountain" data-size="13"></span> Slope</button>
+                  data-icon="mountain" data-size="13"></span> <span data-i18n="layer_slope">Slope</span></button>
             </div>
 
             <div class="kbv-map-frame-web" id="kbvRiskMapContainer"></div>
@@ -2300,53 +2300,53 @@
           <div class="kbv-snapshot-card">
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="font-size:1.1rem; font-weight:800; color:#1A2412;">Field Snapshot</h3>
-                <span
+                <h3 style="font-size:1.1rem; font-weight:800; color:#1A2412;" data-i18n="field_snapshot">Field Snapshot</h3>
+                <span data-i18n="live_telemetry"
                   style="font-size:0.7rem; background:rgba(45,90,39,0.12); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; padding:3px 9px; border-radius:99px; font-weight:700;">Live
                   Telemetry</span>
               </div>
 
               <div>
                 <div class="kbv-snapshot-row">
-                  <span style="color:var(--kbv-sage);">Soil Order</span>
+                  <span style="color:var(--kbv-sage);" data-i18n="snap_soil_order">Soil Order</span>
                   <b id="kbvSnapSoil" style="color:#1A2412; text-align:right;">Red Sandy Loam</b>
                 </div>
                 <div class="kbv-snapshot-row">
-                  <span style="color:var(--kbv-sage);">Soil pH (0–30 cm)</span>
+                  <span style="color:var(--kbv-sage);" data-i18n="snap_ph">Soil pH (0–30 cm)</span>
                   <b id="kbvSnapPh" style="color:#1A2412;">6.8 Optimal</b>
                 </div>
                 <div class="kbv-snapshot-row">
-                  <span style="color:var(--kbv-sage);">Top Suitable Crop</span>
-                  <b id="kbvSnapTopCrop" style="color:#2D5A27;">Analyzing...</b>
+                  <span style="color:var(--kbv-sage);" data-i18n="snap_top_crop">Top Suitable Crop</span>
+                  <b id="kbvSnapTopCrop" data-i18n="analyzing_dot" style="color:#2D5A27;">Analyzing...</b>
                 </div>
                 <div class="kbv-snapshot-row">
-                  <span style="color:var(--kbv-sage);">Sentinel-2 NDVI</span>
-                  <b id="kbvSnapNdvi" style="color:#1A2412;">0.65 (Good)</b>
+                  <span style="color:var(--kbv-sage);" data-i18n="snap_ndvi">Sentinel-2 NDVI</span>
+                  <b id="kbvSnapNdvi" style="color:#1A2412;">0.65</b>
                 </div>
                 <div class="kbv-snapshot-row">
-                  <span style="color:var(--kbv-sage);">Annual Rainfall</span>
+                  <span style="color:var(--kbv-sage);" data-i18n="snap_rain">Annual Rainfall</span>
                   <b id="kbvSnapRain" style="color:#1A2412;">880 mm</b>
                 </div>
                 <div class="kbv-snapshot-row">
-                  <span style="color:var(--kbv-sage);">Elevation / Slope</span>
+                  <span style="color:var(--kbv-sage);" data-i18n="snap_elev_slope">Elevation / Slope</span>
                   <b id="kbvSnapElev" style="color:#1A2412;">680 m · 2.4%</b>
                 </div>
               </div>
             </div>
 
             <div style="display:grid; gap:8px;">
-              <button type="button" onclick="window.kbvApp.switchDashboardTab('crops')"
+              <button type="button" onclick="window.kbvApp.switchDashboardTab('crops')" data-i18n="open_crop_advisor"
                 style="width:100%; padding:11px 14px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; font-size:0.84rem; font-weight:700; cursor:pointer;">
                 Open Full Crop Advisor →
               </button>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <button type="button" onclick="window.kbvApp.switchDashboardTab('mandi')"
                   style="padding:9px 10px; border-radius:10px; background:#F0EEE9; border:1px solid var(--kbv-border); color:#1A2412; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                  <span data-icon="mandi" data-size="14" style="color:#2D5A27;"></span> Mandi Profit
+                  <span data-icon="mandi" data-size="14" style="color:#2D5A27;"></span> <span data-i18n="mandi_profit_btn">Mandi Profit</span>
                 </button>
                 <button type="button" onclick="window.kbvApp.switchDashboardTab('doctor')"
                   style="padding:9px 10px; border-radius:10px; background:#F0EEE9; border:1px solid var(--kbv-border); color:#1A2412; font-size:0.78rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                  <span data-icon="doctor" data-size="14" style="color:#2D5A27;"></span> Ask AI Doctor
+                  <span data-icon="doctor" data-size="14" style="color:#2D5A27;"></span> <span data-i18n="ask_ai_doctor_btn">Ask AI Doctor</span>
                 </button>
               </div>
             </div>
@@ -2369,7 +2369,7 @@
             </div>
           </div>
           <div id="cropSuitabilityContainer">
-            <div style="font-size:0.85rem; color:var(--text-sub);">Loading regional crop rankings...</div>
+            <div style="font-size:0.85rem; color:var(--text-sub);" data-i18n="loading_crops">Loading regional crop rankings...</div>
           </div>
         </div>
       </div>
@@ -2385,48 +2385,48 @@
                   Location:</span> <b id="kbvSoilLocName" style="color:#1A2412;">Bengaluru Urban, Karnataka</b></div>
               <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_class_label">Soil
                   Classification:</span> <b id="soilClassValue">Red Sandy Loam (Alfisols)</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Primary Taxonomy:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="primary_tax_label">Primary Taxonomy:</span> <b
                   id="soilTaxonomyMeta">Sandy Clay Loam</b></div>
               <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_ph_label">Soil pH
                   (0-30cm):</span> <b id="soilPhValue">6.8 (Optimal Neutral)</b></div>
               <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soil_texture_label">Soil
                   Texture:</span> <b id="soilTextureValue">Sandy Clay Loam (Well Drained)</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Drainage Class:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="drainage_class_label">Drainage Class:</span> <b
                   id="soilDrainageValue">Well Drained</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Organic Carbon (SOC):</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="soc_label">Organic Carbon (SOC):</span> <b
                   id="soilSocValue">0.52%</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Nitrogen (N):</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="n_label">Nitrogen (N):</span> <b
                   id="soilNValue">210 kg/ha</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Phosphorus (P₂O₅):</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="p_label">Phosphorus (P₂O₅):</span> <b
                   id="soilPValue">16 kg/ha</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Potassium (K₂O):</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="k_label">Potassium (K₂O):</span> <b
                   id="soilKValue">240 kg/ha</b></div>
             </div>
           </div>
 
           <div class="kbv-editorial-card">
             <div class="kbv-agro-panel-title"><span data-icon="weather" data-size="18" style="color:#2D5A27;"></span>
-              Micro-Climate, Hydrology & Topography</div>
+              <span data-i18n="micro_climate_title">Micro-Climate, Hydrology &amp; Topography</span></div>
             <div style="font-size:0.85rem; color:#1A2412; line-height:1.85;">
               <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);"
                   data-i18n="temp_label">Temperature:</span> <b id="weatherTempValue">28.5°C</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Relative Humidity:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="humidity_label">Relative Humidity:</span> <b
                   id="weatherHumidityValue">68%</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Annual & 7-Day Rainfall:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="rainfall_label">Annual &amp; 7-Day Rainfall:</span> <b
                   id="weatherRainfallValue">880 mm</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Solar Radiation:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="solar_label">Solar Radiation:</span> <b
                   id="weatherSolarValue">20.2 MJ/m²/d</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="elev_slope_label">Elevation
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="elev_label">Elevation
                   (a.s.l.):</span> <b id="terrainElevValue">680 m</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Terrain Slope:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="slope_label">Terrain Slope:</span> <b
                   id="terrainSlopeValue">2.4%</b></div>
-              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);">Hazard Profile:</span> <b
+              <div class="kbv-snapshot-row"><span style="color:var(--kbv-sage);" data-i18n="hazard_label">Hazard Profile:</span> <b
                   id="terrainRiskValue">Flood: Low | Drought: Moderate</b></div>
             </div>
             <div style="margin-top:16px;">
               <button type="button" onclick="window.app && window.app.openProvenanceModal()"
                 style="width:100%; padding:11px 14px; border-radius:12px; background:rgba(45,90,39,0.1); border:1px solid rgba(45,90,39,0.28); color:#2D5A27; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                <span data-icon="microscope" data-size="15"></span> View Full Scientific Data Provenance & Audit Report
+                <span data-icon="microscope" data-size="15"></span> <span data-i18n="view_provenance_btn">View Full Scientific Data Provenance &amp; Audit Report</span>
               </button>
             </div>
           </div>
@@ -2439,7 +2439,7 @@
           <div class="kbv-agro-panel-title"><span data-icon="water" data-size="18" style="color:#2D5A27;"></span> <span
               data-i18n="panel_irrigation">FAO-56 Weather-Driven Irrigation Schedule</span></div>
           <div id="kbvDedicatedIrrigationContainer">
-            <div style="font-size:0.85rem; color:var(--text-sub);">Loading 7-day soil water balance...</div>
+            <div style="font-size:0.85rem; color:var(--text-sub);" data-i18n="loading_irr">Loading 7-day soil water balance...</div>
           </div>
         </div>
       </div>
@@ -2448,9 +2448,9 @@
       <div class="kbv-editorial-tab-panel" id="kbvTab_mandi">
         <div class="kbv-editorial-card">
           <div class="kbv-agro-panel-title"><span data-icon="mandi" data-size="18" style="color:#2D5A27;"></span> <span
-              data-i18n="panel_mandi">APMC Mandi Market Prices & Profitability Calculator</span></div>
+              data-i18n="panel_mandi">APMC Mandi Market Prices &amp; Profitability Calculator</span></div>
           <div id="kbvDedicatedMandiContainer">
-            <div style="font-size:0.85rem; color:var(--text-sub);">Loading APMC Mandi commodity benchmarks...</div>
+            <div style="font-size:0.85rem; color:var(--text-sub);" data-i18n="loading_mandi">Loading APMC Mandi commodity benchmarks...</div>
           </div>
         </div>
       </div>
@@ -2459,9 +2459,9 @@
       <div class="kbv-editorial-tab-panel" id="kbvTab_doctor">
         <div class="kbv-editorial-card">
           <div class="kbv-agro-panel-title"><span data-icon="doctor" data-size="18" style="color:#2D5A27;"></span>
-            Multilingual Voice AI Crop Doctor & STCR Advisory</div>
+            <span data-i18n="panel_doctor">Multilingual Voice AI Crop Doctor &amp; STCR Advisory</span></div>
           <div id="kbvDedicatedDoctorContainer">
-            <div style="font-size:0.85rem; color:var(--text-sub);">Loading AI Crop Doctor advisory...</div>
+            <div style="font-size:0.85rem; color:var(--text-sub);" data-i18n="loading_doctor">Loading AI Crop Doctor advisory...</div>
           </div>
         </div>
       </div>
@@ -2470,9 +2470,9 @@
       <div class="kbv-editorial-tab-panel" id="kbvTab_disease">
         <div class="kbv-editorial-card">
           <div class="kbv-agro-panel-title"><span data-icon="microscope" data-size="18" style="color:#2D5A27;"></span>
-            Visual Crop Disease Screening &amp; Pathology Reference</div>
+            <span data-i18n="panel_disease">Visual Crop Disease Screening &amp; Pathology Reference</span></div>
           <div id="kbvDedicatedDiseaseContainer">
-            <div style="font-size:0.85rem; color:var(--text-sub);">Upload or capture a leaf photo to begin screening...</div>
+            <div style="font-size:0.85rem; color:var(--text-sub);" data-i18n="loading_disease">Upload or capture a leaf photo to begin screening...</div>
           </div>
         </div>
       </div>
@@ -2481,9 +2481,9 @@
       <div class="kbv-editorial-tab-panel" id="kbvTab_tryerror">
         <div class="kbv-editorial-card">
           <div class="kbv-agro-panel-title"><span data-icon="microscope" data-size="18" style="color:#2D5A27;"></span>
-            Try &amp; Error — Plantation Compatibility, Best Regional Breed &amp; Irrigation Lab</div>
+            <span data-i18n="panel_tryerror">Try &amp; Error — Plantation Compatibility, Best Regional Breed &amp; Irrigation Lab</span></div>
           <div id="kbvDedicatedTryErrorContainer">
-            <div style="font-size:0.85rem; color:var(--text-sub);">Loading plantation evaluation lab...</div>
+            <div style="font-size:0.85rem; color:var(--text-sub);" data-i18n="loading_tryerror">Loading plantation evaluation lab...</div>
           </div>
         </div>
       </div>
@@ -2496,7 +2496,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="scale"
-            data-size="18" style="color:#2D5A27;"></span> Multi-Crop Suitability Comparison</div>
+            data-size="18" style="color:#2D5A27;"></span> <span data-i18n="modal_compare_title">Multi-Crop Suitability Comparison</span></div>
         <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body" id="comparisonModalBody"></div>
@@ -2508,7 +2508,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="microscope"
-            data-size="18" style="color:#2D5A27;"></span> Scientific Data Provenance & Audit Trail</div>
+            data-size="18" style="color:#2D5A27;"></span> <span data-i18n="modal_provenance_title">Scientific Data Provenance &amp; Audit Trail</span></div>
         <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body" id="provenanceModalBody"></div>
@@ -2523,7 +2523,7 @@
     <div class="modal-card" style="max-width:520px;">
       <div class="modal-header">
         <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><span data-icon="camera"
-            data-size="18" style="color:#2D5A27;"></span> Take Field or Crop Photo</div>
+            data-size="18" style="color:#2D5A27;"></span> <span data-i18n="modal_camera_title">Take Field or Crop Photo</span></div>
         <button type="button" class="modal-close-btn" id="cameraModalCloseBtn" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body" style="text-align:center;">
@@ -2535,32 +2535,34 @@
         </div>
         <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
           <button type="button" class="btn btn-primary" id="kbvCaptureSnapBtn" style="padding:10px 18px;"><span
-              data-icon="camera" data-size="15"></span> Capture Photo</button>
+              data-icon="camera" data-size="15"></span> <span data-i18n="capture_photo_btn">Capture Photo</span></button>
           <button type="button" class="btn btn-secondary" id="kbvCameraFallbackFileBtn" style="padding:10px 16px;"><span
-              data-icon="image" data-size="15"></span> Choose Image File Instead</button>
+              data-icon="image" data-size="15"></span> <span data-i18n="choose_file_btn">Choose Image File Instead</span></button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Global Toast -->
-  <div class="kbv-toast" id="kbvToast">Location Synchronized</div>
+  <div class="kbv-toast" id="kbvToast" data-i18n="toast_loc_synced">Location Synchronized</div>
 
   <!-- Leaflet Scripts (Local offline first + CDN fallback) -->
   <script src="js/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Application Modules -->
-  <script src="js/icons.js?v=3.4"></script>
-  <script src="js/api.js?v=3.4"></script>
-  <script src="js/map.js?v=3.4"></script>
-  <script src="js/suitability.js?v=3.4"></script>
-  <script src="js/disease_scanner.js?v=3.5"></script>
-  <script src="js/modules.js?v=3.5"></script>
-  <script src="js/app.js?v=3.4"></script>
-  <script src="js/kbv_ui.js?v=3.5"></script>
-  <script src="js/voice_assistant.js?v=3.4"></script>
-  <script src="js/report_generator.js?v=3.4"></script>
+  <script src="js/i18n.js?v=3.6"></script>
+  <script src="js/i18n_pathology.js?v=3.6"></script>
+  <script src="js/icons.js?v=3.6"></script>
+  <script src="js/api.js?v=3.6"></script>
+  <script src="js/map.js?v=3.6"></script>
+  <script src="js/suitability.js?v=3.6"></script>
+  <script src="js/disease_scanner.js?v=3.6"></script>
+  <script src="js/modules.js?v=3.6"></script>
+  <script src="js/app.js?v=3.6"></script>
+  <script src="js/kbv_ui.js?v=3.6"></script>
+  <script src="js/voice_assistant.js?v=3.6"></script>
+  <script src="js/report_generator.js?v=3.6"></script>
 
   <!-- Bootstrap -->
   <script>

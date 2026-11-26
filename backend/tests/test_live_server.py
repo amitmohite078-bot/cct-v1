@@ -38,6 +38,10 @@ def test_frontend_static_assets():
     make_request("Integrated Modules (js/modules.js)", "/js/modules.js")
     make_request("Vector Icons (js/icons.js)", "/js/icons.js")
     make_request("Suitability Engine (js/suitability.js)", "/js/suitability.js")
+    make_request("Core i18n Engine (js/i18n.js)", "/js/i18n.js")
+    make_request("Pathology i18n Pack (js/i18n_pathology.js)", "/js/i18n_pathology.js")
+    make_request("Disease Scanner (js/disease_scanner.js)", "/js/disease_scanner.js")
+    make_request("PDF Report Generator (js/report_generator.js)", "/js/report_generator.js")
 
 def test_api_endpoints():
     print("\n=== 2. TESTING API ENDPOINTS ===")

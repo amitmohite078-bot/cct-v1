@@ -335,6 +335,7 @@ class ModulesManager {
 
   setLanguage(lang) {
     this.currentLanguage = lang;
+    this.currentCropName = window.AgroI18n ? window.AgroI18n.cropName(this.currentCropId, lang) : this.currentCropName;
     this.render();
   }
 
@@ -721,7 +722,7 @@ class ModulesManager {
           ${TXT.irr}
         </button>
         <button class="btn ${this.activeSubtab === 'market' ? 'btn-primary' : 'btn-secondary'}" style="flex:1; font-size:0.75rem; justify-content:center;" onclick="window.modulesManager.setSubtab('market')">
-          💰 Mandi Profit
+          ${window.AgroI18n ? window.AgroI18n.t("mandi_profit_btn", this.currentLanguage) : "Mandi Profit"}
         </button>
         <button class="btn ${this.activeSubtab === 'doctor' ? 'btn-primary' : 'btn-secondary'}" style="flex:1; font-size:0.75rem; justify-content:center;" onclick="window.modulesManager.setSubtab('doctor')">
           ${TXT.doc}
@@ -1006,6 +1007,8 @@ class ModulesManager {
       return localizeDayName(dueStr);
     };
 
+    const mmUnit = window.AgroI18n ? window.AgroI18n.t("mm_unit", lang) : "mm";
+
     let rowsHtml = schedule.map(day => {
       const irrRec = Boolean(day.irrigation_recommended ?? day.irrigation_needed);
       const depth = Number(day.irrigation_depth_mm || 0);
@@ -1017,16 +1020,16 @@ class ModulesManager {
       return `
       <tr>
         <td style="font-weight:600; text-align:left; padding:8px;">${localizeDayName(day.day || day.date || "")}</td>
-        <td>${etcVal} mm</td>
-        <td>${rainVal} mm</td>
-        <td>${depVal} mm</td>
+        <td>${etcVal} ${mmUnit}</td>
+        <td>${rainVal} ${mmUnit}</td>
+        <td>${depVal} ${mmUnit}</td>
         <td>
           <span class="${irrRec ? 'badge-due' : 'badge-ok'}">
             ${localizeStatus(statusText)}
           </span>
         </td>
         <td style="font-weight:bold; color:${irrRec ? '#2D5A27' : '#4F5E46'}">
-          ${irrRec ? `${depth} mm (${dripHrs} ${LBL.drip_run})` : '—'}
+          ${irrRec ? `${depth} ${mmUnit} (${dripHrs} ${LBL.drip_run})` : '—'}
         </td>
       </tr>
     `;
@@ -1092,10 +1095,12 @@ class ModulesManager {
 
     const tipsToUse = (irr.water_saving_tips && irr.water_saving_tips.length > 0 && lang === "en") ? irr.water_saving_tips : defaultTips;
 
-    let displayCropName = this.currentCropName;
-    if (window.suitabilityRenderer && typeof window.suitabilityRenderer.localizeCropName === "function") {
-      displayCropName = window.suitabilityRenderer.localizeCropName({ id: this.currentCropId, name: this.currentCropName });
-    }
+    const A = window.AgroI18n;
+    const displayCropName = A
+      ? A.cropName(this.currentCropId, lang)
+      : ((window.suitabilityRenderer && window.suitabilityRenderer.localizeCropName)
+        ? window.suitabilityRenderer.localizeCropName({ id: this.currentCropId, name: this.currentCropName })
+        : this.currentCropName);
     const stageVal = (irr.growth_stage || this.growthStage || "mid_season").toLowerCase();
     const rawThreshold = irr.readily_available_water_threshold_mm ?? 42.0;
     const total7dDemand = irr.total_7day_water_demand_mm ?? +(irr.daily_crop_water_demand_etc_mm * 7).toFixed(1);
@@ -1104,41 +1109,48 @@ class ModulesManager {
     const activeAcres = Math.max(0.5, Number(this.currentFarmSize || 2.5));
     const geom = CROP_PLANTING_GEOMETRY[(this.currentCropId || "tomato").toLowerCase()] || CROP_PLANTING_GEOMETRY._default;
     const perEventDepthMm = Math.max(12, +(Number(total7dIrr) > 0 ? Number(total7dIrr) : irr.daily_crop_water_demand_etc_mm * 3).toFixed(1));
+    const locSys = A ? A.localizeIrrSystem(geom.system, lang) : geom.system;
+    const locNote = A ? A.localizeLayoutNote(geom.note, lang) : geom.note;
     const plantingDiagramHtml = this.buildPlantingDiagramHtml({
-      title: `${displayCropName} Field Row × Column Planting & Drip Layout`,
-      subtitle: `Scaled automatically for ${activeAcres.toFixed(1)} Acre(s) · ${geom.system}`,
+      title: A ? A.t("diag_title_tpl", lang, { crop: displayCropName }) : `${displayCropName} Field Row × Column Planting & Drip Layout`,
+      subtitle: A ? A.t("diag_sub_tpl", lang, { acres: activeAcres.toFixed(1), system: locSys }) : `Scaled for ${activeAcres.toFixed(1)} Acre(s) · ${locSys}`,
       rowM: geom.rowM,
       colM: geom.colM,
       acres: activeAcres,
       emittersPerPlant: geom.emittersPerPlant || 1,
       depthMmPerEvent: perEventDepthMm,
-      systemLabel: geom.system,
-      noteText: geom.note
+      systemLabel: locSys,
+      noteText: locNote
     });
+
+    const acUnit = A ? A.t("ac_unit", lang) : "Ac";
+    const irrNeedLbl = A ? A.t("irr_7d_need", lang) : "7-Day Irrigation Need";
+    const rawTriggerLbl = A ? A.t("raw_trigger", lang) : "RAW Trigger:";
+    const soilAwcLbl = A ? A.t("soil_awc", lang) : "Soil AWC:";
 
     return `
       <div>
         <!-- Connected Crop, Acreage & Growth Stage Control Bar -->
         <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; margin-bottom:14px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); border-radius:12px;">
           <div>
-            <div style="font-size:0.7rem; color:#4F5E46; text-transform:uppercase; font-weight:700;">Active Crop · FAO-56 Model</div>
+            <div style="font-size:0.7rem; color:#4F5E46; text-transform:uppercase; font-weight:700;">${A ? A.t("active_crop_fao", lang) : "Active Crop · FAO-56 Model"}</div>
             <div style="font-size:1.05rem; font-weight:800; color:#1A2412;">${displayCropName}</div>
           </div>
 
           <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px;">
             <div style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border:1px solid rgba(45,90,39,0.24); border-radius:10px; padding:6px 10px;">
-              <label for="irrAcresSlider" style="font-size:0.74rem; color:#4F5E46; font-weight:700;">Land Area:</label>
+              <label for="irrAcresSlider" style="font-size:0.74rem; color:#4F5E46; font-weight:700;">${A ? A.t("land_area_lbl", lang) : "Land Area:"}</label>
               <input type="range" id="irrAcresSlider" min="0.5" max="25" step="0.5" value="${activeAcres.toFixed(1)}" style="width:105px; accent-color:#2D5A27; cursor:pointer;" />
-              <span id="irrAcresBadge" style="font-size:0.8rem; font-weight:800; color:#2D5A27; min-width:56px; text-align:right;">${activeAcres.toFixed(1)} Ac</span>
+              <span id="irrAcresBadge" style="font-size:0.8rem; font-weight:800; color:#2D5A27; min-width:56px; text-align:right;">${activeAcres.toFixed(1)} ${acUnit}</span>
             </div>
 
             <div style="display:flex; align-items:center; gap:8px;">
-              <label for="irrGrowthStageSelect" style="font-size:0.75rem; color:#4F5E46; font-weight:700;">Growth Stage:</label>
+              <label for="irrGrowthStageSelect" style="font-size:0.75rem; color:#4F5E46; font-weight:700;">${A ? A.t("growth_stage_lbl", lang) : "Growth Stage:"}</label>
               <select id="irrGrowthStageSelect" onchange="window.modulesManager.setGrowthStage(this.value)" style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.3); color:#1A2412; padding:6px 10px; border-radius:8px; font-size:0.78rem; font-weight:600; cursor:pointer;">
-                <option value="initial" ${stageVal === 'initial' ? 'selected' : ''}>Initial (Emergence)</option>
-                <option value="vegetative" ${stageVal === 'vegetative' || stageVal === 'development' ? 'selected' : ''}>Vegetative / Crop Dev</option>
-                <option value="mid_season" ${stageVal === 'mid_season' || stageVal === 'flowering' || stageVal === 'fruiting' ? 'selected' : ''}>Mid-Season / Flowering</option>
-                <option value="maturity" ${stageVal === 'maturity' || stageVal === 'late_season' ? 'selected' : ''}>Late Season / Maturity</option>
+                <option value="initial" ${stageVal === 'initial' ? 'selected' : ''}>${A ? A.t("stage_initial", lang) : "Initial (Emergence)"}</option>
+                <option value="vegetative" ${stageVal === 'vegetative' || stageVal === 'development' ? 'selected' : ''}>${A ? A.t("stage_veg", lang) : "Vegetative / Crop Dev"}</option>
+                <option value="mid_season" ${stageVal === 'mid_season' || stageVal === 'flowering' || stageVal === 'fruiting' ? 'selected' : ''}>${A ? A.t("stage_mid", lang) : "Mid-Season / Flowering"}</option>
+                <option value="maturity" ${stageVal === 'maturity' || stageVal === 'late_season' ? 'selected' : ''}>${A ? A.t("stage_maturity", lang) : "Late Season / Maturity"}</option>
               </select>
             </div>
           </div>
@@ -1153,17 +1165,17 @@ class ModulesManager {
           <div class="param-card">
             <div class="param-label">${LBL.etc}</div>
             <div class="param-value">${irr.daily_crop_water_demand_etc_mm} <span class="param-unit">${LBL.mm_day}</span></div>
-            <div class="param-meta">Kc = ${irr.crop_coefficient_kc} · 7d: ${total7dDemand} mm</div>
+            <div class="param-meta">Kc = ${irr.crop_coefficient_kc} · 7d: ${total7dDemand} ${mmUnit}</div>
           </div>
           <div class="param-card">
             <div class="param-label">${LBL.next_irr}</div>
             <div class="param-value" style="color:#2D5A27; font-size:0.98rem;">${localizeNextDue(irr.next_irrigation_due)}</div>
-            <div class="param-meta">RAW Trigger: ${rawThreshold} mm</div>
+            <div class="param-meta">${rawTriggerLbl} ${rawThreshold} ${mmUnit}</div>
           </div>
           <div class="param-card">
-            <div class="param-label">7-Day Irrigation Need</div>
-            <div class="param-value" style="color:#1A2412;">${total7dIrr} <span class="param-unit">mm</span></div>
-            <div class="param-meta">Soil AWC: ${irr.soil_moisture_holding_awc_mm ?? 90} mm</div>
+            <div class="param-label">${irrNeedLbl}</div>
+            <div class="param-value" style="color:#1A2412;">${total7dIrr} <span class="param-unit">${mmUnit}</span></div>
+            <div class="param-meta">${soilAwcLbl} ${irr.soil_moisture_holding_awc_mm ?? 90} ${mmUnit}</div>
           </div>
         </div>
 
@@ -1201,17 +1213,20 @@ class ModulesManager {
   }
 
   buildPlantingDiagramHtml({
-    title = "Row × Column Planting & Irrigation Diagram",
+    title = "",
     subtitle = "",
     rowM = 0.75,
     colM = 0.45,
     acres = 2.5,
     emittersPerPlant = 1,
     depthMmPerEvent = 30,
-    systemLabel = "Inline Drip Lateral",
+    systemLabel = "",
     noteText = "",
     plantRadius = 6
   }) {
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = (k, vars) => (A ? A.t(k, lang, vars) : k);
     const ic = (name, size = 14) => (typeof window.kbvIcon === "function" ? window.kbvIcon(name, size) : "");
     const safeAcres = Math.max(0.25, Number(acres || 2.5));
     const rM = Math.max(0.1, Number(rowM || 0.75));
@@ -1228,6 +1243,18 @@ class ModulesManager {
 
     const rowFt = (rM * 3.28084).toFixed(1);
     const colFt = (cM * 3.28084).toFixed(1);
+    const mU = t("m_unit");
+    const ftU = t("ft_unit");
+    const lU = t("l_unit");
+    const mmU = t("mm_unit");
+    const acU = t("ac_unit");
+    const rowWord = t("row_word");
+    const colWord = t("col_word");
+    const rowUnit = t("row_unit");
+    const plantUnit = t("plant_unit");
+    const dispSystem = A ? A.localizeIrrSystem(systemLabel || "", lang) : (systemLabel || "Inline Drip");
+    const dispNote = noteText ? (A ? A.localizeLayoutNote(noteText, lang) : noteText) : "";
+    const dispTitle = title || t("diag_title_tpl", { crop: A ? A.cropName(this.currentCropId, lang) : this.currentCropName });
 
     const visRows = Math.min(4, Math.max(2, rowsTotal));
     const visCols = Math.min(7, Math.max(2, colsTotal));
@@ -1238,25 +1265,21 @@ class ModulesManager {
     const startX = bx + colStep * 0.65;
 
     let svgGrid = "";
-    // Sub-main manifold along left edge of plot
     svgGrid += `<line x1="${bx + 12}" y1="${by + 10}" x2="${bx + 12}" y2="${by + bh - 10}" stroke="#1E3F1A" stroke-width="4" stroke-linecap="round" />`;
-    svgGrid += `<text x="${bx + 4}" y="${by + bh / 2}" transform="rotate(-90 ${bx + 4},${by + bh / 2})" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1E3F1A">SUB-MAIN PIPE</text>`;
+    svgGrid += `<text x="${bx + 4}" y="${by + bh / 2}" transform="rotate(-90 ${bx + 4},${by + bh / 2})" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1E3F1A">${t("submain_pipe")}</text>`;
 
     for (let r = 0; r < visRows; r++) {
       const cy = +(startY + r * rowStep).toFixed(1);
-      // Horizontal drip lateral pipe along each crop row
       svgGrid += `<line x1="${bx + 12}" y1="${cy}" x2="${bx + bw - 14}" y2="${cy}" stroke="#0284C7" stroke-width="2" stroke-dasharray="5,3" />`;
-      svgGrid += `<text x="${bx + bw - 12}" y="${cy - 5}" text-anchor="end" font-size="8.5" font-weight="700" fill="#0369A1">Row ${r + 1}</text>`;
+      svgGrid += `<text x="${bx + bw - 12}" y="${cy - 5}" text-anchor="end" font-size="8.5" font-weight="700" fill="#0369A1">${rowWord} ${r + 1}</text>`;
       for (let c = 0; c < visCols; c++) {
         const cx = +(startX + c * colStep).toFixed(1);
-        // Wetting root-zone bulb + canopy
         svgGrid += `<circle cx="${cx}" cy="${cy}" r="${plantRadius + 4}" fill="rgba(2,132,199,0.16)" stroke="rgba(2,132,199,0.38)" stroke-width="1" />`;
         svgGrid += `<circle cx="${cx}" cy="${cy}" r="${plantRadius}" fill="#2D5A27" stroke="#FFFFFF" stroke-width="1.5" />`;
         svgGrid += `<circle cx="${cx}" cy="${cy}" r="1.8" fill="#F0EEE9" />`;
       }
     }
 
-    // Row-to-Row vertical spacing callout between Row 1 and Row 2 (right side)
     const r0Y = startY;
     const r1Y = +(startY + rowStep).toFixed(1);
     const dimX = +(bx + bw - 68).toFixed(1);
@@ -1265,11 +1288,10 @@ class ModulesManager {
       <polygon points="${dimX - 3.5},${r0Y + 5} ${dimX + 3.5},${r0Y + 5} ${dimX},${r0Y}" fill="#B45309" />
       <polygon points="${dimX - 3.5},${r1Y - 5} ${dimX + 3.5},${r1Y - 5} ${dimX},${r1Y}" fill="#B45309" />
       <rect x="${dimX + 5}" y="${(r0Y + r1Y) / 2 - 11}" width="60" height="22" rx="4" fill="#FFFBEB" stroke="#D97706" stroke-width="1" />
-      <text x="${dimX + 35}" y="${(r0Y + r1Y) / 2 - 1}" text-anchor="middle" font-size="8.5" font-weight="800" fill="#92400E">Row: ${rM}m</text>
-      <text x="${dimX + 35}" y="${(r0Y + r1Y) / 2 + 8}" text-anchor="middle" font-size="7.5" font-weight="600" fill="#B45309">(${rowFt} ft)</text>
+      <text x="${dimX + 35}" y="${(r0Y + r1Y) / 2 - 1}" text-anchor="middle" font-size="8.5" font-weight="800" fill="#92400E">${rowWord}: ${rM}${mU}</text>
+      <text x="${dimX + 35}" y="${(r0Y + r1Y) / 2 + 8}" text-anchor="middle" font-size="7.5" font-weight="600" fill="#B45309">(${rowFt} ${ftU})</text>
     `;
 
-    // Plant-to-Plant (Column) horizontal spacing callout between Col 1 and Col 2 above Row 1
     const c0X = startX;
     const c1X = +(startX + colStep).toFixed(1);
     const dimY = +(r0Y - 19).toFixed(1);
@@ -1278,7 +1300,7 @@ class ModulesManager {
       <line x1="${c0X}" y1="${dimY - 4}" x2="${c0X}" y2="${r0Y - plantRadius - 2}" stroke="rgba(30,63,26,0.45)" stroke-width="1" stroke-dasharray="2,2" />
       <line x1="${c1X}" y1="${dimY - 4}" x2="${c1X}" y2="${r0Y - plantRadius - 2}" stroke="rgba(30,63,26,0.45)" stroke-width="1" stroke-dasharray="2,2" />
       <rect x="${(c0X + c1X) / 2 - 44}" y="${dimY - 19}" width="88" height="17" rx="4" fill="#FFFFFF" stroke="#2D5A27" stroke-width="1" />
-      <text x="${(c0X + c1X) / 2}" y="${dimY - 8}" text-anchor="middle" font-size="8.5" font-weight="800" fill="#1E3F1A">Col: ${cM}m (${colFt} ft)</text>
+      <text x="${(c0X + c1X) / 2}" y="${dimY - 8}" text-anchor="middle" font-size="8.5" font-weight="800" fill="#1E3F1A">${colWord}: ${cM}${mU} (${colFt} ${ftU})</text>
     `;
 
     return `
@@ -1286,62 +1308,60 @@ class ModulesManager {
         <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
           <div>
             <div style="font-size:0.9rem; font-weight:800; color:#1A2412; display:flex; align-items:center; gap:6px;">
-              ${ic("water", 15)} ${title}
+              ${ic("water", 15)} ${dispTitle}
             </div>
             <div style="font-size:0.74rem; color:#4F5E46; margin-top:2px;">${subtitle}</div>
           </div>
           <span style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); color:#2D5A27; font-size:0.72rem; font-weight:700; padding:4px 10px; border-radius:20px;">
-            ${safeAcres.toFixed(1)} Ac · ~${Math.round(sideM)}m × ${Math.round(sideM)}m (${Math.round(sideFt)}ft × ${Math.round(sideFt)}ft)
+            ${safeAcres.toFixed(1)} ${acU} · ~${Math.round(sideM)}${mU} × ${Math.round(sideM)}${mU} (${Math.round(sideFt)}${ftU} × ${Math.round(sideFt)}${ftU})
           </span>
         </div>
 
         <div class="kbv-diagram-stats-grid">
           <div style="background:#F0EEE9; border-radius:10px; padding:9px 10px; border:1px solid rgba(45,90,39,0.14);">
-            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">Row × Column Spacing</div>
-            <div style="font-size:0.95rem; font-weight:800; color:#1A2412; margin-top:2px;">${rM} m × ${cM} m</div>
-            <div style="font-size:0.69rem; color:#4F5E46;">${rowFt} ft row × ${colFt} ft plant</div>
+            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">${t("row_col_spacing")}</div>
+            <div style="font-size:0.95rem; font-weight:800; color:#1A2412; margin-top:2px;">${rM} ${mU} × ${cM} ${mU}</div>
+            <div style="font-size:0.69rem; color:#4F5E46;">${rowFt} ${ftU} ${rowUnit} × ${colFt} ${ftU} ${plantUnit}</div>
           </div>
           <div style="background:#F0EEE9; border-radius:10px; padding:9px 10px; border:1px solid rgba(45,90,39,0.14);">
-            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">Total Plant Population</div>
+            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">${t("total_pop")}</div>
             <div style="font-size:0.95rem; font-weight:800; color:#2D5A27; margin-top:2px;">${totalPlants.toLocaleString()}</div>
-            <div style="font-size:0.69rem; color:#4F5E46;">~${rowsTotal.toLocaleString()} rows × ${colsTotal.toLocaleString()} cols</div>
+            <div style="font-size:0.69rem; color:#4F5E46;">~${rowsTotal.toLocaleString()} ${t("rows_word")} × ${colsTotal.toLocaleString()} ${t("cols_word")}</div>
           </div>
           <div style="background:#F0EEE9; border-radius:10px; padding:9px 10px; border:1px solid rgba(45,90,39,0.14);">
-            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">Water Volume / Event</div>
-            <div style="font-size:0.95rem; font-weight:800; color:#0369A1; margin-top:2px;">${eventLiters.toLocaleString()} L</div>
-            <div style="font-size:0.69rem; color:#4F5E46;">${perPlantLiters} L/plant @ ${depthMmPerEvent} mm</div>
+            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">${t("water_vol_event")}</div>
+            <div style="font-size:0.95rem; font-weight:800; color:#0369A1; margin-top:2px;">${eventLiters.toLocaleString()} ${lU}</div>
+            <div style="font-size:0.69rem; color:#4F5E46;">${perPlantLiters} ${lU}/${plantUnit} @ ${depthMmPerEvent} ${mmU}</div>
           </div>
           <div style="background:#F0EEE9; border-radius:10px; padding:9px 10px; border:1px solid rgba(45,90,39,0.14);">
-            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">Drip Lateral Est.</div>
-            <div style="font-size:0.95rem; font-weight:800; color:#1A2412; margin-top:2px;">${lateralLenM.toLocaleString()} m</div>
-            <div style="font-size:0.69rem; color:#4F5E46;">${emittersPerPlant} emitter(s)/plant · ${systemLabel.split('+')[0].trim()}</div>
+            <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase;">${t("drip_lateral_est")}</div>
+            <div style="font-size:0.95rem; font-weight:800; color:#1A2412; margin-top:2px;">${lateralLenM.toLocaleString()} ${mU}</div>
+            <div style="font-size:0.69rem; color:#4F5E46;">${emittersPerPlant} ${t("emitters_plant")} · ${dispSystem.split('+')[0].trim()}</div>
           </div>
         </div>
 
         <div style="background:#F8F7F3; border:1px solid rgba(45,90,39,0.16); border-radius:12px; padding:8px; overflow:hidden;">
-          <svg viewBox="0 0 640 264" width="100%" style="max-width:100%; height:auto; display:block;" role="img" aria-label="Planting spacing diagram showing rows, columns, and drip laterals">
-            <!-- Outer field parcel frame -->
+          <svg viewBox="0 0 640 264" width="100%" style="max-width:100%; height:auto; display:block;" role="img" aria-label="${dispTitle}">
             <rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="10" fill="#F0EEE9" stroke="#2D5A27" stroke-width="1.6" />
             <text x="${bx + bw / 2}" y="22" text-anchor="middle" font-size="10.5" font-weight="800" fill="#1A2412">
-              Parcel Width: ~${Math.round(sideM)} m (${Math.round(sideFt)} ft) — Showing Representative ${visRows} Rows × ${visCols} Columns (of ${rowsTotal} × ${colsTotal})
+              ${t("parcel_width", { sideM: Math.round(sideM), sideFt: Math.round(sideFt), visRows, visCols, rowsTotal, colsTotal })}
             </text>
             ${svgGrid}
-            <!-- Legend bar at bottom -->
             <g transform="translate(64, 232)">
               <circle cx="8" cy="10" r="5" fill="#2D5A27" />
-              <text x="18" y="13" font-size="9" font-weight="700" fill="#1A2412">Plant / Pit</text>
+              <text x="18" y="13" font-size="9" font-weight="700" fill="#1A2412">${t("plant_pit")}</text>
               <circle cx="96" cy="10" r="6" fill="rgba(2,132,199,0.22)" stroke="#0284C7" stroke-width="1" />
-              <text x="107" y="13" font-size="9" font-weight="700" fill="#0369A1">Wetted Root Zone</text>
+              <text x="107" y="13" font-size="9" font-weight="700" fill="#0369A1">${t("wetted_zone")}</text>
               <line x1="212" y1="10" x2="236" y2="10" stroke="#0284C7" stroke-width="2.2" stroke-dasharray="5,3" />
-              <text x="242" y="13" font-size="9" font-weight="700" fill="#0369A1">Drip Lateral</text>
+              <text x="242" y="13" font-size="9" font-weight="700" fill="#0369A1">${t("drip_lateral")}</text>
               <line x1="322" y1="10" x2="344" y2="10" stroke="#1E3F1A" stroke-width="3.5" />
-              <text x="350" y="13" font-size="9" font-weight="700" fill="#1E3F1A">Sub-Main</text>
-              <text x="516" y="13" text-anchor="end" font-size="8.5" font-weight="700" fill="#4F5E46">Density: ${(totalPlants / safeAcres).toFixed(0)} plants/acre</text>
+              <text x="350" y="13" font-size="9" font-weight="700" fill="#1E3F1A">${t("sub_main")}</text>
+              <text x="516" y="13" text-anchor="end" font-size="8.5" font-weight="700" fill="#4F5E46">${t("density_tpl", { val: (totalPlants / safeAcres).toFixed(0) })}</text>
             </g>
           </svg>
         </div>
 
-        ${noteText ? `<div style="margin-top:8px; font-size:0.74rem; color:#4F5E46; line-height:1.45;"><b>Layout Engineering Note:</b> ${noteText}</div>` : ""}
+        ${dispNote ? `<div style="margin-top:8px; font-size:0.74rem; color:#4F5E46; line-height:1.45;"><b>${t("layout_note_lbl")}</b> ${dispNote}</div>` : ""}
       </div>
     `;
   }
@@ -1352,8 +1372,10 @@ class ModulesManager {
     slider.oninput = (e) => {
       const acres = Math.max(0.5, parseFloat(e.target.value) || 2.5);
       this.currentFarmSize = acres;
+      const lang = this.currentLanguage || "en";
+      const A = window.AgroI18n;
       const badge = document.getElementById("irrAcresBadge");
-      if (badge) badge.textContent = `${acres.toFixed(1)} Ac`;
+      if (badge) badge.textContent = `${acres.toFixed(1)} ${A ? A.t("ac_unit", lang) : "Ac"}`;
 
       const diagramWrap = document.getElementById("irrPlantingDiagramWrap");
       if (diagramWrap) {
@@ -1362,28 +1384,36 @@ class ModulesManager {
         const total7dIrr = irr.total_7day_irrigation_required_mm ?? schedule.reduce((acc, d) => acc + Number(d.irrigation_depth_mm || 0), 0);
         const perEventDepthMm = Math.max(12, +(Number(total7dIrr) > 0 ? Number(total7dIrr) : (irr.daily_crop_water_demand_etc_mm || 4.8) * 3).toFixed(1));
         const geom = CROP_PLANTING_GEOMETRY[(this.currentCropId || "tomato").toLowerCase()] || CROP_PLANTING_GEOMETRY._default;
-        let displayCropName = this.currentCropName;
-        if (window.suitabilityRenderer && typeof window.suitabilityRenderer.localizeCropName === "function") {
-          displayCropName = window.suitabilityRenderer.localizeCropName({ id: this.currentCropId, name: this.currentCropName });
-        }
+        const displayCropName = A ? A.cropName(this.currentCropId, lang) : this.currentCropName;
+        const locSys = A ? A.localizeIrrSystem(geom.system, lang) : geom.system;
+        const locNote = A ? A.localizeLayoutNote(geom.note, lang) : geom.note;
         diagramWrap.innerHTML = this.buildPlantingDiagramHtml({
-          title: `${displayCropName} Field Row × Column Planting & Drip Layout`,
-          subtitle: `Scaled automatically for ${acres.toFixed(1)} Acre(s) · ${geom.system}`,
+          title: A ? A.t("diag_title_tpl", lang, { crop: displayCropName }) : `${displayCropName} Field Row × Column Planting & Drip Layout`,
+          subtitle: A ? A.t("diag_sub_tpl", lang, { acres: acres.toFixed(1), system: locSys }) : `Scaled for ${acres.toFixed(1)} Acre(s) · ${locSys}`,
           rowM: geom.rowM,
           colM: geom.colM,
           acres: acres,
           emittersPerPlant: geom.emittersPerPlant || 1,
           depthMmPerEvent: perEventDepthMm,
-          systemLabel: geom.system,
-          noteText: geom.note
+          systemLabel: locSys,
+          noteText: locNote
         });
       }
     };
   }
 
   renderDoctorSection() {
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = (k, vars) => (A ? A.t(k, lang, vars) : k);
+    const escAttr = (s) => String(s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;");
     const fallback = this.getFallbackModules(this.currentCropId);
-    const doc = (this.modulesData && this.modulesData.crop_doctor_module) || fallback.crop_doctor_module;
+    const rawDoc = (this.modulesData && this.modulesData.crop_doctor_module) || fallback.crop_doctor_module;
+    const displayCropName = A ? A.cropName(this.currentCropId, lang) : this.currentCropName;
+    const phVal = Number(this.lastFieldContext?.ph || 6.8);
+    const doc = (A && typeof A.localizeDoctorModule === "function")
+      ? A.localizeDoctorModule(rawDoc, this.currentCropId, displayCropName, phVal, lang)
+      : rawDoc;
     const amendments = doc.soil_amendments || [];
     const fertilizer = doc.fertilizer_schedule || [];
 
@@ -1403,69 +1433,72 @@ class ModulesManager {
       </div>
     `).join("");
 
+    const qp1 = t("qp_1"), qp2 = t("qp_2"), qp3 = t("qp_3"), qp4 = t("qp_4");
+    const autoOn = !(window.voiceAssistant && !window.voiceAssistant.autoReadEnabled);
+
     return `
       <div>
         <div style="background:rgba(45,90,39,0.09); border:1px solid rgba(45,90,39,0.25); border-radius:10px; padding:12px; margin-bottom:14px;">
-          <div style="font-weight:bold; font-size:0.88rem; color:#2D5A27; margin-bottom:4px; display:flex; align-items:center; gap:6px;">${ic("stethoscope", 16)} Crop Doctor Prescription</div>
+          <div style="font-weight:bold; font-size:0.88rem; color:#2D5A27; margin-bottom:4px; display:flex; align-items:center; gap:6px;">${ic("stethoscope", 16)} ${t("doctor_rx")}</div>
           <div style="font-size:0.78rem; color:#1A2412; line-height:1.45;">
             ${doc.crop_doctor_summary}
           </div>
         </div>
 
-        <div class="param-section-title">Soil Conditioning & Amendments</div>
+        <div class="param-section-title">${t("soil_cond_amend")}</div>
         <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.18); border-radius:8px; padding:12px; margin-bottom:14px;">
           ${amendHtml}
         </div>
 
-        <div class="param-section-title">STCR Precision Fertilizer Schedule</div>
+        <div class="param-section-title">${t("stcr_fert_sched")}</div>
         <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.18); border-radius:8px; padding:12px; margin-bottom:14px;">
           ${fertHtml}
         </div>
 
         <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
-          <div class="param-section-title" style="margin-bottom:0;">Ask the AI Crop Doctor (11-Language Voice &amp; Text)</div>
-          <button type="button" id="doctorAutoVoiceBtn" style="background:${(window.voiceAssistant && !window.voiceAssistant.autoReadEnabled) ? '#FFFFFF' : 'rgba(45,90,39,0.12)'}; border:1px solid rgba(45,90,39,0.3); color:#2D5A27; border-radius:20px; padding:4px 10px; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-            ${ic("speaker", 12)} <span>Auto-Voice: ${(window.voiceAssistant && !window.voiceAssistant.autoReadEnabled) ? 'OFF' : 'ON'}</span>
+          <div class="param-section-title" style="margin-bottom:0;">${t("ask_doctor_title")}</div>
+          <button type="button" id="doctorAutoVoiceBtn" style="background:${autoOn ? 'rgba(45,90,39,0.12)' : '#FFFFFF'}; border:1px solid rgba(45,90,39,0.3); color:#2D5A27; border-radius:20px; padding:4px 10px; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+            ${ic("speaker", 12)} <span>${t("auto_voice")} ${autoOn ? t("on_word") : t("off_word")}</span>
           </button>
         </div>
         <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-          <span style="font-size:0.7rem; color:#4F5E46; font-weight:600; display:flex; align-items:center;">Quick Prompts:</span>
-          <button type="button" class="kbv-preset-chip" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion('NPK खाद कब और कैसे डालें?')">${ic("soil", 12)} NPK खाद कब डालें? (Hindi)</button>
-          <button type="button" class="kbv-preset-chip" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion('कीटकनाशक फवारणी कधी करावी?')">${ic("pest", 12)} कीटकनाशक फवारणी (Marathi)</button>
-          <button type="button" class="kbv-preset-chip" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion('Best bio-control for stem rot and leaf blight?')">${ic("crops", 12)} Bio-control (English)</button>
-          <button type="button" class="kbv-preset-chip" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion('How much water does this crop need this week?')">${ic("water", 12)} Irrigation Timing</button>
+          <span style="font-size:0.7rem; color:#4F5E46; font-weight:600; display:flex; align-items:center;">${t("quick_prompts")}</span>
+          <button type="button" class="kbv-preset-chip doctor-qp-btn" data-prompt="${escAttr(qp1)}" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion(this.dataset.prompt)">${ic("soil", 12)} ${qp1}</button>
+          <button type="button" class="kbv-preset-chip doctor-qp-btn" data-prompt="${escAttr(qp2)}" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion(this.dataset.prompt)">${ic("pest", 12)} ${qp2}</button>
+          <button type="button" class="kbv-preset-chip doctor-qp-btn" data-prompt="${escAttr(qp3)}" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion(this.dataset.prompt)">${ic("crops", 12)} ${qp3}</button>
+          <button type="button" class="kbv-preset-chip doctor-qp-btn" data-prompt="${escAttr(qp4)}" style="font-size:0.72rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px;" onclick="window.modulesManager.fillDoctorQuestion(this.dataset.prompt)">${ic("water", 12)} ${qp4}</button>
         </div>
         <div id="doctorPendingImagePreview" style="display:none; align-items:center; justify-content:space-between; gap:10px; padding:8px 12px; margin-bottom:8px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); border-radius:8px; flex-wrap:wrap;">
           <div style="display:flex; align-items:center; gap:10px;">
-            <img id="doctorPendingImageThumb" src="" alt="Attached leaf photo" style="width:42px; height:42px; object-fit:cover; border-radius:6px; border:1px solid #2D5A27;" />
+            <img id="doctorPendingImageThumb" src="" alt="" style="width:42px; height:42px; object-fit:cover; border-radius:6px; border:1px solid #2D5A27;" />
             <div>
               <div id="doctorPendingImageName" style="font-size:0.78rem; font-weight:700; color:#1A2412;"></div>
-              <div id="doctorPendingImageScan" style="font-size:0.71rem; color:#4F5E46;">Attached leaf photo ready for Crop Doctor discussion</div>
+              <div id="doctorPendingImageScan" style="font-size:0.71rem; color:#4F5E46;">${t("attached_photo_ready")}</div>
             </div>
           </div>
-          <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.72rem;" onclick="window.kbvApp.switchDashboardTab('disease')">View Scan</button>
+          <button type="button" class="btn btn-secondary" style="padding:4px 10px; font-size:0.72rem;" onclick="window.kbvApp.switchDashboardTab('disease')">${t("view_scan_btn")}</button>
         </div>
         <div class="chat-window">
           <div class="chat-messages" id="cropDoctorChatMessages">
             <div class="chat-bubble bot">
-              <div>Hello! I am <b>Dr. AgroNexus</b>, specialized in <b>${this.currentCropName}</b>. Ask me in English, हिन्दी, मराठी, বাংলা, മലയാളം, ਪੰਜਾਬੀ, ଓଡ଼ିଆ, தமிழ், తెలుగు, ગુજરાતી, or ಕನ್ನಡ about fertilizer timing, pest scouting, or irrigation!</div>
+              <div>${t("doctor_welcome_tpl", { crop: `<b>${displayCropName}</b>` })}</div>
               <div style="margin-top:6px; text-align:right;">
                 <button type="button" class="voice-speak-btn" data-welcome-speak="1" style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); color:#2D5A27; border-radius:6px; padding:3px 9px; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-                  ${ic("speaker", 12)} Read Aloud
+                  ${ic("speaker", 12)} ${t("read_aloud")}
                 </button>
               </div>
             </div>
           </div>
           <div id="voiceStatusIndicator" style="display:none; margin:8px 0; padding:6px 12px; background:rgba(185,28,28,0.12); border:1px solid #dc2626; border-radius:6px; color:#991b1b; font-size:0.78rem; font-weight:600; text-align:center;">
-            Listening... Speak your question clearly into your microphone!
+            ${t("listening_msg")}
           </div>
           <div class="chat-input-bar" style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-            <input type="text" id="cropDoctorInput" placeholder="Ask in any Indian language or tap Speak..." style="flex:1; min-width:160px;" />
+            <input type="text" id="cropDoctorInput" placeholder="${escAttr(t("doctor_placeholder"))}" style="flex:1; min-width:160px;" />
             <button type="button" class="btn btn-primary" id="cropDoctorSendBtn" style="padding:6px 14px; font-weight:600;">
-              Send
+              ${t("send_btn")}
             </button>
             <button type="button" class="btn" id="cropDoctorVoiceBtn" style="background:#2D5A27; color:white; border:1px solid #1E3F1A; padding:6px 12px; display:inline-flex; align-items:center; gap:4px; font-weight:600; cursor:pointer;">
-              ${ic("doctor", 13)} Speak
+              ${ic("doctor", 13)} ${t("speak_btn")}
             </button>
           </div>
         </div>
@@ -1483,6 +1516,11 @@ class ModulesManager {
 
   _bindSpeakButton(btn, answerText, langCode) {
     if (!btn || !window.voiceAssistant) return;
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const readTxt = A ? A.t("read_aloud", lang) : "Read Aloud";
+    const stopTxt = A ? A.t("stop_audio", lang) : "Stop Audio";
+    const audioErrTxt = A ? A.t("audio_unavail_msg", lang) : "Audio playback unavailable in this browser.";
     const speakerIc = typeof window.kbvIcon === "function" ? window.kbvIcon("speaker", 12) : "";
     const stopIc = typeof window.kbvIcon === "function" ? window.kbvIcon("stop", 12) : "";
     const resetAllButtons = () => {
@@ -1490,7 +1528,7 @@ class ModulesManager {
         b.dataset.speaking = "0";
         b.style.background = "#F0EEE9";
         b.style.color = "#2D5A27";
-        b.innerHTML = `${speakerIc} Read Aloud`;
+        b.innerHTML = `${speakerIc} ${readTxt}`;
       });
     };
 
@@ -1506,7 +1544,7 @@ class ModulesManager {
           btn.dataset.speaking = "1";
           btn.style.background = "rgba(220,38,38,0.12)";
           btn.style.color = "#991b1b";
-          btn.innerHTML = `${stopIc} Stop Audio`;
+          btn.innerHTML = `${stopIc} ${stopTxt}`;
         },
         onEnd: () => {
           resetAllButtons();
@@ -1514,7 +1552,7 @@ class ModulesManager {
         onError: (err) => {
           resetAllButtons();
           if (window.kbvApp && typeof window.kbvApp.showToast === "function") {
-            window.kbvApp.showToast(err || "Audio playback unavailable in this browser.", 4000);
+            window.kbvApp.showToast(err || audioErrTxt, 4000);
           }
         }
       });
@@ -1530,6 +1568,10 @@ class ModulesManager {
     const msgBox = document.getElementById("cropDoctorChatMessages");
     if (!input || !sendBtn) return;
 
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = (k, vars) => (A ? A.t(k, lang, vars) : k);
+
     if (window.kbvMedia && typeof window.kbvMedia.syncPreviews === "function") {
       window.kbvMedia.syncPreviews();
     }
@@ -1541,14 +1583,15 @@ class ModulesManager {
         const on = window.voiceAssistant.autoReadEnabled;
         if (!on) window.voiceAssistant.stopSpeaking();
         autoVoiceBtn.style.background = on ? "rgba(45,90,39,0.12)" : "#FFFFFF";
-        autoVoiceBtn.innerHTML = `${speakerIc} <span>Auto-Voice: ${on ? "ON" : "OFF"}</span>`;
+        autoVoiceBtn.innerHTML = `${speakerIc} <span>${t("auto_voice")} ${on ? t("on_word") : t("off_word")}</span>`;
       };
     }
 
+    const displayCropName = A ? A.cropName(this.currentCropId, lang) : this.currentCropName;
     const welcomeBtn = msgBox && msgBox.querySelector("[data-welcome-speak='1']");
     if (welcomeBtn) {
-      const welcomeText = `Hello! I am Doctor AgroNexus, specialized in ${this.currentCropName}. Ask me in any Indian language about fertilizer timing, pest scouting, or irrigation.`;
-      this._bindSpeakButton(welcomeBtn, welcomeText, this.currentLanguage || "en");
+      const welcomeText = t("doctor_welcome_tpl", { crop: displayCropName });
+      this._bindSpeakButton(welcomeBtn, welcomeText, lang);
     }
 
     const sendMessage = async (customText = null, fromMic = false) => {
@@ -1564,22 +1607,28 @@ class ModulesManager {
 
       const loadingBubble = document.createElement("div");
       loadingBubble.className = "chat-bubble bot";
-      loadingBubble.textContent = "Dr. AgroNexus is analyzing your field & crop conditions...";
+      loadingBubble.textContent = t("doctor_loading");
       msgBox.appendChild(loadingBubble);
       msgBox.scrollTop = msgBox.scrollHeight;
 
+      const ctxCopy = { ...(this.lastFieldContext || {}) };
+      if (ctxCopy.locationName && A) ctxCopy.locationName = A.placeName(ctxCopy.locationName, lang);
+      if (ctxCopy.texture && window.app && window.app.localizeSoilTexture) {
+        ctxCopy.texture = window.app.localizeSoilTexture(ctxCopy.texture, lang);
+      }
+
       const resp = await window.ApiClient.chatCropDoctor(
-        this.currentCropName,
+        displayCropName,
         q,
-        this.lastFieldContext,
-        this.currentLanguage || "en"
+        ctxCopy,
+        lang
       );
 
       loadingBubble.innerHTML = `
         <div>${resp.answer}</div>
         <div style="margin-top:6px; text-align:right;">
           <button type="button" class="voice-speak-btn" style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.28); color:#2D5A27; border-radius:6px; padding:3px 9px; font-size:0.72rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-            ${speakerIc} Read Aloud
+            ${speakerIc} ${t("read_aloud")}
           </button>
         </div>
       `;
@@ -1606,7 +1655,7 @@ class ModulesManager {
           window.voiceAssistant.stopSpeaking();
         }
         if (!window.voiceAssistant || !window.voiceAssistant.recognition) {
-          const msg = "Microphone voice recognition works on Chrome, Edge, or Safari over HTTPS / localhost. You can also click any Quick Prompt chip or type below, and click Read Aloud to hear answers!";
+          const msg = t("mic_unavail_msg");
           if (window.kbvApp && typeof window.kbvApp.showToast === "function") {
             window.kbvApp.showToast(msg, 5500);
           } else {
@@ -1615,7 +1664,7 @@ class ModulesManager {
           return;
         }
 
-        window.voiceAssistant.setLanguage(this.currentLanguage || "en");
+        window.voiceAssistant.setLanguage(lang);
         window.voiceAssistant.startListening(
           (transcript) => {
             if (voiceIndicator) voiceIndicator.style.display = "none";
@@ -1625,7 +1674,7 @@ class ModulesManager {
             if (voiceIndicator) voiceIndicator.style.display = isListening ? "block" : "none";
             voiceBtn.style.background = isListening ? "#dc2626" : "#2D5A27";
             const ic = typeof window.kbvIcon === "function" ? window.kbvIcon(isListening ? "stop" : "doctor", 13) : "";
-            voiceBtn.innerHTML = `${ic} ${isListening ? "Listening..." : "Speak"}`;
+            voiceBtn.innerHTML = `${ic} ${isListening ? t("listening_btn") : t("speak_btn")}`;
           },
           (err) => {
             if (voiceIndicator) voiceIndicator.style.display = "none";
@@ -1656,7 +1705,10 @@ class ModulesManager {
   }
 
   async evaluateTryErrorPlant(plantQuery) {
-    const query = (plantQuery || this.tryErrorQuery || "Mango").trim();
+    const rawQuery = (plantQuery || this.tryErrorQuery || "Mango").trim();
+    const query = (window.AgroI18n && typeof window.AgroI18n.resolveEnglishCropQuery === "function")
+      ? window.AgroI18n.resolveEnglishCropQuery(rawQuery, "Mango")
+      : rawQuery;
     this.tryErrorQuery = query;
     this.tryErrorLoading = true;
 
@@ -1710,34 +1762,46 @@ class ModulesManager {
   }
 
   renderTryErrorSection() {
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = (k, vars) => (A ? A.t(k, lang, vars) : k);
+    const escAttr = (s) => String(s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;");
     const ic = (name, size = 14) => (typeof window.kbvIcon === "function" ? window.kbvIcon(name, size) : "");
     const activeAcres = Math.max(0.5, Number(this.currentFarmSize || 2.5));
-    const locName = (window.kbvApp && window.kbvApp.currentLocationName)
+    const rawLocName = (window.kbvApp && window.kbvApp.currentLocationName)
       || (this.lastFieldContext && this.lastFieldContext.locationName)
       || "Bengaluru Urban, Karnataka";
+    const locName = A ? A.placeName(rawLocName, lang) : rawLocName;
     const quickPlants = ["Mango", "Banana", "Coconut", "Pomegranate", "Grapes", "Guava", "Papaya", "Coffee", "Turmeric", "Dragon Fruit"];
     const chipsHtml = quickPlants.map(p => {
       const active = (this.tryErrorQuery || "").toLowerCase() === p.toLowerCase();
-      return `<button type="button" class="tryerror-plant-chip kbv-preset-chip" data-plant="${p}" style="font-size:0.75rem; padding:5px 11px; border-radius:20px; border:1px solid ${active ? '#2D5A27' : 'rgba(45,90,39,0.22)'}; background:${active ? '#2D5A27' : '#FFFFFF'}; color:${active ? '#FFFFFF' : '#1A2412'}; font-weight:700; cursor:pointer;">${p}</button>`;
+      const dispPlant = A ? A.cropName(p, lang) : p;
+      return `<button type="button" class="tryerror-plant-chip kbv-preset-chip" data-plant="${p}" style="font-size:0.75rem; padding:5px 11px; border-radius:20px; border:1px solid ${active ? '#2D5A27' : 'rgba(45,90,39,0.22)'}; background:${active ? '#2D5A27' : '#FFFFFF'}; color:${active ? '#FFFFFF' : '#1A2412'}; font-weight:700; cursor:pointer;">${dispPlant}</button>`;
     }).join("");
+
+    const dispQuery = A ? A.cropName(this.tryErrorQuery || "Mango", lang) : (this.tryErrorQuery || "Mango");
+    const acUnit = t("ac_unit");
+    const mUnit = t("m_unit");
 
     let bodyHtml = "";
     if (this.tryErrorLoading) {
       bodyHtml = `
         <div style="padding:28px; text-align:center; background:#F0EEE9; border:1px dashed rgba(45,90,39,0.3); border-radius:12px;">
-          <div style="font-weight:800; color:#2D5A27; font-size:0.95rem;">Analyzing "${this.tryErrorQuery}" for ${locName}...</div>
-          <div style="font-size:0.78rem; color:#4F5E46; margin-top:6px;">Evaluating regional climate suitability, matching high-yield cultivars/breeds &amp; computing drip layout for ${activeAcres.toFixed(1)} acres.</div>
+          <div style="font-weight:800; color:#2D5A27; font-size:0.95rem;">${t("try_loading_title", { plant: dispQuery, loc: locName })}</div>
+          <div style="font-size:0.78rem; color:#4F5E46; margin-top:6px;">${t("try_loading_sub", { acres: activeAcres.toFixed(1) })}</div>
         </div>
       `;
     } else if (!this.tryErrorResult) {
       bodyHtml = `
         <div style="padding:24px; text-align:center; background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); border-radius:12px;">
-          <div style="font-weight:700; color:#1A2412;">Search any orchard, plantation, or specialty crop above and click <b>Analyze Plant</b>.</div>
-          <div style="font-size:0.78rem; color:#4F5E46; margin-top:4px;">We will inspect your active location (${locName}), suggest the best regional breeds/varieties, and build a custom irrigation &amp; row-column spacing layout.</div>
+          <div style="font-weight:700; color:#1A2412;">${t("try_empty_title")}</div>
+          <div style="font-size:0.78rem; color:#4F5E46; margin-top:4px;">${t("try_empty_sub", { loc: locName })}</div>
         </div>
       `;
     } else {
-      const r = this.tryErrorResult;
+      const r = (A && typeof A.localizePlantationTrial === "function")
+        ? A.localizePlantationTrial(this.tryErrorResult, lang)
+        : this.tryErrorResult;
       const loc = r.location_analysis || {};
       const comp = r.compatibility || {};
       const breeds = r.recommended_breeds || [];
@@ -1752,18 +1816,18 @@ class ModulesManager {
           <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:6px;">
             <span style="font-size:0.94rem; font-weight:800; color:#1A2412;">${b.name}</span>
             ${idx === 0
-              ? `<span style="background:#2D5A27; color:#FFFFFF; font-size:0.66rem; font-weight:800; padding:2px 8px; border-radius:12px;">BEST FIT</span>`
-              : `<span style="background:#F0EEE9; color:#4F5E46; font-size:0.66rem; font-weight:700; padding:2px 8px; border-radius:12px;">OPTION ${idx + 1}</span>`
+              ? `<span style="background:#2D5A27; color:#FFFFFF; font-size:0.66rem; font-weight:800; padding:2px 8px; border-radius:12px;">${t("best_fit_badge")}</span>`
+              : `<span style="background:#F0EEE9; color:#4F5E46; font-size:0.66rem; font-weight:700; padding:2px 8px; border-radius:12px;">${t("option_badge", { idx: idx + 1 })}</span>`
             }
           </div>
           <div style="font-size:0.74rem; color:#2D5A27; font-weight:700; margin-bottom:5px;">
-            Expected Yield: ${b.yield || 'High Commercial Grade'}
+            ${t("expected_yield")} ${b.yield || ''}
           </div>
           <div style="font-size:0.76rem; color:#33402B; line-height:1.45; margin-bottom:5px;">
-            <b>Trait Advantage:</b> ${b.trait || 'High-vigor regionally adapted cultivar.'}
+            <b>${t("trait_adv")}</b> ${b.trait || ''}
           </div>
           <div style="font-size:0.73rem; color:#4F5E46; line-height:1.4;">
-            <b>Recommended Rootstock / Stock:</b> ${b.rootstock || loc.zone_name || 'Certified nursery stock'}
+            <b>${t("rec_rootstock")}</b> ${b.rootstock || loc.zone_name || ''}
           </div>
         </div>
       `).join("");
@@ -1774,17 +1838,19 @@ class ModulesManager {
       const plantsNow = Math.max(1, Math.round(areaSqMNow / (rowSp * colSp)));
       const eventTotalLiters = plantsNow * Number(irr.liters_per_plant_event || 60);
       const depthMmPerEvent = +(eventTotalLiters / Math.max(1, areaSqMNow)).toFixed(2);
+      const irrMethodDisp = irr.method || t("drip_sys_default");
+      const diagNote = A ? A.localizeLayoutNote(geom.spacing_note, lang) : (geom.spacing_note || "");
 
       const diagramHtml = this.buildPlantingDiagramHtml({
-        title: `${r.plant_name} (${activeAcres.toFixed(1)} Ac) Row × Column Orchard Layout`,
-        subtitle: `Optimal spacing (${rowSp} m × ${colSp} m) · ${irr.method || 'Drip System'}`,
+        title: t("orchard_layout_tpl", { crop: r.plant_name, acres: activeAcres.toFixed(1) }),
+        subtitle: t("optimal_spacing_tpl", { r: `${rowSp} ${mUnit}`, c: `${colSp} ${mUnit}`, sys: irrMethodDisp }),
         rowM: rowSp,
         colM: colSp,
         acres: activeAcres,
         emittersPerPlant: irr.drippers_per_plant || 2,
         depthMmPerEvent: depthMmPerEvent,
-        systemLabel: irr.method || "Basin Drip",
-        noteText: geom.spacing_note || "Align rows North–South for uniform canopy sunlight and airflow.",
+        systemLabel: irrMethodDisp,
+        noteText: diagNote,
         plantRadius: rowSp >= 2.5 ? 8 : 6
       });
 
@@ -1795,48 +1861,48 @@ class ModulesManager {
         <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); border-radius:12px; padding:14px; margin-bottom:14px;">
           <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:10px;">
             <div>
-              <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:#4F5E46;">Plantation Compatibility Report · ${loc.zone_name || 'Agro-Climatic Evaluation'}</div>
+              <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:#4F5E46;">${t("compat_report")} · ${loc.zone_name || ''}</div>
               <div style="font-size:1.18rem; font-weight:900; color:#1A2412; margin-top:2px;">
-                ${r.plant_name} <span style="font-size:0.82rem; font-weight:500; font-style:italic; color:#4F5E46;">(${r.scientific_name || r.category})</span>
+                ${r.plant_name} ${lang === "en" && r.scientific_name ? `<span style="font-size:0.82rem; font-weight:500; font-style:italic; color:#4F5E46;">(${r.scientific_name})</span>` : ""}
               </div>
               <div style="font-size:0.76rem; color:#4F5E46; margin-top:4px;">
-                <b>Evaluated Field:</b> ${locName} (${loc.zone_name || 'India'}) · Soil: ${loc.soil_texture || 'Loam'} (pH ${loc.soil_ph ?? 6.8}) · Mean Temp: ${loc.mean_temp_c ?? 27.5}°C · Rain: ${Math.round(loc.annual_rainfall_mm ?? 920)} mm · Elev: ${Math.round(loc.elevation_m ?? 420)} m
+                <b>${t("eval_field")}</b> ${locName} (${loc.zone_name || ''}) · ${t("soil_word")} ${loc.soil_texture || ''} (pH ${loc.soil_ph ?? 6.8}) · ${t("temp_word")} ${loc.mean_temp_c ?? 27.5}°C · ${t("rain_word")} ${Math.round(loc.annual_rainfall_mm ?? 920)} ${t("mm_unit")} · ${t("elev_word")} ${Math.round(loc.elevation_m ?? 420)} ${mUnit}
               </div>
             </div>
             <div style="background:${badgeBg}; color:${badgeColor}; border:1px solid rgba(45,90,39,0.25); padding:8px 14px; border-radius:12px; text-align:right;">
-              <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase;">Location Fit Score</div>
-              <div style="font-size:1.15rem; font-weight:900;">${score} / 100 · ${comp.verdict || 'Suitable'}</div>
+              <div style="font-size:0.68rem; font-weight:700; text-transform:uppercase;">${t("loc_fit_score")}</div>
+              <div style="font-size:1.15rem; font-weight:900;">${score} / 100 · ${comp.verdict || ''}</div>
             </div>
           </div>
           <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; font-size:0.75rem;">
-            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>pH Fit:</b> ${comp.ph_score ?? 90}%</span>
-            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>Thermal Fit:</b> ${comp.temp_score ?? 90}%</span>
-            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>Moisture / Rain Fit:</b> ${comp.rain_score ?? 85}%</span>
-            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>Drainage Fit:</b> ${comp.drainage_score ?? 95}%</span>
+            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>${t("ph_fit")}</b> ${comp.ph_score ?? 90}%</span>
+            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>${t("thermal_fit")}</b> ${comp.temp_score ?? 90}%</span>
+            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>${t("moisture_fit")}</b> ${comp.rain_score ?? 85}%</span>
+            <span style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.16); padding:4px 10px; border-radius:8px;"><b>${t("drainage_fit")}</b> ${comp.drainage_score ?? 95}%</span>
           </div>
         </div>
 
         <!-- 2. Best Regional Breeds / Cultivars -->
-        <div class="param-section-title">${ic("trophy", 15)} Best Recommended ${r.plant_name} Breeds for ${loc.zone_name || locName}</div>
+        <div class="param-section-title">${ic("trophy", 15)} ${t("best_breeds_title", { plant: r.plant_name, zone: loc.zone_name || locName })}</div>
         <div class="kbv-breed-grid" style="margin-bottom:16px;">
           ${breedsHtml}
         </div>
 
         <!-- 3. Yield-Maximizing Irrigation Plan & Row-Column Diagram -->
-        <div class="param-section-title">${ic("water", 15)} Yield-Maximizing Irrigation &amp; Productivity Plan</div>
+        <div class="param-section-title">${ic("water", 15)} ${t("yield_irr_title")}</div>
         <div class="kbv-tryerror-grid">
           <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); border-radius:12px; padding:13px;">
-            <div style="font-size:0.82rem; font-weight:800; color:#2D5A27; margin-bottom:8px;">Irrigation &amp; Drip Calibration</div>
+            <div style="font-size:0.82rem; font-weight:800; color:#2D5A27; margin-bottom:8px;">${t("irr_calib_title")}</div>
             <div style="font-size:0.78rem; color:#1A2412; line-height:1.68;">
-              <div><b>Recommended System:</b> ${irr.method || 'Inline Drip + Mulching'}</div>
-              <div><b>Emitters per Plant:</b> ${irr.drippers_per_plant || 2} × ${irr.emitter_lph || 4} LPH drippers</div>
-              <div><b>Schedule Interval:</b> Every ${irr.interval_days || 4} days (${irr.drip_run_hours_per_event || 3.0} hrs/run per irrigation)</div>
-              <div><b>Per-Plant Allocation:</b> ${irr.liters_per_plant_day ?? 12} L/plant/day (${irr.liters_per_plant_event ?? 48} L/plant per event)</div>
-              <div id="tryErrorTotalWaterStat"><b>Total Event Water (${activeAcres.toFixed(1)} Ac · ${plantsNow.toLocaleString()} plants):</b> ${Math.round(eventTotalLiters).toLocaleString()} Liters</div>
+              <div><b>${t("rec_system")}</b> ${irrMethodDisp}</div>
+              <div><b>${t("emitters_lbl")}</b> ${t("lph_drippers_tpl", { n: irr.drippers_per_plant || 2, lph: irr.emitter_lph || 4 })}</div>
+              <div><b>${t("sched_interval")}</b> ${t("every_days_hrs", { days: irr.interval_days || 4, hrs: irr.drip_run_hours_per_event || 3.0 })}</div>
+              <div><b>${t("per_plant_alloc")}</b> ${irr.liters_per_plant_day ?? 12} ${t("l_plant_day")} (${irr.liters_per_plant_event ?? 48} ${t("l_plant_event")})</div>
+              <div id="tryErrorTotalWaterStat"><b>${t("total_event_water", { acres: activeAcres.toFixed(1), plants: plantsNow.toLocaleString() })}</b> ${Math.round(eventTotalLiters).toLocaleString()} ${t("liters_word")}</div>
             </div>
           </div>
           <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); border-radius:12px; padding:13px;">
-            <div style="font-size:0.82rem; font-weight:800; color:#2D5A27; margin-bottom:8px;">Location-Tuned Yield Boost Actions</div>
+            <div style="font-size:0.82rem; font-weight:800; color:#2D5A27; margin-bottom:8px;">${t("yield_boost_actions")}</div>
             <ul style="padding-left:16px; margin:0; font-size:0.78rem; color:#33402B; line-height:1.6;">
               ${stepsList}
             </ul>
@@ -1855,24 +1921,24 @@ class ModulesManager {
         <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.22); border-radius:12px; padding:14px; margin-bottom:14px;">
           <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
             <div style="font-size:0.78rem; color:#4F5E46; font-weight:700;">
-              ${ic("gps", 14)} Analyzing against active location: <b style="color:#1A2412;">${locName}</b>
+              ${ic("gps", 14)} ${t("analyzing_active_loc")} <b style="color:#1A2412;">${locName}</b>
             </div>
             <div style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border:1px solid rgba(45,90,39,0.24); border-radius:10px; padding:5px 10px;">
-              <label for="tryErrorAcresSlider" style="font-size:0.74rem; color:#4F5E46; font-weight:700;">Trial Area:</label>
+              <label for="tryErrorAcresSlider" style="font-size:0.74rem; color:#4F5E46; font-weight:700;">${t("trial_area_lbl")}</label>
               <input type="range" id="tryErrorAcresSlider" min="0.5" max="25" step="0.5" value="${activeAcres.toFixed(1)}" style="width:105px; accent-color:#2D5A27; cursor:pointer;" />
-              <span id="tryErrorAcresBadge" style="font-size:0.8rem; font-weight:800; color:#2D5A27; min-width:54px; text-align:right;">${activeAcres.toFixed(1)} Ac</span>
+              <span id="tryErrorAcresBadge" style="font-size:0.8rem; font-weight:800; color:#2D5A27; min-width:54px; text-align:right;">${activeAcres.toFixed(1)} ${acUnit}</span>
             </div>
           </div>
 
           <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-            <input type="text" id="tryErrorSearchInput" value="${this.tryErrorQuery || ''}" placeholder="Search any plantation or fruit tree (e.g. Mango, Banana, Coconut, Pomegranate, Coffee)..." style="flex:1; min-width:220px; padding:9px 12px; border-radius:10px; border:1px solid rgba(45,90,39,0.3); background:#FFFFFF; color:#1A2412; font-size:0.86rem; font-weight:600;" />
+            <input type="text" id="tryErrorSearchInput" value="${escAttr(dispQuery)}" placeholder="${escAttr(t("search_plant_ph"))}" style="flex:1; min-width:220px; padding:9px 12px; border-radius:10px; border:1px solid rgba(45,90,39,0.3); background:#FFFFFF; color:#1A2412; font-size:0.86rem; font-weight:600;" />
             <button type="button" id="tryErrorAnalyzeBtn" class="btn btn-primary" style="padding:9px 18px; font-weight:800; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
-              ${ic("search", 14)} Analyze Plant
+              ${ic("search", 14)} ${t("analyze_plant_btn")}
             </button>
           </div>
 
           <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px;">
-            <span style="font-size:0.72rem; color:#4F5E46; font-weight:700;">Popular Plantations:</span>
+            <span style="font-size:0.72rem; color:#4F5E46; font-weight:700;">${t("popular_plantations")}</span>
             ${chipsHtml}
           </div>
         </div>
@@ -1886,6 +1952,9 @@ class ModulesManager {
     const searchInput = document.getElementById("tryErrorSearchInput");
     const analyzeBtn = document.getElementById("tryErrorAnalyzeBtn");
     const slider = document.getElementById("tryErrorAcresSlider");
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = (k, vars) => (A ? A.t(k, lang, vars) : k);
 
     if (analyzeBtn && searchInput) {
       analyzeBtn.onclick = () => {
@@ -1904,7 +1973,7 @@ class ModulesManager {
       chip.onclick = (e) => {
         const p = e.currentTarget.getAttribute("data-plant");
         if (p) {
-          if (searchInput) searchInput.value = p;
+          if (searchInput) searchInput.value = A ? A.cropName(p, lang) : p;
           this.evaluateTryErrorPlant(p);
         }
       };
@@ -1915,11 +1984,13 @@ class ModulesManager {
         const acres = Math.max(0.5, parseFloat(e.target.value) || 2.5);
         this.currentFarmSize = acres;
         const badge = document.getElementById("tryErrorAcresBadge");
-        if (badge) badge.textContent = `${acres.toFixed(1)} Ac`;
+        if (badge) badge.textContent = `${acres.toFixed(1)} ${t("ac_unit")}`;
 
         const diagramWrap = document.getElementById("tryErrorDiagramWrap");
         if (diagramWrap && this.tryErrorResult) {
-          const r = this.tryErrorResult;
+          const r = (A && typeof A.localizePlantationTrial === "function")
+            ? A.localizePlantationTrial(this.tryErrorResult, lang)
+            : this.tryErrorResult;
           const geom = r.planting_geometry || {};
           const irr = r.irrigation_plan || {};
           const rowSp = Number(geom.row_spacing_m || 5.0);
@@ -1930,18 +2001,20 @@ class ModulesManager {
           const depthMmPerEvent = +(eventTotalLiters / Math.max(1, areaSqMNow)).toFixed(2);
           const totalWaterEl = document.getElementById("tryErrorTotalWaterStat");
           if (totalWaterEl) {
-            totalWaterEl.innerHTML = `<b>Total Event Water (${acres.toFixed(1)} Ac · ${plantsNow.toLocaleString()} plants):</b> ${Math.round(eventTotalLiters).toLocaleString()} Liters`;
+            totalWaterEl.innerHTML = `<b>${t("total_event_water", { acres: acres.toFixed(1), plants: plantsNow.toLocaleString() })}</b> ${Math.round(eventTotalLiters).toLocaleString()} ${t("liters_word")}`;
           }
+          const irrMethodDisp = irr.method || t("drip_sys_default");
+          const mUnit = t("m_unit");
           diagramWrap.innerHTML = this.buildPlantingDiagramHtml({
-            title: `${r.plant_name} (${acres.toFixed(1)} Ac) Row × Column Orchard Layout`,
-            subtitle: `Optimal spacing (${rowSp} m × ${colSp} m) · ${irr.method || 'Drip System'}`,
+            title: t("orchard_layout_tpl", { crop: r.plant_name, acres: acres.toFixed(1) }),
+            subtitle: t("optimal_spacing_tpl", { r: `${rowSp} ${mUnit}`, c: `${colSp} ${mUnit}`, sys: irrMethodDisp }),
             rowM: rowSp,
             colM: colSp,
             acres: acres,
             emittersPerPlant: irr.drippers_per_plant || 2,
             depthMmPerEvent: depthMmPerEvent,
-            systemLabel: irr.method || "Basin Drip",
-            noteText: geom.spacing_note || "Align rows North–South for uniform canopy sunlight and airflow.",
+            systemLabel: irrMethodDisp,
+            noteText: A ? A.localizeLayoutNote(geom.spacing_note, lang) : (geom.spacing_note || ""),
             plantRadius: rowSp >= 2.5 ? 8 : 6
           });
         }
@@ -2403,7 +2476,9 @@ class ModulesManager {
     const regional = getRegionalMandiBenchmarkJS(key, this.fieldLat, this.fieldLon);
 
     const prof = (this.modulesData && this.modulesData.mandi_profitability_module) || {};
-    const benchmarkMandi = prof.benchmark_mandi || regional.benchmark_mandi || fallbackMandi.benchmark_mandi;
+    const A = window.AgroI18n;
+    const rawMandi = prof.benchmark_mandi || regional.benchmark_mandi || fallbackMandi.benchmark_mandi;
+    const benchmarkMandi = (A && typeof A.localizeMandiName === "function") ? A.localizeMandiName(rawMandi, lang) : rawMandi;
     const officialModalPrice = regional.modal_price_qtl || fallbackMandi.modal_price_qtl;
     const minPrice = fallbackMandi.min_price_qtl || Math.round(officialModalPrice * 0.75);
     const maxPrice = fallbackMandi.max_price_qtl || Math.round(officialModalPrice * 1.35);
@@ -2423,16 +2498,28 @@ class ModulesManager {
     const roi = ((totalProfit / Math.max(1, totalCost)) * 100).toFixed(1);
 
     let commodityDisplay = prof.commodity_name || fallbackMandi.commodity_name;
-    if (lang !== "en" && window.suitabilityRenderer && typeof window.suitabilityRenderer.localizeCropName === "function") {
-      const locName = window.suitabilityRenderer.localizeCropName({ id: key, name: this.currentCropName });
-      if (locName) commodityDisplay = `${locName} · ${commodityDisplay}`;
+    if (lang !== "en") {
+      commodityDisplay = A ? A.cropName(key, lang) : (
+        (window.suitabilityRenderer && window.suitabilityRenderer.localizeCropName)
+          ? window.suitabilityRenderer.localizeCropName({ id: key, name: this.currentCropName })
+          : commodityDisplay
+      );
     }
 
     const mspBadge = mspPrice
       ? `<span style="font-size:0.75rem; background:rgba(45,90,39,0.12); border:1px solid #2D5A27; color:#2D5A27; padding:3px 8px; border-radius:6px; font-weight:700;">${ML.msp}: ₹${mspPrice.toLocaleString()} / ${ML.qtl}</span>`
       : `<span style="font-size:0.75rem; background:rgba(217,119,6,0.12); border:1px solid #d97706; color:#9A6700; padding:3px 8px; border-radius:6px; font-weight:700;">${ML.apmc_range}: ₹${minPrice.toLocaleString()} - ₹${maxPrice.toLocaleString()}</span>`;
 
-    const dateToday = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const locale = (A && A.LOCALES[lang]) || "en-IN";
+    const dateToday = new Date().toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' });
+    const rawTrend = (prof.price_trend || fallbackMandi.price_trend || "").replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]+/gu, "").replace(/\s{2,}/g, " ").trim();
+    const dispTrend = (A && typeof A.mandiTrend === "function") ? A.mandiTrend(rawTrend, lang) : rawTrend;
+    const dispSentiment = (A && typeof A.mandiSentiment === "function")
+      ? A.mandiSentiment(prof.market_sentiment || fallbackMandi.market_sentiment, lang)
+      : (prof.market_sentiment || fallbackMandi.market_sentiment);
+    const dispSource = (A && typeof A.mandiSource === "function")
+      ? A.mandiSource(prof.verified_source || fallbackMandi.verified_source, lang)
+      : (prof.verified_source || fallbackMandi.verified_source);
 
     const ic = (name, size = 14) => (typeof window.kbvIcon === "function" ? window.kbvIcon(name, size) : "");
     const cropIcoName = typeof window.kbvCropIcon === "function" ? window.kbvCropIcon(key) : "crops";
@@ -2463,7 +2550,7 @@ class ModulesManager {
                 ₹<span id="mandiModalRateBadge">${activePrice.toLocaleString()}</span> <span style="font-size:0.85rem; color:#4F5E46; font-weight:600;">/ ${ML.qtl}</span>
               </div>
               <div style="font-size:0.72rem; color:#2D5A27; font-weight:700; margin-top:2px;">
-                ${(prof.price_trend || fallbackMandi.price_trend || "").replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]+/gu, "").replace(/\s{2,}/g, " ").trim()}
+                ${dispTrend}
               </div>
             </div>
           </div>
@@ -2497,8 +2584,8 @@ class ModulesManager {
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; font-size:0.72rem; color:#4F5E46;">
-            <div style="display:inline-flex; align-items:center; gap:5px;"><span style="color:#2D5A27; display:inline-flex;">${ic("chart", 13)}</span> <b>${ML.sentiment}</b> ${prof.market_sentiment || fallbackMandi.market_sentiment}</div>
-            <div style="color:#2D5A27; font-weight:600; display:inline-flex; align-items:center; gap:4px;">${ic("check", 13)} ${prof.verified_source || fallbackMandi.verified_source}</div>
+            <div style="display:inline-flex; align-items:center; gap:5px;"><span style="color:#2D5A27; display:inline-flex;">${ic("chart", 13)}</span> <b>${ML.sentiment}</b> ${dispSentiment}</div>
+            <div style="color:#2D5A27; font-weight:600; display:inline-flex; align-items:center; gap:4px;">${ic("check", 13)} ${dispSource}</div>
           </div>
         </div>
 

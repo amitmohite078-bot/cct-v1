@@ -299,6 +299,9 @@ class SuitabilityRenderer {
 
   localizeCropName(crop) {
     const lang = this.currentLanguage || "en";
+    if (window.AgroI18n && typeof window.AgroI18n.cropName === "function") {
+      return window.AgroI18n.cropName(crop?.id || crop?.name || "", lang);
+    }
     if (crop.id && SUITABILITY_CROP_NAMES[crop.id] && SUITABILITY_CROP_NAMES[crop.id][lang]) {
       return SUITABILITY_CROP_NAMES[crop.id][lang];
     }
@@ -518,6 +521,13 @@ class SuitabilityRenderer {
       const durationLocalized = this.localizeDuration(crop.expected_growing_duration);
       const waterLocalized = this.localizeWater(crop.water_requirement);
       const limitingFactorLocalized = crop.limiting_factor ? this.localizeLimitingFactor(crop.limiting_factor.factor) : "";
+      const summaryObj = (window.AgroI18n && typeof window.AgroI18n.localizeCropSummary === "function")
+        ? window.AgroI18n.localizeCropSummary(crop, this.currentLanguage || "en")
+        : { explanation: crop.explanation || "" };
+      const explanationLocalized = summaryObj.explanation || "";
+      const locUnits = (s) => (window.AgroI18n && typeof window.AgroI18n.localizeUnitsInRange === "function")
+        ? window.AgroI18n.localizeUnitsInRange(s, this.currentLanguage || "en")
+        : (s || "");
 
       html += `
         <div class="crop-card ${isSelected ? 'selected' : ''}" data-crop-id="${crop.id}" onclick="window.suitabilityRenderer.selectCrop('${crop.id}')" style="background:#FFFFFF; border:1.5px solid ${isSelected ? '#2D5A27' : 'rgba(45,90,39,0.18)'}; border-radius:14px; padding:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s ease;">
@@ -566,7 +576,7 @@ class SuitabilityRenderer {
           </div>
 
           <div style="font-size:0.75rem; color:#33402B; margin-top:6px; line-height:1.4;">
-            ${crop.explanation ? crop.explanation.substring(0, 190) + '...' : ''}
+            ${explanationLocalized ? (this.currentLanguage === "en" && explanationLocalized.length > 190 ? explanationLocalized.substring(0, 190) + '...' : explanationLocalized) : ''}
           </div>
 
           ${crop.limiting_factor ? `
@@ -584,11 +594,11 @@ class SuitabilityRenderer {
                   <div>
                     <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${LBL.est_produce_acre || 'Estimated Produce (Per Acre)'}</div>
                     <div style="font-size:1.08rem; font-weight:900; color:#1A2412; line-height:1.2;">
-                      ${crop.estimated_produce.yield_ton_per_acre_range || ((crop.estimated_produce.yield_ton_per_ha_avg / 2.471).toFixed(2) + ' Tonnes / Acre')}
+                      ${locUnits(crop.estimated_produce.yield_ton_per_acre_range || ((crop.estimated_produce.yield_ton_per_ha_avg / 2.471).toFixed(2) + ' Tonnes / Acre'))}
                     </div>
                     ${crop.estimated_produce.yield_quintals_per_acre_range ? `
                       <div style="font-size:0.72rem; color:#2D5A27; font-weight:700; margin-top:2px;">
-                        ${crop.estimated_produce.yield_quintals_per_acre_range}
+                        ${locUnits(crop.estimated_produce.yield_quintals_per_acre_range)}
                       </div>
                     ` : ''}
                   </div>
@@ -598,10 +608,10 @@ class SuitabilityRenderer {
                 <div style="text-align:right;">
                   <div style="font-size:0.68rem; color:#4F5E46; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">${LBL.total_1km_produce || '1 km² Total (247.1 Acres)'}</div>
                   <div style="font-size:0.98rem; font-weight:900; color:#2D5A27; line-height:1.2;">
-                    ${crop.estimated_produce.total_produce_1km2_ton_range}
+                    ${locUnits(crop.estimated_produce.total_produce_1km2_ton_range)}
                   </div>
                   <div style="font-size:0.70rem; color:#4F5E46; margin-top:2px;">
-                    ${crop.estimated_produce.yield_ton_per_ha_range}
+                    ${locUnits(crop.estimated_produce.yield_ton_per_ha_range)}
                   </div>
                 </div>
               </div>
@@ -698,9 +708,15 @@ class SuitabilityRenderer {
     let waterCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#1A2412;">${this.localizeWater(c.water_requirement)}</td>`).join("");
     let durationCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#1A2412;">${this.localizeDuration(c.expected_growing_duration)}</td>`).join("");
     let seasonCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#1A2412;">${this.localizeSeason(c.recommended_planting_season)}</td>`).join("");
-    let limitCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#7C2D12; font-size:0.75rem;">${c.limiting_factor ? this.localizeLimitingFactor(c.limiting_factor.factor) : 'None'}</td>`).join("");
-    let prosCols = cropsToCompare.map(c => `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#1A2412;"><ul style="padding-left:14px;">${(c.pros || []).map(p => `<li>${p}</li>`).join('')}</ul></td>`).join("");
-    let challengesCols = cropsToCompare.map(c => `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#4F5E46;"><ul style="padding-left:14px; color:#4F5E46;">${(c.potential_cultivation_challenges || []).slice(0, 2).map(ch => `<li>${ch}</li>`).join('')}</ul></td>`).join("");
+    let limitCols = cropsToCompare.map(c => `<td style="text-align:center; padding:10px; color:#7C2D12; font-size:0.75rem;">${c.limiting_factor ? this.localizeLimitingFactor(c.limiting_factor.factor) : '—'}</td>`).join("");
+    let prosCols = cropsToCompare.map(c => {
+      const sum = (window.AgroI18n && lang !== "en") ? window.AgroI18n.localizeCropSummary(c, lang) : { pros: c.pros || [] };
+      return `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#1A2412;"><ul style="padding-left:14px;">${(sum.pros || []).map(p => `<li>${p}</li>`).join('')}</ul></td>`;
+    }).join("");
+    let challengesCols = cropsToCompare.map(c => {
+      const sum = (window.AgroI18n && lang !== "en") ? window.AgroI18n.localizeCropSummary(c, lang) : { challenges: c.potential_cultivation_challenges || [] };
+      return `<td style="padding:10px; font-size:0.75rem; vertical-align:top; color:#4F5E46;"><ul style="padding-left:14px; color:#4F5E46;">${(sum.challenges || []).slice(0, 2).map(ch => `<li>${ch}</li>`).join('')}</ul></td>`;
+    }).join("");
 
     modalBody.innerHTML = `
       <div id="comparisonRadarWrapper" style="margin-bottom:20px; height:260px; max-width:480px; margin-left:auto; margin-right:auto; display:${typeof Chart === 'undefined' ? 'none' : 'block'};">

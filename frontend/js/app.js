@@ -101,6 +101,19 @@ class AgroCloudApp {
         return dict[key][l] || dict[key].en;
       }
     }
+    const scLower = soilClass.toLowerCase();
+    if (scLower.includes("black") || scLower.includes("vertisol")) {
+      return dict["Black Cotton Soil (Vertisols)"][l] || soilClass;
+    }
+    if (scLower.includes("alluvial") || scLower.includes("entisol") || scLower.includes("inceptisol")) {
+      return dict["Alluvial Loam (Inceptisols)"][l] || soilClass;
+    }
+    if (scLower.includes("red") || scLower.includes("alfisol")) {
+      return dict["Red Sandy Loam (Alfisols)"][l] || soilClass;
+    }
+    if (scLower.includes("laterite") || scLower.includes("oxisol")) {
+      return dict["Laterite Loam (Oxisols)"][l] || soilClass;
+    }
     return soilClass;
   }
 
@@ -290,6 +303,7 @@ class AgroCloudApp {
       "Optimal": { en: "Optimal", hi: "इष्टतम", kn: "ಸೂಕ್ತ", te: "అనుకూలం", ta: "சிறந்தது", mr: "योग्य", gu: "શ્રેષ્ઠ", bn: "অনুকূল", ml: "അനുയോജ്യം", pa: "ਉੱਤਮ", or: "ଉତ୍ତମ" },
       "High": { en: "High", hi: "उच्च", kn: "ಹೆಚ್ಚು", te: "ఎక్కువ", ta: "அதிகம்", mr: "जास्त", gu: "વધુ", bn: "উচ্চ", ml: "കൂടിയത്", pa: "ਵੱਧ", or: "ଅଧିକ" },
       "Medium": { en: "Medium", hi: "मध्यम", kn: "ಮಧ್ಯಮ", te: "మధ్యస్థం", ta: "நடுத்தரம்", mr: "मध्यम", gu: "મધ્યમ", bn: "মাঝারি", ml: "മിതമായത്", pa: "ਦਰਮਿਆਨਾ", or: "ମଧ୍ୟମ" },
+      "Moderate": { en: "Moderate", hi: "मध्यम", kn: "ಮಧ್ಯಮ", te: "మధ్యస్థం", ta: "மிதமான", mr: "मध्यम", gu: "મધ્યમ", bn: "মাঝারি", ml: "മിതമായത്", pa: "ਦਰਮਿਆਨਾ", or: "ମଧ୍ୟମ" },
       "Low": { en: "Low", hi: "कम", kn: "ಕಡಿಮೆ", te: "తక్కువ", ta: "குறைவு", mr: "कमी", gu: "ઓછું", bn: "কম", ml: "കുറഞ്ഞത്", pa: "ਘੱਟ", or: "କମ୍" },
       "Deficient": { en: "Deficient", hi: "अपर्याप्त", kn: "ಕೊರತೆ", te: "లోపం", ta: "பற்றாக்குறை", mr: "तुटवडा", gu: "ખામીયુક્ત", bn: "ঘাটতি", ml: "കമ്മി", pa: "ਕਮੀ", or: "ଅଭାବ" }
     };
@@ -579,7 +593,10 @@ class AgroCloudApp {
     const rs = env.remote_sensing || {};
     const snapNdvi = document.getElementById("kbvSnapNdvi");
     if (snapNdvi && rs.ndvi !== undefined) {
-      snapNdvi.textContent = `${rs.ndvi} (${rs.vegetation_badge || "Good"})`;
+      const vegTxt = (window.AgroI18n && typeof window.AgroI18n.vegBadge === "function")
+        ? window.AgroI18n.vegBadge(rs.vegetation_badge || "Good", this.currentLanguage)
+        : (rs.vegetation_badge || "Good");
+      snapNdvi.textContent = `${rs.ndvi} (${vegTxt})`;
     }
     if (topCrop && this.modulesManager) {
       this.handleCropSelected(topCrop.id);
@@ -649,21 +666,22 @@ class AgroCloudApp {
     }
 
     const soilNEl = document.getElementById("soilNValue");
+    const kgHaUnit = (window.AgroI18n && window.AgroI18n.t("kg_ha_unit", lang)) || "kg/ha";
     if (soilNEl && soil && soil.nutrients) {
       const nStat = this.localizeNutrientStatus(soil.nutrients.n_status, lang);
-      soilNEl.textContent = `${soil.nutrients.nitrogen_kgha} kg/ha (${nStat})`;
+      soilNEl.textContent = `${soil.nutrients.nitrogen_kgha} ${kgHaUnit} (${nStat})`;
     }
 
     const soilPEl = document.getElementById("soilPValue");
     if (soilPEl && soil && soil.nutrients) {
       const pStat = this.localizeNutrientStatus(soil.nutrients.p_status, lang);
-      soilPEl.textContent = `${soil.nutrients.phosphorus_kgha} kg/ha (${pStat})`;
+      soilPEl.textContent = `${soil.nutrients.phosphorus_kgha} ${kgHaUnit} (${pStat})`;
     }
 
     const soilKEl = document.getElementById("soilKValue");
     if (soilKEl && soil && soil.nutrients) {
       const kStat = this.localizeNutrientStatus(soil.nutrients.k_status, lang);
-      soilKEl.textContent = `${soil.nutrients.potassium_kgha} kg/ha (${kStat})`;
+      soilKEl.textContent = `${soil.nutrients.potassium_kgha} ${kgHaUnit} (${kStat})`;
     }
 
     const soilSocEl = document.getElementById("soilSocValue");
@@ -706,7 +724,8 @@ class AgroCloudApp {
     }
     const snapRainEl = document.getElementById("kbvSnapRain");
     if (snapRainEl && weather) {
-      snapRainEl.textContent = `${weather.annual_rainfall} mm/yr`;
+      const mmYrUnit = (window.AgroI18n && window.AgroI18n.t("mm_yr_unit", lang)) || "mm/yr";
+      snapRainEl.textContent = `${weather.annual_rainfall} ${mmYrUnit}`;
     }
 
     const weatherSolarEl = document.getElementById("weatherSolarValue");
@@ -736,7 +755,8 @@ class AgroCloudApp {
     }
     const snapElevEl = document.getElementById("kbvSnapElev");
     if (snapElevEl && terrain) {
-      snapElevEl.textContent = `${terrain.elevation_m} m · ${terrain.slope_pct}%`;
+      const mUnit = (window.AgroI18n && window.AgroI18n.t("m_unit", lang)) || "m";
+      snapElevEl.textContent = `${terrain.elevation_m} ${mUnit} · ${terrain.slope_pct}%`;
     }
 
     const terrainRiskEl = document.getElementById("terrainRiskValue");
@@ -784,6 +804,8 @@ class AgroCloudApp {
     if (!this.analysisData || !this.analysisData.data_provenance) return;
     const prov = this.analysisData.data_provenance;
     const reg = prov.provenance_registry || {};
+    const lang = this.currentLanguage || (window.AgroI18n && window.AgroI18n.getLang()) || "en";
+    const T = (k) => (window.AgroI18n && window.AgroI18n.t(k, lang)) || k;
 
     let rows = Object.values(reg).map(p => `
       <tr>
@@ -803,12 +825,12 @@ class AgroCloudApp {
       body.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); border-radius:8px;">
           <div>
-            <div style="font-size:0.9rem; font-weight:bold; color:#2D5A27;">Data Transparency & Scientific Audit Report</div>
-            <div style="font-size:0.75rem; color:#4F5E46;">Full observational trail for 1 km × 1 km grid at Lat ${this.currentLat.toFixed(4)}, Lon ${this.currentLon.toFixed(4)}</div>
+            <div style="font-size:0.9rem; font-weight:bold; color:#2D5A27;">${T("prov_banner_title")}</div>
+            <div style="font-size:0.75rem; color:#4F5E46;">${T("prov_banner_sub")} (${this.currentLat.toFixed(4)}, ${this.currentLon.toFixed(4)})</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:1.4rem; font-weight:800; color:#2D5A27;">${prov.overall_data_confidence_pct}%</div>
-            <div style="font-size:0.7rem; color:#4F5E46;">Overall Data Confidence</div>
+            <div style="font-size:1.4rem; font-weight:800; color:#2D5A27;">${prov.overall_data_confidence_pct ?? prov.mean_confidence_score ?? 91.5}%</div>
+            <div style="font-size:0.7rem; color:#4F5E46;">${T("prov_overall_conf")}</div>
           </div>
         </div>
 
@@ -816,14 +838,14 @@ class AgroCloudApp {
           <table class="provenance-table">
             <thead>
               <tr>
-                <th>Parameter</th>
-                <th>Observed Value</th>
-                <th>Public Data Source</th>
-                <th>Resolution</th>
-                <th>Observation Date</th>
-                <th>Confidence</th>
-                <th>Data Status</th>
-                <th>Limitations & Notes</th>
+                <th>${T("prov_col_param")}</th>
+                <th>${T("prov_col_val")}</th>
+                <th>${T("prov_col_source")}</th>
+                <th>${T("prov_col_res")}</th>
+                <th>${T("prov_col_date")}</th>
+                <th>${T("prov_col_conf")}</th>
+                <th>${T("prov_col_status")}</th>
+                <th>${T("prov_col_notes")}</th>
               </tr>
             </thead>
             <tbody>

@@ -2555,13 +2555,15 @@ class KBVApp {
 
   setLanguage(lang) {
     this.currentLanguage = lang;
+    if (window.AgroI18n && typeof window.AgroI18n.setLang === "function") {
+      window.AgroI18n.setLang(lang);
+    }
     const navSelect = document.getElementById("kbvNavLangSelect");
     if (navSelect) navSelect.value = lang;
 
-    // Apply translations across DOM
+    // Apply translations across DOM & active subsystems
     this.applyTranslations();
 
-    // Notify suitability renderer and modules manager if present
     if (window.suitabilityRenderer && typeof window.suitabilityRenderer.setLanguage === "function") {
       window.suitabilityRenderer.setLanguage(lang);
     }
@@ -2571,62 +2573,113 @@ class KBVApp {
     if (window.app && typeof window.app.setLanguage === "function") {
       window.app.setLanguage(lang);
     }
+    if (window.voiceAssistant && typeof window.voiceAssistant.setLanguage === "function") {
+      window.voiceAssistant.setLanguage(lang);
+    }
+    if (window.diseaseScanner && typeof window.diseaseScanner.render === "function") {
+      window.diseaseScanner.render();
+    }
+    if (window.kbvMedia && typeof window.kbvMedia.syncPreviews === "function") {
+      window.kbvMedia.syncPreviews();
+    }
 
-    // Update risk legend text
+    // Re-sync location displays & map risk legend cleanly in active language
+    this.updateLocationDisplays(this.currentLat, this.currentLon, this.currentLocationName);
     this.updateRiskLegend();
+    if (this.riskMap && this.currentScreen === 4) {
+      this.setMapLayerMode(this.currentMapMode || "risk", { silent: true });
+    }
+  }
+
+  _setLabelPreservingSvg(el, text) {
+    if (!el || !text) return;
+    const svg = el.querySelector("svg");
+    if (svg) {
+      el.innerHTML = `${svg.outerHTML} <span>${text}</span>`;
+    } else {
+      el.textContent = text;
+    }
   }
 
   applyTranslations() {
-    const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = KBV_TRANSLATIONS[lang] || KBV_TRANSLATIONS.en;
 
     // 1. Text elements with data-i18n (strip leading emojis so crisp SVG icons stay clean)
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
-      if (t[key]) {
-        el.textContent = String(t[key]).replace(/^[\u{1F300}-\u{1FAFF}\u2600-\u27BF]+\s*/u, "");
+      const val = (A && A.t(key, lang) !== key) ? A.t(key, lang) : t[key];
+      if (val) {
+        el.textContent = String(val).replace(/^[\u{1F300}-\u{1FAFF}\u2600-\u27BF]+\s*/u, "");
       }
     });
 
-    const MANDI_PANEL_TITLES = {
-      en: "APMC Mandi Market Prices & Profitability Calculator",
-      hi: "एपीएमसी मंडी बाज़ार भाव और लाभप्रदता कैलकुलेटर",
-      kn: "ಎಪಿಎಂಸಿ ಮಂಡಿ ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ಮತ್ತು ಲಾಭದಾಯಕತೆ ಕ್ಯಾಲ್ಕುಲೇಟರ್",
-      mr: "एपीएमसी मंडी बाजारभाव आणि नफा कॅल्क्युलेटर",
-      te: "ఏపీఎంసీ మండి మార్కెట్ ధరలు & లాభదాయకత క్యాలిక్యులేటర్",
-      ta: "ஏபிஎம்சி மண்டி சந்தை விலை & லாபக் கணிப்பான்",
-      gu: "એપીએમસી મંડી બજાર ભાવ અને નફા કેલ્ક્યુલેટર",
-      bn: "এপিএমসি মান্ডি বাজার দর ও লাভের ক্যালকুলেটর",
-      ml: "എപിഎംസി മണ്ഡി വിപണി വിലയും ലാഭ കണക്കുകൂട്ടലും",
-      pa: "ਏਪੀਐਮਸੀ ਮੰਡੀ ਬਾਜ਼ਾਰ ਭਾਅ ਅਤੇ ਮੁਨਾਫ਼ਾ ਕੈਲਕੁਲੇਟਰ",
-      or: "ଏପିଏମସି ମଣ୍ଡି ବଜାର ଦର ଏବଂ ଲାଭ କ୍ୟାଲକୁଲେଟର"
-    };
-    const mandiTitleEl = document.querySelector('[data-i18n="panel_mandi"]');
-    if (mandiTitleEl) {
-      mandiTitleEl.textContent = MANDI_PANEL_TITLES[this.currentLanguage] || MANDI_PANEL_TITLES.en;
+    // 2. Placeholders with data-i18n-ph
+    document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+      const key = el.getAttribute("data-i18n-ph");
+      const val = (A && A.t(key, lang) !== key) ? A.t(key, lang) : t[key];
+      if (val) el.placeholder = val;
+    });
+
+    // 3. Fallback location search placeholder if attribute missing
+    const locInput = document.getElementById("kbvLocSearchInput");
+    if (locInput && !locInput.hasAttribute("data-i18n-ph")) {
+      locInput.placeholder = A ? A.t("search_loc_ph", lang) : (t.loc_search_ph || locInput.placeholder);
     }
 
-    // 2. Hero Title (preserve AgroNexus identity cleanly)
+    // 4. Hero Title (preserve AgroNexus identity cleanly)
     const heroTitle = document.getElementById("kbvHeroTitle");
     if (heroTitle) {
       heroTitle.innerHTML = `Agro<span class="kbv-highlight">Nexus</span>`;
     }
 
-    // 3. Localize Dashboard Crop Selector Options
+    // 5. Localize Dashboard Crop Selector Options cleanly
     const dashCropSelect = document.getElementById("kbvDashCropSelect");
-    if (dashCropSelect && dashCropSelect.options && t.crops) {
+    if (dashCropSelect && dashCropSelect.options) {
       Array.from(dashCropSelect.options).forEach(opt => {
-        if (t.crops[opt.value]) {
-          opt.textContent = t.crops[opt.value];
-        }
+        const locName = A ? A.cropName(opt.value, lang) : (t.crops && t.crops[opt.value]);
+        if (locName) opt.textContent = locName;
       });
     }
 
-    // 7. Localize 1 km² soil/weather profile (live data or comprehensive 11-language placeholders)
-    if (window.app && window.app.analysisData) {
-      if (typeof window.app.renderEnvironmentalCards === "function") {
+    // 6. Localize Quick Region & Quick Crop preset chips cleanly
+    if (A) {
+      document.querySelectorAll("[data-place-chip]").forEach(el => {
+        const key = el.getAttribute("data-place-chip");
+        const translated = A.placeName(key, lang);
+        if (translated) this._setLabelPreservingSvg(el, translated);
+      });
+      document.querySelectorAll("[data-crop-label]").forEach(el => {
+        const key = el.getAttribute("data-crop-label");
+        const translated = A.cropName(key, lang);
+        if (translated) this._setLabelPreservingSvg(el, translated);
+      });
+    }
+
+    // 7. Hide English-only helper subtitles on Screen 1 language buttons when non-English language is active
+    const engSubs = new Set(["Hindi", "Kannada", "Telugu", "Tamil", "Marathi", "Gujarati", "Bengali", "Malayalam", "Punjabi", "Odia"]);
+    document.querySelectorAll(".kbv-lang-option").forEach(btn => {
+      btn.querySelectorAll("span, div").forEach(node => {
+        if (node.hasAttribute("data-i18n") || node.children.length > 0) return;
+        const txt = node.textContent.trim();
+        if (engSubs.has(txt)) {
+          node.style.display = lang === "en" ? "" : "none";
+        }
+      });
+    });
+
+    // 7. Localize 1 km² soil/weather profile (live data or deterministic localized fallback preview)
+    if (window.app && typeof window.app.renderEnvironmentalCards === "function") {
+      if (window.app.analysisData) {
         window.app.renderEnvironmentalCards(window.app.analysisData.environmental_data);
+      } else if (window.ApiClient && typeof window.ApiClient.fallbackAnalyze === "function") {
+        const preview = window.ApiClient.fallbackAnalyze(this.currentLat || 12.9571, this.currentLon || 77.5325, "Kharif");
+        window.app.renderEnvironmentalCards(preview.environmental_data);
       }
-    } else {
+      return;
+    }
+    {
       const lang = this.currentLanguage || "en";
       const soilClassEl = document.getElementById("soilClassValue");
       if (soilClassEl) {
@@ -2733,13 +2786,15 @@ class KBVApp {
   }
 
   updateRiskLegend() {
-    const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = KBV_TRANSLATIONS[lang] || KBV_TRANSLATIONS.en;
     const highEl = document.getElementById("kbvHighRiskLegend");
     const modEl = document.getElementById("kbvModRiskLegend");
     const lowEl = document.getElementById("kbvLowRiskLegend");
-    if (highEl) highEl.textContent = t.high_risk;
-    if (modEl) modEl.textContent = t.mod_risk;
-    if (lowEl) lowEl.textContent = t.low_risk;
+    if (highEl) highEl.textContent = A ? A.t("high_risk", lang) : t.high_risk;
+    if (modEl) modEl.textContent = A ? A.t("mod_risk", lang) : t.mod_risk;
+    if (lowEl) lowEl.textContent = A ? A.t("low_risk", lang) : t.low_risk;
   }
 
   goToScreen(screenNum) {
@@ -2862,14 +2917,16 @@ class KBVApp {
 
     // Dynamically synchronize Mandi Market Price, Irrigation & AI Crop Doctor Modules
     if (window.modulesManager) {
-      const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
+      const A = window.AgroI18n;
+      const lang = this.currentLanguage || "en";
+      const cropName = A ? A.cropName(cropKey, lang) : (cropKey.charAt(0).toUpperCase() + cropKey.slice(1));
       const lat = this.currentLat || (window.app && window.app.currentLat) || 12.9571;
       const lon = this.currentLon || (window.app && window.app.currentLon) || 77.5325;
       const env = (window.app && window.app.analysisData && window.app.analysisData.environmental_data) || {};
       const ctx = {
         lat,
         lon,
-        locationName: this.currentLocationName
+        locationName: A ? A.placeName(this.currentLocationName, lang) : this.currentLocationName
       };
       if (env.soil) {
         ctx.ph = env.soil.ph;
@@ -2908,15 +2965,17 @@ class KBVApp {
   async detectLocationForAnalysis() {
     const locBtn = document.getElementById("kbvUseLocationBtn");
     const dashLocBtn = document.getElementById("kbvDashUseLocBtn");
-    const dashOrigHtml = dashLocBtn ? dashLocBtn.innerHTML : "";
-    const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const t = KBV_TRANSLATIONS[lang] || KBV_TRANSLATIONS.en;
+    const locatingTxt = A ? A.t("locating_gps", lang) : t.locating;
 
     if (locBtn) {
-      locBtn.innerHTML = `<span>${t.locating}</span>`;
+      locBtn.innerHTML = `<span>${locatingTxt}</span>`;
       locBtn.disabled = true;
     }
     if (dashLocBtn) {
-      dashLocBtn.innerHTML = `<span>${t.locating}</span>`;
+      dashLocBtn.innerHTML = `<span>${locatingTxt}</span>`;
       dashLocBtn.disabled = true;
     }
 
@@ -2956,18 +3015,19 @@ class KBVApp {
         await window.app.runAnalysis(lat, lon);
       }
 
-      this.showToast(`Location synchronized: ${locDesc}`, 4000);
+      const dispLoc = A ? A.placeName(locDesc, lang) : locDesc;
+      this.showToast(A ? A.t("toast_gps_synced", lang, { name: dispLoc }) : `Location synchronized: ${dispLoc}`, 4000);
     } catch (err) {
       console.warn("Location error:", err);
-      this.showToast("Using agricultural coordinate grid.", 3000);
+      this.showToast(A ? A.t("coord_grid_fallback", lang) : "Using agricultural coordinate grid.", 3000);
     } finally {
       if (locBtn) {
-        locBtn.innerHTML = `<span>${t.use_curr_loc}</span>`;
+        locBtn.innerHTML = `<span>${A ? A.t("detect_gps", lang) : t.use_curr_loc}</span>`;
         locBtn.disabled = false;
       }
       if (dashLocBtn) {
         const gpsIc = typeof window.kbvIcon === "function" ? window.kbvIcon("gps", 15) : "";
-        dashLocBtn.innerHTML = dashOrigHtml || `${gpsIc} <span>Detect GPS</span>`;
+        dashLocBtn.innerHTML = `${gpsIc} <span>${A ? A.t("detect_gps", lang) : "Detect GPS"}</span>`;
         dashLocBtn.disabled = false;
       }
     }
@@ -2975,9 +3035,10 @@ class KBVApp {
 
   async runAnalysisWorkflow() {
     const dashAnalyzeBtn = document.getElementById("kbvDashAnalyzeBtn");
-    const origBtnHtml = dashAnalyzeBtn ? dashAnalyzeBtn.innerHTML : "";
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
     if (dashAnalyzeBtn) {
-      dashAnalyzeBtn.innerHTML = `Analyzing...`;
+      dashAnalyzeBtn.innerHTML = A ? A.t("analyzing_btn", lang) : `Analyzing...`;
       dashAnalyzeBtn.disabled = true;
     }
 
@@ -3015,8 +3076,10 @@ class KBVApp {
       console.error("Workflow execution notice:", workflowErr);
     } finally {
       if (dashAnalyzeBtn) {
+        const activeLang = this.currentLanguage || "en";
         const boltIc = typeof window.kbvIcon === "function" ? window.kbvIcon("bolt", 14) : "";
-        dashAnalyzeBtn.innerHTML = origBtnHtml || `${boltIc} <span>Analyze</span>`;
+        const btnTxt = window.AgroI18n ? window.AgroI18n.t("analyze_btn", activeLang) : "Analyze";
+        dashAnalyzeBtn.innerHTML = `${boltIc} <span>${btnTxt}</span>`;
         dashAnalyzeBtn.disabled = false;
       }
       this.goToScreen(4);
@@ -3093,12 +3156,17 @@ class KBVApp {
         googleHybrid.addTo(this.riskMap);
 
         // Modern layer selector control
-        L.control.layers({
-          "🛰️ Google Satellite + Labels (Updated)": googleHybrid,
-          "🗺️ Google Street & Roads": googleStreets,
-          "🌍 Esri Satellite Clarity": esriSat,
-          "🏙️ CartoDB Voyager": cartoVoyager
-        }, null, { position: "topright" }).addTo(this.riskMap);
+        const lLang = this.currentLanguage || "en";
+        const LA = window.AgroI18n;
+        const baseLayers = {};
+        baseLayers[LA ? LA.t("leaflet_sat_hybrid", lLang) : "Google Satellite + Labels"] = googleHybrid;
+        baseLayers[LA ? LA.t("leaflet_streets", lLang) : "Google Street & Roads"] = googleStreets;
+        baseLayers[LA ? LA.t("leaflet_esri", lLang) : "Esri Satellite"] = esriSat;
+        baseLayers[LA ? LA.t("leaflet_carto", lLang) : "CartoDB Map"] = cartoVoyager;
+        if (this.baseLayerControl) {
+          try { this.riskMap.removeControl(this.baseLayerControl); } catch (e) {}
+        }
+        this.baseLayerControl = L.control.layers(baseLayers, null, { position: "topright" }).addTo(this.riskMap);
       }
 
       // Clear previous vector layers
@@ -3114,6 +3182,8 @@ class KBVApp {
       const ne = [lat + deltaLat, lon + deltaLon];
       const se = [lat - deltaLat, lon + deltaLon];
       const sw = [lat - deltaLat, lon - deltaLon];
+      const mapLang = this.currentLanguage || "en";
+      const MA = window.AgroI18n;
 
       L.polygon([nw, ne, se, sw], {
         color: '#FFFFFF',
@@ -3121,7 +3191,7 @@ class KBVApp {
         dashArray: '6, 6',
         fillColor: '#2D5A27',
         fillOpacity: 0.08
-      }).addTo(this.riskLayers).bindTooltip("1.0 km × 1.0 km Geodesic Boundary (100 Hectares / 247.1 Acres)", { permanent: false });
+      }).addTo(this.riskLayers).bindTooltip(MA ? MA.t("geodesic_bound_tip", mapLang) : "1.0 km × 1.0 km Geodesic Boundary (100 Hectares / 247.1 Acres)", { permanent: false });
 
       // B. 3 Concentric Risk Zones (500m Low Risk, 350m Moderate Risk, 180m High Risk)
       L.circle([lat, lon], {
@@ -3156,10 +3226,12 @@ class KBVApp {
         iconSize: [24, 24],
         iconAnchor: [12, 12]
       });
-      const locTitle = this.currentLocationName || "Your Field Location";
+      const rawLocTitle = this.currentLocationName || (MA ? MA.t("your_field_loc", mapLang) : "Your Field Location");
+      const locTitle = MA ? MA.placeName(rawLocTitle, mapLang) : rawLocTitle;
+      const activeGridLbl = MA ? MA.t("active_grid_popup", mapLang) : "1 km² Active Analysis Grid";
       L.marker([lat, lon], { icon: centerIcon })
         .addTo(this.riskLayers)
-        .bindPopup(`<div style="font-family:sans-serif; min-width:180px;"><b style="color:#2D5A27; font-size:13px;">${locTitle}</b><br><span style="font-size:11px; color:#4F5E46;">${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E</span><br><span style="display:inline-block; margin-top:4px; background:#F0EEE9; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; color:#2D5A27;">1 km² Active Analysis Grid</span></div>`)
+        .bindPopup(`<div style="font-family:sans-serif; min-width:180px;"><b style="color:#2D5A27; font-size:13px;">${locTitle}</b><br><span style="font-size:11px; color:#4F5E46;">${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E</span><br><span style="display:inline-block; margin-top:4px; background:#F0EEE9; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold; color:#2D5A27;">${activeGridLbl}</span></div>`)
         .openPopup();
 
       // D. Multiple invalidateSize timeouts to ensure tiles render perfectly even with CSS transitions
@@ -3176,43 +3248,50 @@ class KBVApp {
 
   updateLocationDisplays(lat, lon, name) {
     this.currentLocationName = name;
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const dispName = A ? A.placeName(name, lang) : name;
+    const areaLine = A ? A.t("area_meta_line", lang) : "100 Hectares (247.1 Acres)";
+    const safeLat = Number(lat || 12.9571);
+    const safeLon = Number(lon || 77.5325);
 
     // Screen 3 Location Card elements
     const locNameEl = document.getElementById("kbvFetchedLocationName");
-    if (locNameEl) locNameEl.textContent = name;
+    if (locNameEl) locNameEl.textContent = dispName;
 
     const locCoordsEl = document.getElementById("kbvFetchedCoords");
-    if (locCoordsEl) locCoordsEl.textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E • 100 Hectares (247.1 Acres)`;
+    if (locCoordsEl) locCoordsEl.textContent = `${safeLat.toFixed(4)}°N, ${safeLon.toFixed(4)}°E • ${areaLine}`;
 
     const locDisplay = document.getElementById("kbvLocationDisplay");
-    if (locDisplay) locDisplay.textContent = `📍 ${name} (${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E)`;
+    if (locDisplay) locDisplay.textContent = `${dispName} (${safeLat.toFixed(4)}°N, ${safeLon.toFixed(4)}°E)`;
 
     const statusPill = document.getElementById("kbvLocStatusPill");
     if (statusPill) {
-      statusPill.textContent = "Synced";
+      statusPill.textContent = A ? A.t("synced_pill", lang) : "Synced";
       statusPill.style.background = "rgba(45,90,39,0.12)";
       statusPill.style.color = "#2D5A27";
     }
 
     // Dedicated Pages Location Labels
     const s4LocText = document.getElementById("kbvScreen4LocationText");
-    if (s4LocText) s4LocText.textContent = name;
+    if (s4LocText) s4LocText.textContent = dispName;
 
     const s4CoordsText = document.getElementById("kbvScreen4CoordsText");
-    if (s4CoordsText) s4CoordsText.textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E • 100 Hectares (247.1 Acres)`;
+    if (s4CoordsText) s4CoordsText.textContent = `${safeLat.toFixed(4)}°N, ${safeLon.toFixed(4)}°E • ${areaLine}`;
 
     const soilLoc = document.getElementById("kbvSoilLocName");
-    if (soilLoc) soilLoc.textContent = name;
+    if (soilLoc) soilLoc.textContent = dispName;
 
     ["kbvCropsLocLabel", "kbvSoilLocLabel", "kbvIrrigationLocLabel", "kbvMandiLocLabel", "kbvDoctorLocLabel"].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.textContent = name;
+      if (el) el.textContent = dispName;
     });
 
     const mapTitle = document.getElementById("kbvMapTitleText");
     if (mapTitle) {
-      const t = KBV_TRANSLATIONS[this.currentLanguage] || KBV_TRANSLATIONS.en;
-      mapTitle.textContent = `${t.risk_map_title || '1 km² Area Risk Map'} — ${name}`;
+      const t = KBV_TRANSLATIONS[lang] || KBV_TRANSLATIONS.en;
+      const mapPrefix = A ? A.t("risk_map_title", lang) : (t.risk_map_title || "1 km² Area Risk Map");
+      mapTitle.textContent = `${mapPrefix} — ${dispName}`;
     }
   }
 
@@ -3220,6 +3299,10 @@ class KBVApp {
     this.currentLat = lat;
     this.currentLon = lon;
     this.currentLocationName = name;
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
+    const dispName = A ? A.placeName(name, lang) : name;
+
     if (window.app) {
       window.app.currentLat = lat;
       window.app.currentLon = lon;
@@ -3232,19 +3315,21 @@ class KBVApp {
     // Synchronize Mandi Market & Modules to newly selected location
     if (window.modulesManager) {
       const cropKey = this.selectedCrop || "tomato";
-      const cropName = cropKey.charAt(0).toUpperCase() + cropKey.slice(1);
-      window.modulesManager.setCrop(cropKey, cropName, { lat, lon, locationName: name });
+      const cropName = A ? A.cropName(cropKey, lang) : (cropKey.charAt(0).toUpperCase() + cropKey.slice(1));
+      window.modulesManager.setCrop(cropKey, cropName, { lat, lon, locationName: dispName });
       window.modulesManager.loadModules(lat, lon).catch(e => console.warn("Module loc sync notice:", e));
     }
-    this.showToast(`📍 Farm Location set to: ${name}`, 4000);
+    this.showToast(A ? A.t("toast_loc_set", lang, { name: dispName }) : `Farm Location set to: ${dispName}`, 4000);
   }
 
-  setMapLayerMode(mode) {
+  setMapLayerMode(mode, opts = {}) {
     this.currentMapMode = mode;
     if (!this.riskMap || !this.riskLayers) return;
 
     this.riskLayers.clearLayers();
 
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
     const lat = this.currentLat || (window.app && window.app.currentLat) || 12.9571;
     const lon = this.currentLon || (window.app && window.app.currentLon) || 77.5325;
     const deltaLat = 500 / 111320;
@@ -3260,7 +3345,7 @@ class KBVApp {
       weight: 2.5,
       dashArray: '6, 6',
       fillColor: 'transparent'
-    }).addTo(this.riskLayers).bindTooltip("1.0 km × 1.0 km Geodesic Boundary", { permanent: false });
+    }).addTo(this.riskLayers).bindTooltip(A ? A.t("geodesic_bound_tip", lang) : "1.0 km × 1.0 km Geodesic Boundary", { permanent: false });
 
     // 2. Render 5x5 sub-cells if mode is ndvi, ndwi, soil, elevation
     if (mode === "ndvi" || mode === "ndwi" || mode === "soil" || mode === "elevation") {
@@ -3272,6 +3357,8 @@ class KBVApp {
       const subNdwi = rs.subgrid_ndwi || [];
       const subSoil = soilData.subgrid_analysis || [];
       const subTerrain = terrainData.subgrid_elevations || [];
+      const cellLbl = A ? A.t("cell_lbl", lang) : "Cell";
+      const ha4Lbl = A ? A.t("hectares_4", lang) : "4 Hectares";
 
       for (let r = 0; r < 5; r++) {
         for (let c = 0; c < 5; c++) {
@@ -3288,24 +3375,29 @@ class KBVApp {
           if (mode === "ndvi") {
             const ndviVal = (subNdvi[idx] && subNdvi[idx].ndvi !== undefined) ? subNdvi[idx].ndvi : +(0.55 + (Math.sin(idx * 1.5) * 0.18)).toFixed(2);
             fillColor = ndviVal >= 0.65 ? "#16a34a" : (ndviVal >= 0.45 ? "#65a30d" : (ndviVal >= 0.25 ? "#ca8a04" : "#dc2626"));
-            popupText = `<b>Sentinel-2 NDVI: ${ndviVal}</b><br>Canopy Vigor: ${ndviVal >= 0.65 ? 'Dense Healthy' : (ndviVal >= 0.45 ? 'Moderate' : 'Stressed')}<br>Cell: ${r + 1}, ${c + 1} (4 Hectares)`;
+            const vigorTxt = ndviVal >= 0.65 ? (A ? A.t("vigor_dense", lang) : "Dense Healthy") : (ndviVal >= 0.45 ? (A ? A.t("vigor_mod", lang) : "Moderate") : (A ? A.t("vigor_stress", lang) : "Stressed"));
+            popupText = `<b>${A ? A.t("sat_ndvi", lang) : "NDVI"}: ${ndviVal}</b><br>${A ? A.t("canopy_vigor", lang) : "Canopy Vigor"}: ${vigorTxt}<br>${cellLbl}: ${r + 1}, ${c + 1} (${ha4Lbl})`;
           } else if (mode === "ndwi") {
             const ndwiVal = (subNdwi[idx] && subNdwi[idx].ndwi !== undefined) ? subNdwi[idx].ndwi : +(0.12 + (Math.cos(idx * 1.2) * 0.12)).toFixed(2);
             fillColor = ndwiVal >= 0.20 ? "#0284c7" : (ndwiVal >= 0.0 ? "#0d9488" : (ndwiVal >= -0.20 ? "#d97706" : "#b91c1c"));
-            popupText = `<b>Sentinel-2 NDWI: ${ndwiVal}</b><br>Moisture: ${ndwiVal >= 0.15 ? 'Optimal Hydration' : (ndwiVal >= 0.0 ? 'Mild Deficit' : 'Moisture Stress')}<br>Cell: ${r + 1}, ${c + 1} (4 Hectares)`;
+            const moistTxt = ndwiVal >= 0.15 ? (A ? A.t("moist_opt", lang) : "Optimal Hydration") : (ndwiVal >= 0.0 ? (A ? A.t("moist_mild", lang) : "Mild Deficit") : (A ? A.t("moist_stress", lang) : "Moisture Stress"));
+            popupText = `<b>${A ? A.t("sat_ndwi", lang) : "NDWI"}: ${ndwiVal}</b><br>${A ? A.t("moisture_lbl", lang) : "Moisture"}: ${moistTxt}<br>${cellLbl}: ${r + 1}, ${c + 1} (${ha4Lbl})`;
           } else if (mode === "soil") {
             const sCell = subSoil[idx] || {};
             const phVal = sCell.ph !== undefined ? sCell.ph : +((soilData.ph || 6.8) + ((r - 2) * 0.08) - ((c - 2) * 0.04)).toFixed(2);
-            const tex = sCell.texture_class || soilData.texture_class || "Clay Loam";
-            const drain = soilData.drainage || "Well Drained";
+            const rawTex = sCell.texture_class || soilData.texture_class || "Clay Loam";
+            const rawDrain = soilData.drainage || "Well Drained";
+            const tex = (window.app && window.app.localizeSoilTexture) ? window.app.localizeSoilTexture(rawTex, lang) : rawTex;
+            const drain = (window.app && window.app.localizeDrainage) ? window.app.localizeDrainage(rawDrain, lang) : rawDrain;
             fillColor = phVal < 6.0 ? "#f97316" : (phVal <= 7.8 ? "#06b6d4" : "#8b5cf6");
-            popupText = `<b>Soil pH: ${phVal}</b><br>Texture: ${tex} (${drain})<br>Cell: ${r + 1}, ${c + 1}`;
+            popupText = `<b>${A ? A.t("soil_ph_lbl", lang) : "Soil pH"}: ${phVal}</b><br>${A ? A.t("texture_lbl", lang) : "Texture"}: ${tex} (${drain})<br>${cellLbl}: ${r + 1}, ${c + 1}`;
           } else {
             const tCell = subTerrain[idx] || {};
             const slopeVal = tCell.slope_pct !== undefined ? tCell.slope_pct : +((terrainData.slope_pct || 1.4) + (r * 0.15)).toFixed(2);
             const elevVal = tCell.elevation_m !== undefined ? tCell.elevation_m : Math.round((terrainData.elevation_m || 520) + (r * 3));
+            const mUnit = A ? A.t("m_unit", lang) : "m";
             fillColor = slopeVal < 2.0 ? "#10b981" : (slopeVal < 4.5 ? "#3b82f6" : "#eab308");
-            popupText = `<b>Slope Gradient: ${slopeVal}%</b><br>Micro-Elevation: ${elevVal}m<br>Cell: ${r + 1}, ${c + 1}`;
+            popupText = `<b>${A ? A.t("slope_grad_lbl", lang) : "Slope Gradient"}: ${slopeVal}%</b><br>${A ? A.t("micro_elev_lbl", lang) : "Micro-Elevation"}: ${elevVal} ${mUnit}<br>${cellLbl}: ${r + 1}, ${c + 1}`;
           }
 
           const cellBounds = [[c_s, c_w], [c_n, c_e]];
@@ -3332,11 +3424,23 @@ class KBVApp {
       iconSize: [24, 24],
       iconAnchor: [12, 12]
     });
+    const rawPinLoc = this.currentLocationName || (A ? A.t("your_field_loc", lang) : "Field Location");
+    const dispPinLoc = A ? A.placeName(rawPinLoc, lang) : rawPinLoc;
     L.marker([lat, lon], { icon: centerIcon })
       .addTo(this.riskLayers)
-      .bindPopup(`<b style="color:#2D5A27;">${this.currentLocationName || 'Field Location'}</b><br>${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E`);
+      .bindPopup(`<b style="color:#2D5A27;">${dispPinLoc}</b><br>${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E`);
 
-    this.showToast(`Active Map Layer: ${mode.toUpperCase()}`, 2500);
+    if (!opts.silent) {
+      const modeNames = {
+        risk: A ? A.t("layer_sat", lang) : "Satellite",
+        ndvi: A ? A.t("layer_ndvi", lang) : "NDVI Canopy",
+        ndwi: A ? A.t("layer_ndwi", lang) : "NDWI Moisture",
+        soil: A ? A.t("layer_soil", lang) : "Soil pH",
+        elevation: A ? A.t("layer_slope", lang) : "Slope"
+      };
+      const modeLbl = modeNames[mode] || mode.toUpperCase();
+      this.showToast(A ? A.t("toast_layer", lang, { mode: modeLbl }) : `Active Map Layer: ${modeLbl}`, 2500);
+    }
   }
 
   openNdviMap() {
@@ -3396,38 +3500,40 @@ class KBVApp {
       window.lastAnalysisData = analysisData;
     }
 
+    const lang = this.currentLanguage || "en";
+    const A = window.AgroI18n;
     if (window.farmReportGenerator && analysisData) {
       window.farmReportGenerator.generateReport(analysisData, modulesData);
-      this.showToast("📄 Digital Farm Health Card PDF ready for print/download!", 4000);
+      this.showToast(A ? A.t("toast_report_ready", lang) : "Digital Farm Health Card PDF ready for print/download", 4000);
       return;
     }
-    const cropName = (this.selectedCrop || "tomato").toUpperCase();
+    const cropKey = this.selectedCrop || "tomato";
+    const cropName = A ? A.cropName(cropKey, lang) : cropKey.toUpperCase();
     const soil = (analysisData && analysisData.environmental_data && analysisData.environmental_data.soil) || {};
-    const reportText = `
-======================================================
-  AGROCLOUD AI - KBV 1 KM² FARM HEALTH REPORT
-======================================================
-Generated: ${new Date().toLocaleString()}
-Selected Crop: ${cropName}
-Soil Classification: ${soil.soil_classification || "Regional Soil Profile"}
-Soil pH: ${soil.ph || "N/A"}
-Analysis Boundary: 1.0 km² Geodesic Area (100 Hectares / 247.1 Acres)
-Target Coordinates: ${lat}°N, ${lon}°E
-======================================================
-100% Software-Based • No IoT / Hardware Sensors Required
-AgroCloud AI Geospatial Pedology & Climatology Engine
-======================================================
-    `.trim();
+    const soilClassDisp = (window.app && window.app.localizeSoilClass) ? window.app.localizeSoilClass(soil.soil_classification || "Red Sandy Loam", lang) : (soil.soil_classification || "");
+    const locale = (A && A.LOCALES[lang]) || "en-IN";
+    const reportText = [
+      A ? A.t("rep_title", lang) : "AgroNexus — Digital Farm Health Card",
+      A ? A.t("rep_sub", lang) : "1 km × 1 km Geodesic Area",
+      "------------------------------------------------------",
+      `${A ? A.t("rep_issued", lang) : "Generated:"} ${new Date().toLocaleString(locale)}`,
+      `${A ? A.t("snap_top_crop", lang) : "Selected Crop:"}: ${cropName}`,
+      `${A ? A.t("rep_soil_class", lang) : "Soil Classification:"}: ${soilClassDisp}`,
+      `${A ? A.t("rep_soil_ph", lang) : "Soil pH:"}: ${soil.ph || "—"}`,
+      `${A ? A.t("rep_cov", lang) : "Area:"}: ${A ? A.t("area_meta_line", lang) : "1.00 km²"}`,
+      `${A ? A.t("rep_sec_loc", lang) : "Coordinates:"}: ${lat}°N, ${lon}°E`,
+      "------------------------------------------------------"
+    ].join("\n");
 
     const blob = new Blob([reportText], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `KBV_${cropName}_Farm_Report.txt`;
+    a.download = `AgroNexus_${cropKey}_Report.txt`;
     a.click();
     URL.revokeObjectURL(url);
 
-    this.showToast("📄 Report downloaded successfully!", 3500);
+    this.showToast(A ? A.t("toast_report_dl", lang) : "Report downloaded successfully", 3500);
   }
 
   showToast(message, duration = 3000) {
@@ -3528,7 +3634,10 @@ window.kbvMedia = {
       if (snapBtn) snapBtn.disabled = true;
       if (errEl) {
         errEl.style.display = "block";
-        errEl.textContent = "Camera unavailable or permission denied. Click 'Choose Image File Instead' below to upload a photo.";
+        const lang = (window.kbvApp && window.kbvApp.currentLanguage) || "en";
+        errEl.textContent = window.AgroI18n
+          ? window.AgroI18n.t("camera_unavail_err", lang)
+          : "Camera unavailable or permission denied. Click 'Choose Image File Instead' below to upload a photo.";
       }
     }
   },
@@ -3565,7 +3674,11 @@ window.kbvMedia = {
       window.diseaseScanner.analyzeImage(this.currentImage, crop);
     }
     if (window.kbvApp && typeof window.kbvApp.showToast === "function") {
-      window.kbvApp.showToast(`📷 ${source} attached: ${name} — Leaf screening started`, 3200);
+      const lang = window.kbvApp.currentLanguage || "en";
+      const A = window.AgroI18n;
+      const locSrc = A && typeof A.localizeSource === "function" ? A.localizeSource(source, lang) : source;
+      const msg = A ? A.t("toast_photo_attached", lang, { source: locSrc, name }) : `${locSrc} attached: ${name} — Leaf screening started`;
+      window.kbvApp.showToast(msg, 3200);
     }
   },
 
@@ -3582,11 +3695,23 @@ window.kbvMedia = {
 
   syncPreviews() {
     const img = this.currentImage;
+    const lang = (window.kbvApp && window.kbvApp.currentLanguage) || "en";
+    const A = window.AgroI18n;
     const scanRes = window.diseaseScanner?.lastResult;
-    const scanSummary = scanRes
-      ? (scanRes.abstained ? `Screening: ${scanRes.predicted_condition}` : `Detected: ${scanRes.predicted_condition} (${scanRes.confidence_pct}%)`)
-      : null;
+    const ds = window.diseaseScanner;
+    let scanSummary = null;
+    if (scanRes) {
+      const cropKey = scanRes.crop_id || (window.kbvApp && window.kbvApp.selectedCrop) || "tomato";
+      const cropDisplay = A ? A.cropName(cropKey, lang) : cropKey;
+      const localizedCond = (ds && typeof ds.localizeCondition === "function")
+        ? ds.localizeCondition(scanRes, cropDisplay, lang)
+        : (A && A.localizeDiseaseName ? A.localizeDiseaseName(scanRes.disease_id, scanRes.predicted_condition, cropDisplay, lang) : scanRes.predicted_condition);
+      scanSummary = scanRes.abstained
+        ? `${A ? A.t("scan_screening_lbl", lang) : "Screening:"} ${localizedCond}`
+        : `${A ? A.t("scan_detected_lbl", lang) : "Detected:"} ${localizedCond} (${scanRes.confidence_pct}%)`;
+    }
 
+    const locSrc = img ? (A && typeof A.localizeSource === "function" ? A.localizeSource(img.source, lang) : img.source) : "";
     const bar = document.getElementById("kbvAttachedMediaBar");
     const thumb = document.getElementById("kbvAttachedMediaThumb");
     const title = document.getElementById("kbvAttachedMediaTitle");
@@ -3596,7 +3721,8 @@ window.kbvMedia = {
       if (img) {
         thumb.src = img.dataUrl;
         title.textContent = img.name;
-        meta.textContent = scanSummary ? `${img.source} • ${scanSummary}` : `${img.source} • Ready for Disease ID & AI Crop Doctor`;
+        const readyTxt = A ? A.t("ready_screening", lang) : "Ready for Disease ID & AI Crop Doctor";
+        meta.textContent = scanSummary ? `${locSrc} • ${scanSummary}` : `${locSrc} • ${readyTxt}`;
         bar.style.display = "flex";
       } else {
         bar.style.display = "none";
@@ -3610,9 +3736,9 @@ window.kbvMedia = {
     if (docPrev && docThumb && docName) {
       if (img) {
         docThumb.src = img.dataUrl;
-        docName.textContent = `${img.name} (${img.source})`;
+        docName.textContent = `${img.name} (${locSrc})`;
         if (docScan) {
-          docScan.textContent = scanSummary || "Attached leaf photo ready for Crop Doctor discussion";
+          docScan.textContent = scanSummary || (A ? A.t("attached_photo_ready", lang) : "Attached leaf photo ready for Crop Doctor discussion");
         }
         docPrev.style.display = "flex";
       } else {

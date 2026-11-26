@@ -26,7 +26,10 @@ class FarmReportGenerator {
     const crops = cs.all_ranked_crops || cs.top_recommendations || cs.ranked_crops || [];
     const marketRaw = analysisData.market_profitability;
     const market = Array.isArray(marketRaw) ? marketRaw : ((marketRaw && marketRaw.ranked_profitability) || []);
-    const dateStr = new Date().toLocaleDateString("en-IN", {
+    const lang = (window.AgroI18n && window.AgroI18n.getLang()) || (window.kbvApp && window.kbvApp.currentLanguage) || "en";
+    const T = (k, v) => (window.AgroI18n && window.AgroI18n.t(k, lang, v)) || k;
+    const locId = (window.AgroI18n && window.AgroI18n.LOCALES[lang]) || "en-IN";
+    const dateStr = new Date().toLocaleDateString(locId, {
       day: "2-digit",
       month: "short",
       year: "numeric"
@@ -34,14 +37,23 @@ class FarmReportGenerator {
 
     const reportId = `AGRO-${Math.abs(Math.round(grid.center ? grid.center.lat * 1000 : 19997))}-${Math.abs(Math.round(grid.center ? grid.center.lon * 1000 : 73789))}`;
 
+    const TIER_MAP = {
+      high: { en: "Highly Suitable", hi: "अत्यधिक उपयुक्त", kn: "ಅತ್ಯಂತ ಸೂಕ್ತ", te: "అత్యంత అనుకూలం", ta: "மிகவும் உகந்தது", mr: "अत्यंत योग्य", gu: "અત્યંત અનુકૂળ", bn: "অত্যন্ত উপযুক্ত", ml: "വളരെ അനുയോജ്യം", pa: "ਬਹੁਤ ਢੁਕਵਾਂ", or: "ଅତ୍ୟନ୍ତ ଉପଯୁକ୍ତ" },
+      mod: { en: "Moderately Suitable", hi: "मध्यम उपयुक्त", kn: "ಮಧ್ಯಮ ಸೂಕ್ತ", te: "మధ్యస్థ అనుకూలం", ta: "மிதமான உகந்தது", mr: "मध्यम योग्य", gu: "મધ્યમ અનુકૂળ", bn: "মাঝারি উপযুক্ত", ml: "മിതമായി അനുയോജ്യം", pa: "ਦਰਮਿਆਨਾ ਢੁਕਵਾਂ", or: "ମଧ୍ୟମ ଉପଯୁକ୍ତ" }
+    };
+
     const topCropsHtml = crops.slice(0, 5).map((c, i) => {
-      const isHighly = c.category_code === 'S1' || c.tier === 'S1' || (c.recommendation_category && c.recommendation_category.includes('Highly'));
-      const tierLabel = c.recommendation_category || c.tier || c.category || 'Suitable';
-      const adv = (c.pros && c.pros[0]) || (c.advantages && c.advantages[0]) || c.recommendation_reason || 'Optimal pedo-climatic match';
+      const catRaw = c.recommendation_category || c.suitability_category || c.tier || c.category || "";
+      const isHighly = c.category_code === 'S1' || c.tier === 'S1' || /highly/i.test(catRaw);
+      const cName = (window.AgroI18n && window.AgroI18n.cropName(c.id || c.name || c.crop_name, lang)) || (c.name || c.crop_name);
+      const tierLabel = (window.suitabilityRenderer && window.suitabilityRenderer.localizeRecommendation(catRaw))
+        || (isHighly ? (TIER_MAP.high[lang] || TIER_MAP.high.en) : (TIER_MAP.mod[lang] || TIER_MAP.mod.en));
+      const sum = (window.AgroI18n && lang !== "en") ? window.AgroI18n.localizeCropSummary(c, lang) : { pros: c.pros };
+      const adv = (sum.pros && sum.pros[0]) || (c.advantages && c.advantages[0]) || c.recommendation_reason || '';
       return `
       <tr>
         <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:center; font-weight:bold;">#${i + 1}</td>
-        <td style="padding:6px 10px; border:1px solid #cbd5e1;"><b>${c.name || c.crop_name}</b> <span style="font-size:0.75rem; color:#64748b;">(${c.scientific_name || ''})</span></td>
+        <td style="padding:6px 10px; border:1px solid #cbd5e1;"><b>${cName}</b></td>
         <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:center;">
           <span style="background:${isHighly ? '#dcfce7; color:#166534;' : '#fef3c7; color:#92400e;'} padding:2px 8px; border-radius:4px; font-weight:bold; font-size:0.8rem;">
             ${tierLabel} (${c.suitability_score}%)
@@ -52,15 +64,19 @@ class FarmReportGenerator {
     `;
     }).join("");
 
-    const marketRowsHtml = market.slice(0, 4).map(m => `
+    const qtlWord = (window.AgroI18n && window.AgroI18n.t("qtl_acre_unit", lang).split("/")[0].trim()) || "Qtl";
+    const marketRowsHtml = market.slice(0, 4).map(m => {
+      const mName = (window.AgroI18n && window.AgroI18n.cropName(m.crop_id || m.crop_name || m.commodity_name, lang)) || (m.crop_name || m.commodity_name || m.crop_id || '');
+      return `
       <tr>
-        <td style="padding:6px 10px; border:1px solid #cbd5e1;"><b>${m.crop_name || m.commodity_name || m.crop_id || ''}</b></td>
+        <td style="padding:6px 10px; border:1px solid #cbd5e1;"><b>${mName}</b></td>
         <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:right;">₹${(m.modal_price_qtl || 0).toLocaleString()}</td>
-        <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:right;">${m.projected_yield_per_acre_qtl || 0} Qtl</td>
+        <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:right;">${m.projected_yield_per_acre_qtl || 0} ${qtlWord}</td>
         <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:right;">₹${(m.cost_of_cultivation_acre_inr || 0).toLocaleString()}</td>
         <td style="padding:6px 10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:${(m.net_profit_acre_inr || 0) >= 0 ? '#15803d' : '#b91c1c'};">₹${(m.net_profit_acre_inr || 0).toLocaleString()}</td>
       </tr>
-    `).join("");
+    `;
+    }).join("");
 
     const irrMod = (modulesData && (modulesData.irrigation_prediction_module || modulesData.irrigation_module)) || {};
     const et0Val = irrMod.daily_reference_et0_mm || irrMod.current_et0_mm_day || 4.8;
@@ -75,7 +91,7 @@ class FarmReportGenerator {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Digital Farm Health Card - ${reportId}</title>
+        <title>${T("rep_title")} - ${reportId}</title>
         <meta charset="utf-8" />
         <style>
           @page {
@@ -199,88 +215,88 @@ class FarmReportGenerator {
         </style>
       </head>
       <body>
-        <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+        <button class="print-btn" onclick="window.print()">${T("rep_print_btn")}</button>
 
         <div class="card-header">
           <div class="title-area">
-            <img src="${logoUrl}" alt="AgroNexus — Intelligence That Grows." style="height:40px; width:auto; margin-bottom:6px; display:block;" onerror="this.style.display='none';" />
-            <h1>AgroNexus — Digital Farm Health Card</h1>
-            <p>Intelligence That Grows. • 100% Software-Defined Agro-Ecological Dossier • 1 km × 1 km Geodesic Grid (100 Hectares)</p>
+            <img src="${logoUrl}" alt="AgroNexus" style="height:40px; width:auto; margin-bottom:6px; display:block;" onerror="this.style.display='none';" />
+            <h1>${T("rep_title")}</h1>
+            <p>${T("rep_sub")}</p>
           </div>
           <div class="badge-box">
             <div class="id-text">${reportId}</div>
-            <div style="font-size:8pt; color:#64748b;">Issued: ${dateStr}</div>
+            <div style="font-size:8pt; color:#64748b;">${T("rep_issued")} ${dateStr}</div>
           </div>
         </div>
 
-        <div class="section-title">📍 Farm Location & Geographic Coordinates</div>
+        <div class="section-title">${T("rep_sec_loc")}</div>
         <div class="grid-4">
           <div class="metric-card">
-            <div class="metric-label">Center Latitude</div>
+            <div class="metric-label">${T("rep_lat")}</div>
             <div class="metric-value">${grid.center ? grid.center.lat.toFixed(5) : '19.99750'}° N</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Center Longitude</div>
+            <div class="metric-label">${T("rep_lon")}</div>
             <div class="metric-value">${grid.center ? grid.center.lon.toFixed(5) : '73.78980'}° E</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Grid Coverage</div>
-            <div class="metric-value">1.00 km² / 100 Ha</div>
+            <div class="metric-label">${T("rep_cov")}</div>
+            <div class="metric-value">${T("area_badge_text")}</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Spatial Resolution</div>
-            <div class="metric-value">5×5 (25 Micro-Cells)</div>
+            <div class="metric-label">${T("rep_res")}</div>
+            <div class="metric-value">5×5 (25)</div>
           </div>
         </div>
 
-        <div class="section-title">🧪 Soil Pedology & Nutrient Profile (0–30 cm Topsoil)</div>
+        <div class="section-title">${T("rep_sec_soil")}</div>
         <div class="grid-4">
           <div class="metric-card">
-            <div class="metric-label">Soil Classification</div>
-            <div class="metric-value" style="font-size:9.5pt;">${soil.soil_classification || 'Clay Loam (Vertisols)'}</div>
+            <div class="metric-label">${T("rep_soil_class")}</div>
+            <div class="metric-value" style="font-size:9.5pt;">${(window.app && window.app.localizeSoilClass(soil.soil_classification, lang)) || soil.soil_classification || ''}</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Soil pH Reaction</div>
-            <div class="metric-value" style="color:#0284c7;">${soil.ph || 7.2} <span style="font-size:7.5pt; color:#64748b;">(Neutral)</span></div>
+            <div class="metric-label">${T("rep_soil_ph")}</div>
+            <div class="metric-value" style="color:#0284c7;">${soil.ph || 7.2} <span style="font-size:7.5pt; color:#64748b;">(${(window.app && window.app.localizePhStatus(soil.ph || 7.2, lang)) || ''})</span></div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Organic Carbon (SOC)</div>
+            <div class="metric-label">${T("rep_soc")}</div>
             <div class="metric-value">${soil.organic_carbon_pct || 0.68}%</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Internal Drainage</div>
-            <div class="metric-value" style="font-size:9.5pt;">${soil.drainage || 'Well Drained'}</div>
+            <div class="metric-label">${T("drainage_class_label")}</div>
+            <div class="metric-value" style="font-size:9.5pt;">${(window.app && window.app.localizeDrainage(soil.drainage || 'Well Drained', lang)) || soil.drainage || ''}</div>
           </div>
         </div>
 
-        <div class="section-title">🛰️ Satellite Remote Sensing & Canopy Indices (Sentinel-2 MSI)</div>
+        <div class="section-title">${T("layer_sat")}</div>
         <div class="grid-4">
           <div class="metric-card">
-            <div class="metric-label">NDVI Canopy Vigor</div>
-            <div class="metric-value" style="color:#16a34a;">${rs.ndvi || 0.65} <span style="font-size:7.5pt; color:#16a34a;">(${rs.vegetation_badge || 'Good'})</span></div>
+            <div class="metric-label">${T("snap_ndvi")}</div>
+            <div class="metric-value" style="color:#16a34a;">${rs.ndvi || 0.65} <span style="font-size:7.5pt; color:#16a34a;">(${(window.AgroI18n && window.AgroI18n.vegBadge(rs.vegetation_badge || 'Good', lang)) || ''})</span></div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">NDWI Water Index</div>
-            <div class="metric-value" style="color:#0284c7;">${rs.ndwi || 0.14} <span style="font-size:7.5pt; color:#0284c7;">(Optimal)</span></div>
+            <div class="metric-label">${T("sat_ndwi")}</div>
+            <div class="metric-value" style="color:#0284c7;">${rs.ndwi || 0.14}</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Leaf Area Index (LAI)</div>
-            <div class="metric-value">${rs.lai || 2.45} m²/m²</div>
+            <div class="metric-label">${T("rainfall_label")}</div>
+            <div class="metric-value">${weather.annual_rainfall || 880} ${T("mm_unit")}</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Canopy Health Class</div>
-            <div class="metric-value" style="font-size:8.5pt;">${rs.vegetation_class || 'Dense Healthy Canopy'}</div>
+            <div class="metric-label">${T("temp_label")}</div>
+            <div class="metric-value" style="font-size:8.5pt;">${weather.average_temperature || 26.5}°C</div>
           </div>
         </div>
 
-        <div class="section-title">🏆 Top Recommended Crops (AHP Multi-Criteria Scientific Ranking)</div>
+        <div class="section-title">${T("rep_sec_crops")}</div>
         <table>
           <thead>
             <tr>
-              <th style="width:40px;">Rank</th>
-              <th>Crop Name</th>
-              <th style="width:120px;">Suitability Tier</th>
-              <th>Key Scientific Advantage</th>
+              <th style="width:40px;">#</th>
+              <th>${T("rep_col_crop")}</th>
+              <th style="width:140px;">${T("rep_col_tier")}</th>
+              <th>${T("rep_col_reason")}</th>
             </tr>
           </thead>
           <tbody>
@@ -288,15 +304,15 @@ class FarmReportGenerator {
           </tbody>
         </table>
 
-        <div class="section-title">💰 Mandi Market Economics & Projected Profitability (Per Acre)</div>
+        <div class="section-title">${T("rep_sec_mandi")}</div>
         <table>
           <thead>
             <tr>
-              <th>Crop</th>
-              <th style="text-align:right;">Mandi Price (₹/Qtl)</th>
-              <th style="text-align:right;">Projected Yield</th>
-              <th style="text-align:right;">Cost of Cultivation</th>
-              <th style="text-align:right;">Net Profit / Acre</th>
+              <th>${T("rep_col_crop")}</th>
+              <th style="text-align:right;">${T("rep_col_rate")}</th>
+              <th style="text-align:right;">${T("rep_col_yield")}</th>
+              <th style="text-align:right;">${T("rep_col_cost")}</th>
+              <th style="text-align:right;">${T("rep_col_profit")}</th>
             </tr>
           </thead>
           <tbody>
@@ -304,16 +320,9 @@ class FarmReportGenerator {
           </tbody>
         </table>
 
-        <div class="section-title">💧 FAO-56 Weather-Driven Irrigation & STCR Fertilizer Advice</div>
+        <div class="section-title">${T("rep_sec_irr")}</div>
         <div style="font-size:8pt; color:#334155; line-height:1.5; border:1px solid #e2e8f0; border-radius:6px; padding:8px 10px; background:#f8fafc;">
-          <b>• Irrigation Recommendation:</b> Reference evapotranspiration (ET₀) is ${et0Val} mm/day and crop demand (ETc) is ${etcVal} mm/day. Next irrigation due: ${nextIrr}. Avoid saturation during flowering.<br/>
-          <b>• STCR Basal Fertilizer Split:</b> Broadcast 100% Recommended Phosphorous (SSP/DAP) and 50% Potash (MOP) as basal dose. Split Nitrogen into 3 equal top-dressings at sowing, active tillering (30 DAS), and flowering.<br/>
-          <b>• Soil Amendment:</b> Soil reaction is well-buffered (pH ${soil.ph || 7.2}). Maintain humus by incorporating 5–8 tonnes/ha of Farm Yard Manure (FYM).
-        </div>
-
-        <div style="margin-top:14px; padding-top:8px; border-top:1px solid #cbd5e1; display:flex; justify-content:space-between; font-size:7.5pt; color:#64748b;">
-          <div>Data Sources: Copernicus Sentinel-2 Level-2A • ISRIC SoilGrids 2.0 • Open-Meteo ECMWF/GFS • ICAR NBSS&LUP • Agmarknet APMC</div>
-          <div>Strict Zero-Hardware Software Synthesis • Page 1 of 1</div>
+          <b>• ET₀:</b> ${et0Val} ${T("mm_unit")} &nbsp;|&nbsp; <b>ETc:</b> ${etcVal} ${T("mm_unit")} &nbsp;|&nbsp; <b>${T("stcr_fert_sched")}:</b> ${(window.AgroI18n && window.AgroI18n.localizeDoctorModule({}, 'tomato', '', soil.ph || 7.2, lang).crop_doctor_summary) || ''}
         </div>
       </body>
       </html>

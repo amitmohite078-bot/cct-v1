@@ -572,13 +572,17 @@
   function buildRejectedResult(status, reason, rawCropId, metrics, filename, sourceMode) {
     const normCrop = normalizeCropId(rawCropId);
     const displayCrop = (rawCropId || "tomato").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    const dt = (k, vars) => (window.AgroI18n && typeof window.AgroI18n.dt === "function" ? window.AgroI18n.dt(k, vars) : k);
+    const locCrop = (window.AgroI18n && typeof window.AgroI18n.cropName === "function")
+      ? window.AgroI18n.cropName(rawCropId)
+      : (rawCropId || "tomato").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
     return {
       status,
       abstained: true,
       abstention_reason: reason,
       crop_id: normCrop,
-      crop_name: displayCrop,
-      predicted_condition: "Screening Abstained",
+      crop_name: locCrop,
+      predicted_condition: dt("cond_abstained"),
       predicted_disease_id: null,
       is_healthy: false,
       confidence: 0.0,
@@ -596,8 +600,7 @@
         method: "Client-Side Spectral-Texture & Crop-Scoped Foliar Screening Heuristic (v1.0)",
         model_type: "Browser HTML5 Canvas HSV/ExG + Laplacian sharpness + crop differential",
         source_mode: sourceMode,
-        limitations:
-          "Visual screening provides probabilistic optical screening rather than clinical lab microscopy or trained PlantVillage CNN confirmation. Verify with your local KVK or agronomist.",
+        limitations: dt("limitations_text"),
         filename: filename || "leaf_photo.jpg"
       }
     };
@@ -607,65 +610,43 @@
     const img = await loadImageElement(dataUrl);
     const m = extractCanvasMetrics(img);
     const rawCrop = (cropId || "tomato").toString().trim().toLowerCase() || "tomato";
-    const displayCrop = rawCrop.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    const sourceMode = "In-Browser Visual Screening (Client-Side Canvas)";
+    const dt = (k, vars) => (window.AgroI18n && typeof window.AgroI18n.dt === "function" ? window.AgroI18n.dt(k, vars) : k);
+    const locCrop = (window.AgroI18n && typeof window.AgroI18n.cropName === "function")
+      ? window.AgroI18n.cropName(rawCrop)
+      : rawCrop.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    const sourceMode = dt("mode_browser");
 
     if (Math.min(m.width, m.height) < MIN_DIMENSION_PX) {
-      return buildRejectedResult(
-        "QUALITY_REJECTED",
-        `Image resolution ${m.width}×${m.height} px is below minimum ${MIN_DIMENSION_PX}×${MIN_DIMENSION_PX} px. Capture a closer leaf photo.`,
-        rawCrop,
-        m,
-        filename,
-        sourceMode
-      );
+      const r = buildRejectedResult("QUALITY_REJECTED", dt("err_resolution", { w: m.width, h: m.height }), rawCrop, m, filename, sourceMode);
+      r.rejection_code = "err_resolution";
+      return r;
     }
     if (m.mean_brightness < MIN_BRIGHTNESS) {
-      return buildRejectedResult(
-        "QUALITY_REJECTED",
-        `Image is underexposed (brightness ${m.mean_brightness}/255 < ${MIN_BRIGHTNESS}). Retake in natural daylight.`,
-        rawCrop,
-        m,
-        filename,
-        sourceMode
-      );
+      const r = buildRejectedResult("QUALITY_REJECTED", dt("err_dark", { b: m.mean_brightness }), rawCrop, m, filename, sourceMode);
+      r.rejection_code = "err_dark";
+      return r;
     }
     if (m.mean_brightness > MAX_BRIGHTNESS) {
-      return buildRejectedResult(
-        "QUALITY_REJECTED",
-        `Image is overexposed (brightness ${m.mean_brightness}/255 > ${MAX_BRIGHTNESS}). Avoid harsh direct glare.`,
-        rawCrop,
-        m,
-        filename,
-        sourceMode
-      );
+      const r = buildRejectedResult("QUALITY_REJECTED", dt("err_bright", { b: m.mean_brightness }), rawCrop, m, filename, sourceMode);
+      r.rejection_code = "err_bright";
+      return r;
     }
     if (m.blur_variance < MIN_BLUR_VARIANCE) {
-      return buildRejectedResult(
-        "QUALITY_REJECTED",
-        `Image appears too blurry (Laplacian variance ${m.blur_variance} < ${MIN_BLUR_VARIANCE}). Hold camera steady and focus on leaf.`,
-        rawCrop,
-        m,
-        filename,
-        sourceMode
-      );
+      const r = buildRejectedResult("QUALITY_REJECTED", dt("err_blur", { v: m.blur_variance }), rawCrop, m, filename, sourceMode);
+      r.rejection_code = "err_blur";
+      return r;
     }
     if (m.foliar_coverage_pct < MIN_FOLIAR_PCT) {
-      return buildRejectedResult(
-        "ABSTAINED_NON_LEAF",
-        `Abstained: insufficient plant foliage detected (${m.foliar_coverage_pct}% < ${MIN_FOLIAR_PCT}%). Frame a closeup of the crop leaf and retry.`,
-        rawCrop,
-        m,
-        filename,
-        sourceMode
-      );
+      const r = buildRejectedResult("ABSTAINED_NON_LEAF", dt("err_non_leaf", { f: m.foliar_coverage_pct }), rawCrop, m, filename, sourceMode);
+      r.rejection_code = "err_non_leaf";
+      return r;
     }
 
     const catalog = getCatalogForCrop(rawCrop);
     const candidates = [
       {
         id: `${normalizeCropId(rawCrop)}_healthy`,
-        name: `Healthy ${displayCrop} Foliage`,
+        name: `Healthy ${rawCrop} Foliage`,
         pathogen_type: "Healthy Canopy",
         visual_signature: "healthy",
         entry: null
@@ -705,11 +686,11 @@
       status,
       abstained,
       abstention_reason: abstained
-        ? `Visual patterns overlap between '${top.name}' (${top.probability_pct}%) and '${ranked[1]?.name || "alternative"}' (${ranked[1]?.probability_pct || 0}%). Review differential symptoms below or capture a sharper close-up lesion photo.`
+        ? dt("err_overlap", { top: top.name, p1: top.probability_pct, alt: ranked[1]?.name || "", p2: ranked[1]?.probability_pct || 0 })
         : null,
       crop_id: normalizeCropId(rawCrop),
-      crop_name: displayCrop,
-      predicted_condition: abstained ? "Inconclusive Visual Match (Review Differential)" : top.name,
+      crop_name: locCrop,
+      predicted_condition: abstained ? dt("cond_inconclusive") : top.name,
       predicted_disease_id: isHealthy || abstained ? null : top.id,
       is_healthy: isHealthy && !abstained,
       confidence: top.probability,
@@ -723,13 +704,14 @@
       class_probabilities: ranked.map(({ entry, ...rest }) => rest),
       recommended_actions: refEntry
         ? {
+            disease_id: refEntry.disease_id,
+            visual_signature: refEntry.visual_signature,
             symptoms: refEntry.symptoms || "",
             favorable_conditions: refEntry.favorable_conditions || "",
             organic_control: refEntry.organic_control || "",
             chemical_control: refEntry.chemical_control || "",
             preventive_measures: refEntry.preventive_measures || "",
-            extension_guidance:
-              "Inspect 5-10 plants across the plot and confirm chemical dosage with your nearest Krishi Vigyan Kendra (KVK) before spraying."
+            extension_guidance: dt("extension_guidance_text")
           }
         : null,
       crop_disease_catalog: catalog,
@@ -737,8 +719,7 @@
         method: "Client-Side Spectral-Texture & Crop-Scoped Foliar Screening Heuristic (v1.0)",
         model_type: "Browser HTML5 Canvas HSV/ExG + Laplacian sharpness + crop differential",
         source_mode: sourceMode,
-        limitations:
-          "Visual screening provides probabilistic optical screening rather than clinical lab microscopy or trained PlantVillage CNN confirmation. Verify with your local KVK or agronomist.",
+        limitations: dt("limitations_text"),
         filename: filename || "leaf_photo.jpg"
       }
     };
@@ -843,17 +824,24 @@
       const container = document.getElementById("kbvDedicatedDiseaseContainer");
       if (!container) return;
 
+      const A = window.AgroI18n;
+      const lang = (A && A.getLang()) || "en";
+      const dt = (k, vars) => (A && typeof A.dt === "function" ? A.dt(k, lang, vars) : k);
+      const t = (k, vars) => (A && typeof A.t === "function" ? A.t(k, lang, vars) : k);
       const ic = (name, size = 14) => (typeof window.kbvIcon === "function" ? window.kbvIcon(name, size) : "");
       const media = window.kbvMedia?.currentImage || null;
       const activeCrop = this.getSelectedCrop();
-      const catalog = (this.lastResult && Array.isArray(this.lastResult.crop_disease_catalog) && this.lastResult.crop_disease_catalog.length)
+      const locCropName = (A && A.cropName(activeCrop, lang)) || activeCrop.replace(/_/g, " ");
+      const rawCatalog = (this.lastResult && Array.isArray(this.lastResult.crop_disease_catalog) && this.lastResult.crop_disease_catalog.length)
         ? this.lastResult.crop_disease_catalog
         : getCatalogForCrop(activeCrop);
+      const catalog = rawCatalog.map((d) => (A && typeof A.localizeDiseaseEntry === "function" ? A.localizeDiseaseEntry(d, activeCrop, lang) : d));
 
-      const cropOptionsHtml = CROP_OPTIONS.map(
-        (opt) =>
-          `<option value="${escapeHtml(opt.id)}" ${normalizeCropId(activeCrop) === normalizeCropId(opt.id) || activeCrop === opt.id ? "selected" : ""}>${escapeHtml(opt.label)}</option>`
-      ).join("");
+      const cropOptionsHtml = CROP_OPTIONS.map((opt) => {
+        const label = (A && A.cropName(opt.id, lang)) || opt.label;
+        const sel = normalizeCropId(activeCrop) === normalizeCropId(opt.id) || activeCrop === opt.id ? "selected" : "";
+        return `<option value="${escapeHtml(opt.id)}" ${sel}>${escapeHtml(label)}</option>`;
+      }).join("");
 
       const uploadBoxHtml = `
         <div id="kbvDiseaseDropZone"
@@ -861,42 +849,42 @@
           <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
             <div style="display:flex; align-items:center; gap:12px; min-width:220px; flex:1;">
               ${media
-                ? `<img src="${escapeHtml(media.dataUrl)}" alt="Selected leaf photo" style="width:74px; height:74px; object-fit:cover; border-radius:10px; border:2px solid #2D5A27; flex-shrink:0;" />`
+                ? `<img src="${escapeHtml(media.dataUrl)}" alt="" style="width:74px; height:74px; object-fit:cover; border-radius:10px; border:2px solid #2D5A27; flex-shrink:0;" />`
                 : `<div style="width:64px; height:64px; border-radius:10px; background:rgba(45,90,39,0.1); display:flex; align-items:center; justify-content:center; color:#2D5A27; flex-shrink:0;">${ic("image", 26)}</div>`
               }
               <div>
                 <div style="font-size:0.86rem; font-weight:700; color:#1A2412;">
-                  ${media ? escapeHtml(media.name) : "Upload or Drag-and-Drop a Close-Up Crop Leaf Photo"}
+                  ${media ? escapeHtml(media.name) : escapeHtml(dt("drop_title"))}
                 </div>
                 <div style="font-size:0.74rem; color:#4F5E46; margin-top:3px;">
                   ${media
-                    ? `${escapeHtml(media.source)} • Ready for spectral &amp; lesion screening`
-                    : "Minimum 224×224 px in natural daylight. Runs both offline in your browser and on FastAPI server."}
+                    ? escapeHtml(dt("drop_attached_sub", { source: t("field_photo_attached") }))
+                    : escapeHtml(dt("drop_sub"))}
                 </div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <label for="kbvDiseaseCropSelect" style="font-size:0.74rem; font-weight:700; color:#1A2412;">Crop:</label>
+              <label for="kbvDiseaseCropSelect" style="font-size:0.74rem; font-weight:700; color:#1A2412;">${escapeHtml(dt("crop_lbl"))}</label>
               <select id="kbvDiseaseCropSelect"
                 style="padding:7px 10px; border-radius:8px; border:1px solid rgba(45,90,39,0.3); background:#FFFFFF; color:#1A2412; font-size:0.78rem; font-weight:600;">
                 ${cropOptionsHtml}
               </select>
               <button type="button" class="btn btn-secondary" style="padding:7px 12px; font-size:0.76rem; display:inline-flex; align-items:center; gap:5px;"
                 onclick="window.kbvMedia && window.kbvMedia.pickImage()">
-                ${ic("image", 14)} Upload Leaf
+                ${ic("image", 14)} ${escapeHtml(dt("upload_leaf_btn"))}
               </button>
               <button type="button" class="btn btn-secondary" style="padding:7px 12px; font-size:0.76rem; display:inline-flex; align-items:center; gap:5px;"
                 onclick="window.kbvMedia && window.kbvMedia.openCamera()">
-                ${ic("camera", 14)} Take Photo
+                ${ic("camera", 14)} ${escapeHtml(t("take_photo"))}
               </button>
               ${media
                 ? `<button type="button" class="btn btn-primary" style="padding:7px 14px; font-size:0.76rem; font-weight:700; display:inline-flex; align-items:center; gap:5px;"
                     onclick="window.diseaseScanner.analyzeImage(window.kbvMedia.currentImage)">
-                    ${ic("microscope", 14)} Re-Screen Leaf
+                    ${ic("microscope", 14)} ${escapeHtml(dt("rescreen_leaf_btn"))}
                   </button>
                   <button type="button" class="btn btn-secondary" style="padding:7px 10px; font-size:0.76rem; display:inline-flex; align-items:center; gap:4px;"
                     onclick="window.kbvMedia && window.kbvMedia.clearImage()">
-                    ${ic("close", 13)} Clear
+                    ${ic("close", 13)} ${escapeHtml(dt("clear_btn"))}
                   </button>`
                 : ""
               }
@@ -909,52 +897,63 @@
       if (this.isAnalyzing) {
         screeningHtml = `
           <div style="padding:18px; border-radius:10px; background:#F0EEE9; border:1px solid rgba(45,90,39,0.2); font-size:0.82rem; color:#1A2412; margin-bottom:14px;">
-            <b>Running visual leaf screening...</b> Evaluating sharpness, exposure, foliar coverage, chlorosis, rust pustules, and necrotic spots.
+            ${escapeHtml(dt("screening_running"))}
           </div>
         `;
       } else if (this.errorMessage) {
         screeningHtml = `
           <div style="padding:14px; border-radius:10px; background:rgba(185,28,28,0.08); border:1px solid #dc2626; color:#7f1d1d; font-size:0.8rem; margin-bottom:14px;">
-            <b>Screening Error:</b> ${escapeHtml(this.errorMessage)}
+            <b>${escapeHtml(dt("screening_error"))}</b> ${escapeHtml(this.errorMessage)}
           </div>
         `;
       } else if (this.lastResult) {
         const res = this.lastResult;
         const q = res.image_quality || {};
         const passed = q.passed !== false;
+        const resCropName = (A && A.cropName(res.crop_id || activeCrop, lang)) || res.crop_name || locCropName;
 
         let bannerBg = "rgba(45,90,39,0.09)";
         let bannerBorder = "rgba(45,90,39,0.35)";
         let badgeColor = "#2D5A27";
-        let badgeLabel = "SCREENING MATCH";
+        let badgeLabel = dt("badge_match");
 
         if (res.status === "QUALITY_REJECTED" || res.status === "ABSTAINED_NON_LEAF") {
           bannerBg = "rgba(185,28,28,0.08)";
           bannerBorder = "#dc2626";
           badgeColor = "#991b1b";
-          badgeLabel = res.status === "ABSTAINED_NON_LEAF" ? "NON-LEAF ABSTAINED" : "QUALITY CHECK FAILED";
+          badgeLabel = res.status === "ABSTAINED_NON_LEAF" ? dt("badge_non_leaf") : dt("badge_quality_fail");
         } else if (res.abstained) {
           bannerBg = "rgba(217,119,6,0.1)";
           bannerBorder = "#d97706";
           badgeColor = "#b45309";
-          badgeLabel = "LOW CERTAINTY — ABSTAINED";
+          badgeLabel = dt("badge_abstained");
         } else if (!res.is_healthy) {
           bannerBg = "rgba(180,83,9,0.09)";
           bannerBorder = "#b45309";
           badgeColor = "#9a3412";
-          badgeLabel = "VISUAL LESION PATTERN DETECTED";
+          badgeLabel = dt("badge_lesion");
         } else {
-          badgeLabel = "HEALTHY CANOPY INDICATED";
+          badgeLabel = dt("badge_healthy");
         }
 
-        const probBarsHtml = (res.class_probabilities || [])
+        const localizedProbs = (res.class_probabilities || []).map((item) => ({
+          ...item,
+          displayName: (A && typeof A.localizeDiseaseName === "function")
+            ? A.localizeDiseaseName(item.id, item.name, resCropName, lang)
+            : item.name,
+          displayPathogen: (A && typeof A.localizePathogenType === "function")
+            ? A.localizePathogenType(item.pathogen_type, lang)
+            : item.pathogen_type
+        }));
+
+        const probBarsHtml = localizedProbs
           .map((item, idx) => {
             const pct = Number(item.probability_pct || 0).toFixed(1);
             const barColor = item.visual_signature === "healthy" ? "#2D5A27" : idx === 0 ? "#B45309" : "#64748B";
             return `
               <div style="margin-bottom:8px;">
                 <div style="display:flex; justify-content:space-between; font-size:0.76rem; margin-bottom:3px;">
-                  <span style="font-weight:700; color:#1A2412;">${escapeHtml(item.name)} <span style="font-weight:500; color:#4F5E46;">(${escapeHtml(item.pathogen_type)})</span></span>
+                  <span style="font-weight:700; color:#1A2412;">${escapeHtml(item.displayName)} <span style="font-weight:500; color:#4F5E46;">(${escapeHtml(item.displayPathogen)})</span></span>
                   <span style="font-weight:700; color:${barColor};">${pct}%</span>
                 </div>
                 <div style="height:7px; border-radius:999px; background:rgba(0,0,0,0.08); overflow:hidden;">
@@ -965,88 +964,136 @@
           })
           .join("");
 
-        const rec = res.recommended_actions;
+        let predTitle = res.predicted_condition;
+        if (res.status === "QUALITY_REJECTED" || res.status === "ABSTAINED_NON_LEAF") {
+          predTitle = dt("cond_abstained");
+        } else if (res.abstained) {
+          predTitle = dt("cond_inconclusive");
+        } else if (res.is_healthy) {
+          predTitle = dt("healthy_foliage_tpl", { crop: resCropName });
+        } else if (localizedProbs.length > 0) {
+          predTitle = localizedProbs[0].displayName;
+        }
+
+        let localizedAbstention = res.abstention_reason;
+        if (res.abstained) {
+          if (res.rejection_code && A?.DISEASE_UI?.[lang]?.[res.rejection_code]) {
+            localizedAbstention = dt(res.rejection_code, {
+              w: q.width || 0, h: q.height || 0,
+              b: q.mean_brightness ?? 0, v: q.blur_variance ?? 0, f: q.foliar_coverage_pct ?? 0
+            });
+          } else if (res.status === "ABSTAINED_NON_LEAF") {
+            localizedAbstention = dt("err_non_leaf", { f: q.foliar_coverage_pct ?? 0 });
+          } else if (res.status === "QUALITY_REJECTED") {
+            if (Math.min(q.width || 999, q.height || 999) < MIN_DIMENSION_PX) {
+              localizedAbstention = dt("err_resolution", { w: q.width || 0, h: q.height || 0 });
+            } else if ((q.mean_brightness ?? 120) < MIN_BRIGHTNESS) {
+              localizedAbstention = dt("err_dark", { b: q.mean_brightness ?? 0 });
+            } else if ((q.mean_brightness ?? 120) > MAX_BRIGHTNESS) {
+              localizedAbstention = dt("err_bright", { b: q.mean_brightness ?? 0 });
+            } else {
+              localizedAbstention = dt("err_blur", { v: q.blur_variance ?? 0 });
+            }
+          } else if (localizedProbs.length >= 2) {
+            localizedAbstention = dt("err_overlap", {
+              top: localizedProbs[0].displayName, p1: localizedProbs[0].probability_pct,
+              alt: localizedProbs[1].displayName, p2: localizedProbs[1].probability_pct
+            });
+          }
+        }
+
+        const rawRec = res.recommended_actions;
+        const matchedCatalogEntry = (localizedProbs[0] && catalog.find((c) => c.disease_id === localizedProbs[0].id)) || catalog[0];
+        const rec = rawRec && A && typeof A.localizeDiseaseEntry === "function"
+          ? {
+              ...(matchedCatalogEntry || rawRec),
+              extension_guidance: dt("extension_guidance_text")
+            }
+          : rawRec;
+
         const recHtml = rec
           ? `
             <div style="background:#FFFFFF; border:1px solid rgba(45,90,39,0.2); border-radius:10px; padding:12px; margin-top:12px; font-size:0.78rem; color:#1A2412;">
               <div style="font-weight:700; color:#2D5A27; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
-                ${ic("stethoscope", 15)} Field Action &amp; Extension Guidance (${escapeHtml(res.crop_name)})
+                ${ic("stethoscope", 15)} ${escapeHtml(dt("action_title", { crop: resCropName }))}
               </div>
-              <div style="margin-bottom:4px;"><b>Symptoms to Confirm:</b> ${escapeHtml(rec.symptoms)}</div>
-              <div style="margin-bottom:4px;"><b>Favorable Weather:</b> ${escapeHtml(rec.favorable_conditions)}</div>
-              <div style="margin-bottom:4px;"><b>Bio / Organic Option:</b> ${escapeHtml(rec.organic_control)}</div>
-              <div style="margin-bottom:4px;"><b>Targeted Control (Verify with KVK):</b> ${escapeHtml(rec.chemical_control)}</div>
-              <div style="margin-bottom:6px;"><b>Prevention:</b> ${escapeHtml(rec.preventive_measures)}</div>
+              <div style="margin-bottom:4px;"><b>${escapeHtml(dt("lbl_symptoms"))}</b> ${escapeHtml(rec.symptoms)}</div>
+              <div style="margin-bottom:4px;"><b>${escapeHtml(dt("lbl_triggers"))}</b> ${escapeHtml(rec.favorable_conditions)}</div>
+              <div style="margin-bottom:4px;"><b>${escapeHtml(dt("lbl_bio"))}</b> ${escapeHtml(rec.organic_control)}</div>
+              <div style="margin-bottom:4px;"><b>${escapeHtml(dt("lbl_chemical"))}</b> ${escapeHtml(rec.chemical_control)}</div>
+              <div style="margin-bottom:6px;"><b>${escapeHtml(dt("lbl_prevention"))}</b> ${escapeHtml(rec.preventive_measures)}</div>
               <div style="padding:7px 9px; border-radius:6px; background:#F0EEE9; color:#33402B; font-size:0.73rem;">
-                <b>Extension Advisory:</b> ${escapeHtml(rec.extension_guidance)}
+                <b>${escapeHtml(dt("lbl_extension"))}</b> ${escapeHtml(rec.extension_guidance || dt("extension_guidance_text"))}
               </div>
             </div>
           `
           : "";
+
+        const modeText = (res.model_provenance?.source_mode || "").includes("FastAPI") ? dt("mode_backend") : dt("mode_browser");
 
         screeningHtml = `
           <div style="background:${bannerBg}; border:1px solid ${bannerBorder}; border-radius:12px; padding:14px; margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
               <div>
                 <span style="display:inline-block; padding:2px 8px; border-radius:999px; font-size:0.68rem; font-weight:800; letter-spacing:0.04em; background:${badgeColor}; color:#FFFFFF; margin-bottom:5px;">
-                  ${badgeLabel}
+                  ${escapeHtml(badgeLabel)}
                 </span>
                 <div style="font-size:1.05rem; font-weight:800; color:#1A2412;">
-                  ${escapeHtml(res.predicted_condition)}
+                  ${escapeHtml(predTitle)}
                 </div>
-                ${res.abstention_reason ? `<div style="font-size:0.78rem; color:#7c2d12; margin-top:4px; line-height:1.45;">${escapeHtml(res.abstention_reason)}</div>` : ""}
+                ${localizedAbstention ? `<div style="font-size:0.78rem; color:#7c2d12; margin-top:4px; line-height:1.45;">${escapeHtml(localizedAbstention)}</div>` : ""}
               </div>
               <div style="text-align:right; min-width:130px;">
-                <div style="font-size:0.72rem; color:#4F5E46; font-weight:600;">Visual Score</div>
-                <div style="font-size:1.35rem; font-weight:800; color:${badgeColor};">${res.confidence_pct ? `${Number(res.confidence_pct).toFixed(1)}%` : "Abstained"}</div>
-                ${passed ? `<div style="font-size:0.7rem; color:#4F5E46;">Margin: +${(Number(res.margin || 0) * 100).toFixed(1)}%</div>` : ""}
+                <div style="font-size:0.72rem; color:#4F5E46; font-weight:600;">${escapeHtml(dt("visual_score"))}</div>
+                <div style="font-size:1.35rem; font-weight:800; color:${badgeColor};">${res.confidence_pct ? `${Number(res.confidence_pct).toFixed(1)}%` : escapeHtml(dt("cond_abstained"))}</div>
+                ${passed ? `<div style="font-size:0.7rem; color:#4F5E46;">${escapeHtml(dt("margin_lbl"))} +${(Number(res.margin || 0) * 100).toFixed(1)}%</div>` : ""}
               </div>
             </div>
 
             <!-- Quality & Spectral Telemetry Strip -->
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(125px, 1fr)); gap:8px; margin-bottom:12px;">
               <div style="background:rgba(255,255,255,0.85); padding:7px 9px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:0.72rem;">
-                <div style="color:#4F5E46;">Resolution</div>
-                <div style="font-weight:700; color:#1A2412;">${q.width || 0}×${q.height || 0} px</div>
+                <div style="color:#4F5E46;">${escapeHtml(dt("m_resolution"))}</div>
+                <div style="font-weight:700; color:#1A2412;">${q.width || 0}×${q.height || 0}</div>
               </div>
               <div style="background:rgba(255,255,255,0.85); padding:7px 9px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:0.72rem;">
-                <div style="color:#4F5E46;">Sharpness (Laplacian)</div>
+                <div style="color:#4F5E46;">${escapeHtml(dt("m_sharpness"))}</div>
                 <div style="font-weight:700; color:#1A2412;">${q.blur_variance ?? 0}</div>
               </div>
               <div style="background:rgba(255,255,255,0.85); padding:7px 9px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:0.72rem;">
-                <div style="color:#4F5E46;">Brightness</div>
+                <div style="color:#4F5E46;">${escapeHtml(dt("m_brightness"))}</div>
                 <div style="font-weight:700; color:#1A2412;">${q.mean_brightness ?? 0} / 255</div>
               </div>
               <div style="background:rgba(255,255,255,0.85); padding:7px 9px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:0.72rem;">
-                <div style="color:#4F5E46;">Foliar Cover</div>
+                <div style="color:#4F5E46;">${escapeHtml(dt("m_foliar"))}</div>
                 <div style="font-weight:700; color:#1A2412;">${q.foliar_coverage_pct ?? 0}%</div>
               </div>
               <div style="background:rgba(255,255,255,0.85); padding:7px 9px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); font-size:0.72rem;">
-                <div style="color:#4F5E46;">Lesion / Chlorosis Burden</div>
+                <div style="color:#4F5E46;">${escapeHtml(dt("m_lesion"))}</div>
                 <div style="font-weight:700; color:#1A2412;">${q.lesion_burden_pct ?? 0}%</div>
               </div>
             </div>
 
-            ${probBarsHtml ? `<div style="background:rgba(255,255,255,0.9); border-radius:10px; padding:11px; border:1px solid rgba(0,0,0,0.08);"><div style="font-size:0.75rem; font-weight:700; color:#1A2412; margin-bottom:8px;">Crop-Scoped Differential Visual Match</div>${probBarsHtml}</div>` : ""}
+            ${probBarsHtml ? `<div style="background:rgba(255,255,255,0.9); border-radius:10px; padding:11px; border:1px solid rgba(0,0,0,0.08);"><div style="font-size:0.75rem; font-weight:700; color:#1A2412; margin-bottom:8px;">${escapeHtml(dt("diff_title"))}</div>${probBarsHtml}</div>` : ""}
 
             ${recHtml}
 
             <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px; font-size:0.7rem; color:#4F5E46;">
-              <span><b>Method:</b> ${escapeHtml(res.model_provenance?.source_mode || res.model_provenance?.method)}</span>
+              <span><b>${escapeHtml(dt("method_lbl"))}</b> ${escapeHtml(modeText)}</span>
               <button type="button" class="btn btn-primary" style="padding:5px 12px; font-size:0.74rem; display:inline-flex; align-items:center; gap:5px;"
                 onclick="window.diseaseScanner.sendToDoctor()">
-                ${ic("doctor", 13)} Discuss with AI Crop Doctor →
+                ${ic("doctor", 13)} ${escapeHtml(dt("discuss_doctor_btn"))}
               </button>
             </div>
             <div style="font-size:0.69rem; color:#4F5E46; margin-top:5px;">
-              ${escapeHtml(res.model_provenance?.limitations || "")}
+              ${escapeHtml(dt("limitations_text"))}
             </div>
           </div>
         `;
       } else {
         screeningHtml = `
           <div style="padding:12px 14px; border-radius:10px; background:rgba(45,90,39,0.06); border:1px solid rgba(45,90,39,0.2); font-size:0.78rem; color:#33402B; margin-bottom:14px;">
-            <b>No leaf photo screened yet.</b> Click <b>Upload Leaf</b> or <b>Take Photo</b> above (or drop a leaf photo here) to check quality, detect foliar lesion patterns, and view targeted management guidance.
+            ${escapeHtml(dt("no_leaf_yet"))}
           </div>
         `;
       }
@@ -1057,12 +1104,12 @@
           <div style="background:#F0EEE9; border:1px solid rgba(45,90,39,0.18); border-radius:10px; padding:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:5px; flex-wrap:wrap;">
               <b style="font-size:0.84rem; color:#1A2412;">${escapeHtml(d.name)}</b>
-              <span style="font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:999px; background:rgba(45,90,39,0.12); color:#2D5A27;">${escapeHtml(d.pathogen_type || "Pathogen")}</span>
+              <span style="font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:999px; background:rgba(45,90,39,0.12); color:#2D5A27;">${escapeHtml(d.pathogen_type || "")}</span>
             </div>
-            <div style="font-size:0.75rem; color:#33402B; margin-bottom:4px;"><b>Symptoms:</b> ${escapeHtml(d.symptoms)}</div>
-            <div style="font-size:0.74rem; color:#4F5E46; margin-bottom:4px;"><b>Triggers:</b> ${escapeHtml(d.favorable_conditions)}</div>
-            <div style="font-size:0.74rem; color:#2D5A27; margin-bottom:3px;"><b>Bio-Control:</b> ${escapeHtml(d.organic_control)}</div>
-            <div style="font-size:0.74rem; color:#7c2d12;"><b>Extension / Chemical:</b> ${escapeHtml(d.chemical_control)}</div>
+            <div style="font-size:0.75rem; color:#33402B; margin-bottom:4px;"><b>${escapeHtml(dt("lbl_symptoms"))}</b> ${escapeHtml(d.symptoms)}</div>
+            <div style="font-size:0.74rem; color:#4F5E46; margin-bottom:4px;"><b>${escapeHtml(dt("lbl_triggers"))}</b> ${escapeHtml(d.favorable_conditions)}</div>
+            <div style="font-size:0.74rem; color:#2D5A27; margin-bottom:3px;"><b>${escapeHtml(dt("lbl_bio"))}</b> ${escapeHtml(d.organic_control)}</div>
+            <div style="font-size:0.74rem; color:#7c2d12;"><b>${escapeHtml(dt("lbl_chemical"))}</b> ${escapeHtml(d.chemical_control)}</div>
           </div>
         `
         )
@@ -1071,7 +1118,7 @@
       container.innerHTML = `
         ${uploadBoxHtml}
         ${screeningHtml}
-        <div class="param-section-title" style="margin-top:4px;">Pathology &amp; Pest Reference Guide — ${escapeHtml(activeCrop.replace(/_/g, " ").toUpperCase())}</div>
+        <div class="param-section-title" style="margin-top:4px;">${escapeHtml(dt("ref_guide_title", { crop: locCropName }))}</div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px;">
           ${catalogCardsHtml}
         </div>
@@ -1110,7 +1157,7 @@
           dropZone.style.background = "#F0EEE9";
           const file = e.dataTransfer?.files?.[0];
           if (file && window.kbvMedia && typeof window.kbvMedia.handleFile === "function") {
-            window.kbvMedia.handleFile(file, "Dropped Photo");
+            window.kbvMedia.handleFile(file, t("field_photo_attached"));
           }
         });
       }
@@ -1123,12 +1170,16 @@
       }
       if (res && window.modulesManager && typeof window.modulesManager.fillDoctorQuestion === "function") {
         setTimeout(() => {
-          const cond = res.abstained
-            ? `possible foliar symptoms on ${res.crop_name}`
-            : `${res.predicted_condition} on ${res.crop_name}`;
-          window.modulesManager.fillDoctorQuestion(
-            `I scanned a leaf photo showing ${cond}. What biological and field management steps are recommended?`
-          );
+          const A = window.AgroI18n;
+          const lang = (A && A.getLang()) || "en";
+          const cropName = (A && A.cropName(res.crop_id || this.getSelectedCrop(), lang)) || res.crop_name;
+          const cond = (A && typeof A.localizeDiseaseName === "function")
+            ? A.localizeDiseaseName(res.predicted_disease_id, res.predicted_condition, cropName, lang)
+            : res.predicted_condition;
+          const prompt = (A && typeof A.dt === "function")
+            ? A.dt("doctor_disc_prompt", lang, { cond, crop: cropName })
+            : `I scanned a leaf photo showing ${cond} on ${cropName}. What biological and field management steps are recommended?`;
+          window.modulesManager.fillDoctorQuestion(prompt);
         }, 120);
       }
     }
